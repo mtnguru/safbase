@@ -24,7 +24,8 @@
         "drupal/pathologic": "^1.0@alpha",
         "drupal/fontawesome": "^2.14",
         "drupal/adminimal_theme": "^1.5",
-        "drupal/webform": "^5.6"
+        "drupal/webform": "^5.6",
+        "drupal/admin_toolbar": "^2.0"
     },
     "require-dev": {
         "drush/drush": "^9.0"
