@@ -1,0 +1,82 @@
+<?php
+
+
+/**
+ * @file
+ * Contains az_maestro.module.
+ */
+
+use Drupal\az_maestro\AzContentQuery;
+use Drupal\az_maestro\AzStream;
+use Drupal\user\Entity\User;
+
+/**
+ * Implements HOOK_preprocess_node().
+ *
+ * @param $variables
+ */
+function az_maestro_preprocess_node(&$variables) {
+  $node = $variables['node'];
+  $uid = \Drupal::currentUser()->id();
+  $user = User::load($uid);
+
+  // Its all Electric dashboard
+  if ($node->id() == 799) {
+    // If the user is logged in then create the My Activity, My Comments and My Media tabs
+    if ($uid != 0) {
+
+      // Create the user block in the upper left corner.
+      $variables['user_id'] = $user->id();
+      $variables['user_name'] = $user->name->value;
+      $picture = $user->field_picture->getValue();
+      if ($user->field_picture->isEmpty()) {
+        $field = \Drupal\field\Entity\FieldConfig::loadByName('user', 'user', 'field_picture');
+        $default_image = $field->getSetting('default_image');
+        $file = \Drupal::entityManager()
+          ->loadEntityByUuid('file', $default_image['uuid']);
+      }
+      else {
+        $file = \Drupal\file\Entity\File::load($picture[0]['target_id']);
+      }
+
+
+      $variables['user_picture_url'] = \Drupal\image\Entity\ImageStyle::load('thumbnail')
+        ->buildUrl($file->getFileUri());
+
+      $variables['view_my_groups'] = views_embed_view('az_my_groups', 'user_block');
+    }
+    else {
+      $snippet = \Drupal::entityManager()->getStorage('node')->load(325);
+      $dashboard_block = \Drupal::entityTypeManager() ->getViewBuilder('node') ->view($snippet, 'full');
+    }
+
+    $variables['sidebar'] = [
+      'dashboard_block' => (isset($dashboard_block)) ? $dashboard_block : NULL,
+    ];
+
+    // Create sidebar donate block.
+    $block_entity = Drupal\block\Entity\Block::load('azdonateblock');
+    $variables['sidebar']['block_donate'] = \Drupal::entityTypeManager()
+      ->getViewBuilder('block')
+      ->view($block_entity);
+
+
+    // Create Announcement block at top of page
+    if (!$node->field_announcement->isEmpty()) {
+      $nid = $node->field_announcement->getValue()[0]['target_id'];
+      $variables['snippet_dashboard_announcement'] = _az_content_render_node($nid, 'full');
+    }
+
+    // Create sidebar donate block.
+    $block_entity = Drupal\block\Entity\Block::load('azdonateblock');
+    $variables['sidebar']['block_donate'] = \Drupal::entityTypeManager()
+      ->getViewBuilder('block')
+      ->view($block_entity);
+
+    //  $dashConfig = Yaml::decode(file_get_contents($path));
+    $variables['tabs'] = [
+      '#type' => 'markup',
+      '#markup' => 'Maestro Container',
+    ];
+  }
+}

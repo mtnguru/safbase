@@ -1,0 +1,6 @@
+services:
+  switch_themes:
+    class: Drupal\az_em\Theme\SwitchThemes
+    arguments: []
+    tags:
+      - { name: theme_negotiator, priority: 10 }

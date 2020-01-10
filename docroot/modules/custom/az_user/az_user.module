@@ -1,0 +1,229 @@
+<?php
+
+/**
+ * @file
+ * Contains az_user.module.
+ */
+
+use Drupal\Component\Utility\Random;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_form_FORM_ID_alter().   user_form
+ */
+function az_user_form_user_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (!\Drupal::currentUser()->hasPermission('administer account settings')) {
+    $form['field_address']['#access'] = false;
+    $form['field_phone']['#access'] = false;
+    $form['field_private_notes']['#access'] = false;
+  }
+  return;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().   user_login
+ */
+function az_user_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  $form['login-form'] = [
+    '#type' => 'container',
+    '#weight' => 0,
+    '#attributes' => ['class' => ['login-form']],
+    'name' => $form['name'],
+    'pass' => $form['pass'],
+    'header' => [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['header']],
+      '#weight' => -1,
+      'markup' => ['#markup' => '<h2>Login to Ethereal Matters</h2>'],
+    ],
+    'forgot_password' => [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['forgot-password']],
+      '#weight' => 101,
+      'markup' => ['#markup' => 'Forgot your password? - <a href="/user/password">Click here</a>'],
+    ],
+    'actions' => $form['actions'],
+  ];
+  unset($form['name']);
+  unset($form['pass']);
+  unset($form['actions']);
+
+  // Add the join block that goes below the login form.   nid 321
+//$node = Node::load(321);
+//$body = $node->body->value;
+//$body = preg_replace('/\$num_users/', '666', $body);
+
+// - This errors - came from az.  James
+//$node->body->setValue($body);
+
+//$build = \Drupal::entityTypeManager()->getViewBuilder('node')->view($node, 'full');
+//$build['#status'] = $body;$form['join_block'] = [
+//  '#type' => 'container',
+//  '#attributes' => ['class' => ['join-block']],
+//  '#weight' => 100,
+//  'markup' => ['#markup' => render($build)],
+//];
+
+ $form['#submit'][] = '_az_user_login_form_submit';
+
+  return;
+}
+
+/**
+ * Form submission handler for user_login_form().
+ *
+ * Redirects the user to the dashboard after logging in.
+ */
+function _az_user_login_form_submit(&$form, FormStateInterface $form_state) {
+  $url = Url::fromRoute('<front>');
+
+  // Check if a destination was set, probably on an exception controller.
+  // @see \Drupal\user\Form\UserLoginForm::submitForm()
+  $request = \Drupal::service('request_stack')->getCurrentRequest();
+  if ($request->request->has('destination')) {
+    $request->query->set('destination', $request->request->get('destination'));
+  } else {
+    $form_state->setRedirectUrl(Url::fromRoute('<front>'));
+  }
+}
+
+/**
+ * Implements HOOK_preprocess_user().
+ *
+ */
+function az_user_preprocess_user(&$variables) {
+  $user = $variables['user'];
+
+  // Create the fullname by concatenating the first and last names.
+  /*
+  $variables['fullname'] = $user->label();
+  if ($user->field_display_full_user_name->value == true) {
+    $variables['fullname'] .= ' - ';
+    if (!empty($variables['content']['field_first_name'])) {
+      $variables['fullname'] .= $variables['content']['field_first_name']['0']['#context']['value'] . ' ';
+    }
+    if (!empty($variables['content']['field_last_name'])) {
+      $variables['fullname'] .= $variables['content']['field_last_name']['0']['#context']['value'];
+    }
+  }
+  */
+
+  // Get the URL of the user
+  $variables['url'] = $variables['user']->url();
+
+  // Create Users Recent Activity tab
+  $activity = [
+    'type' => 'entity-stream',
+    'id' => 'recent-activity',
+    'label' => 'Activity',
+    'title' => 'Activity',
+    'author' => $user->id(),
+    'status' => NODE_PUBLISHED,
+    'empty' => 'No activity for this user',
+  ];
+
+  // Create Users Unpublished tab
+  $unpublished = [
+    'type' => 'entity-stream',
+    'id' => 'unpublished-activity',
+    'label' => 'Unpublished',
+    'title' => 'Recent Unpublished Activity',
+    'author' => $user->id(),
+    'status' => NODE_NOT_PUBLISHED,
+    'empty' => 'No unpublished activity for this user',
+  ];
+
+  // Create Users Tickets tab
+  if (\Drupal::currentUser()->hasPermission('az content view tickets')) {
+    $tickets = [
+      'type' => 'entity-stream',
+      'id' => 'tickets',
+      'label' => 'Tickets',
+      'types' => 'ticket',
+      'title' => 'Tickets I created',
+      'author' => $user->id(),
+      'empty' => 'NO DISPLAY',
+    ];
+
+    $assigned = [
+      'type' => 'entity-stream',
+      'id' => 'assigned',
+      'label' => 'Assigned Tickets',
+      'types' => 'ticket',
+      'title' => 'Tickets Assigned to Me',
+      'assigned' => $user->id(),
+      'empty' => 'NO DISPLAY',
+    ];
+  }
+
+  // Create Users Comments tab
+  $comments = [
+    'type' => 'entity-stream',
+    'entityType' => 'comment',
+    'id' => 'comments',
+    'label' => 'Comments',
+    'authorComment' => $user->id(),
+    'title' => 'Comments',
+    'status' => NODE_PUBLISHED,
+    'empty' => 'No comments for this user',
+  ];
+
+  $sets = [];
+  if (isset($activity))    $sets[$activity['id']]    = $activity;
+  if (isset($unpublished)) $sets[$unpublished['id']] = $unpublished;
+  if (isset($tickets))     $sets[$tickets['id']]     = $tickets;
+  if (isset($assigned))    $sets[$assigned['id']]    = $assigned;
+  if (isset($comments))    $sets[$comments['id']]    = $comments;
+  $variables['tabs'] = _az_content_build_tabs('main', $sets);
+}
+
+function az_user_preprocess_menu(&$variables) {
+  if ($variables['menu_name'] == 'account' && $variables['logged_in']) {
+    $user = \Drupal::entityTypeManager()
+      ->getStorage('user')
+      ->load(\Drupal::currentUser()->id());
+//  if ($user) {
+//    if ($user->field_picture->isEmpty()) {
+//      $variables['user_name'] = $user->name[0]->value;
+//    }
+//    else {
+//      $fid = $user->field_picture[0]->target_id;
+//      $file = \Drupal\file\Entity\File::load($fid);
+//      $variables['user_picture_url'] = \Drupal\image\Entity\ImageStyle::load('thumbnail')->buildUrl($file->getFileUri());
+//    }
+//  }
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter
+ *
+ * Suggest user--{view_mode}.html.twig file.
+ */
+function az_user_theme_suggestions_user_alter(array &$suggestions, array $variables, $hook) {
+  $suggestions[] = $variables['theme_hook_original'] . '__' . str_replace('-', '_', $variables['elements']['#view_mode']);
+  return $suggestions;
+}
+
+function az_user_get_users_with_permission($permission) {
+  // Get all roles
+  $allRoles =  \Drupal\user\Entity\Role::loadMultiple();
+  $roles = [];
+  // Find those roles with proper permissions
+  foreach ($allRoles as $role) {
+	if ($role->hasPermission($permission)) {
+      $roles[] = $role->id();
+    }
+  }
+
+  $query = \Drupal::database()->select('users', 'u');
+  $query->fields('u', ['uid']);
+  $query->leftJoin('user__roles', 'ur', 'ur.entity_id = u.uid');
+  $query->condition('u.uid', '1', '!=');
+  $query->condition('ur.roles_target_id', $roles, 'IN');
+
+  return $query->execute()->fetchAllAssoc('uid');
+}

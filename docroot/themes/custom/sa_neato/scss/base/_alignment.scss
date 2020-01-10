@@ -1,0 +1,104 @@
+%az-width-5  { width: 5%; }
+%az-width-10 { width: 10%; }
+%az-width-15 { width: 15%; }
+%az-width-20 { width: 20%; }
+%az-width-25 { width: 25%; }
+%az-width-30 { width: 30%; }
+%az-width-35 { width: 35%; }
+%az-width-40 { width: 40%; }
+%az-width-45 { width: 45%; }
+%az-width-50 { width: 50%; }
+%az-width-55 { width: 55%; }
+%az-width-60 { width: 60%; }
+%az-width-65 { width: 65%; }
+%az-width-70 { width: 70%; }
+%az-width-75 { width: 75%; }
+%az-width-80 { width: 80%; }
+%az-width-85 { width: 85%; }
+%az-width-90 { width: 90%; }
+%az-width-95 { width: 95%; }
+%az-width-100 { width: 100%; }
+
+.az-tiny {
+  @include media($bp320only) { width: 20%; }
+  @include media($bp580only) { width: 15%; }
+  @include media($bp960only) { width: 10%; }
+  @include media($bp1280)    { width: 7%; }
+  @include media($bp1920)    { width: 5%; }
+}
+
+.az-small {
+  @include media($bp320only)  { width: 40%; }
+  @include media($bp580only)  { width: 30%; }
+  @include media($bp960only)  { width: 25%; }
+  @include media($bp1280only) { width: 20%; }
+  @include media($bp1920)     { width: 15%; }
+}
+
+.az-medium {
+  @include media($bp320only)  { width: 90%; margin: 0 auto; }
+  @include media($bp580only)  { width: 50%; }
+  @include media($bp960only)  { width: 40% }
+  @include media($bp1280only) { width: 30%; }
+  @include media($bp1920)     { width: 20%; }
+}
+
+.az-medium-large {
+  @include media($bp320only)  { width: 100%; }
+  @include media($bp580only)  { width: 100%; }
+  @include media($bp960only)  { width: 70%; margin: 0 auto;  }
+  @include media($bp1280only) { width: 60%; margin: 0 auto; }
+  @include media($bp1920)     { width: 50%; margin: 0 auto;  }
+}
+
+.az-large {
+  @include media($bp320only)  { width: 100%; }
+  @include media($bp580only)  { width: 100%; }
+  @include media($bp960only)  { width: 80%; margin: 0 auto;  }
+  @include media($bp1280only) { width: 70%; margin: 0 auto;  }
+  @include media($bp1920)     { width: 60%; margin: 0 auto;  }
+}
+
+.az-xlarge {
+  @include media($bp320only)  { width: 100%; }
+  @include media($bp580only)  { width: 100%; }
+  @include media($bp960only)  { width: 90%; margin: 0 auto;  }
+  @include media($bp1280only) { width: 80%; margin: 0 auto;  }
+  @include media($bp1920)     { width: 70%; margin: 0 auto;  }
+}
+
+.az-fullscreen {
+  width: 100%;
+}
+
+.az-clear {
+  clear: both;
+}
+
+.az-clear-left {
+  clear: left;
+}
+
+.az-clear-right {
+  clear: right;
+}
+
+.az-float-right {
+  float: right;
+}
+
+.az-float-left {
+  float: left;
+}
+
+.az-float-none {
+  float: none;
+}
+
+.az-inline-block {
+  display: inline-block;
+}
+
+.az-clearfix {
+  @include clearfix;
+}

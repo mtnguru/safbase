@@ -1,0 +1,243 @@
+<?php
+
+use Drupal\az_groups\AzGroupQuery;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\group\Entity\GroupContent;
+use Drupal\node\Entity\Node;
+use Drupal\group\Entity;
+use Drupal\group\Entity\Group;
+
+/**
+ * @file
+ * Contains az_groups.module.
+ */
+
+function az_groups_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'group_content_theories-group_node-book_add_form') {
+    $node = $form_state->getFormObject()->getEntity();
+  }
+  return;
+}
+
+/**
+ * Implements hook_form_TYPE_form_alter().
+ *
+ * @param $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ * @param $form_id
+ */
+function az_groups_form_node_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
+  $node = $form_state->getFormObject()->getEntity();
+  $type = $node->getType();
+  if ($type == 'article' ||
+      $type == 'book' ||
+      $type == 'news') {
+
+    $results = AzGroupQuery::findGroups([
+      'roles' => [
+        'theories-admin',
+        'theories-contributor',
+        'theories-reviewer',
+      ],
+      'member' => \Drupal::currentUser()->id(),
+      'fields' => [
+        'gfd' => ['id', 'label'],
+      ],
+      'sort' => 'label'
+    ]);
+
+    // If not a new node then add form element to select the group this item belongs to.
+    $defaults = [];
+    $gcs = [];
+    $groups = [];
+
+    if (!$node->isNew()) {
+      $gcs = GroupContent::loadByEntity($node);
+      foreach ($gcs as $key => $gc) {
+        $gid = $gc->getGroup()->id();
+        $defaults[] = $gid;
+        $groups[$gid] = $gc->id();
+      }
+    }
+
+    $form['#az_groups'] = [
+      'gcs' => $gcs,
+      'groups' => $groups,
+      'defaults' => $defaults,
+    ];
+
+    $options = [];
+    foreach ($results as $result) {
+      $options[$result->id] = $result->label;
+    }
+
+    $form['group'] = [
+      '#title' => 'Groups',
+      '#type' => 'checkboxes',
+      '#description' => 'Groups this content belongs to - normally this is set automatically when adding content from the Group home page.',
+      '#options' => $options,
+      '#weight' => 5,
+      '#default_value' => $defaults,
+    ];
+
+    $form['actions']['submit']['#submit'][] = '_az_groups_node_form_submit';
+  }
+  return;
+}
+
+function _az_groups_node_form_submit($form, FormStateInterface $form_state) {
+  $node = $form_state->getFormObject()->getEntity();
+  $gids = $form_state->getValue('group');
+
+  foreach ($gids as $gid => $selected) {
+    if ($selected) {  // If the group is selected
+      if (!empty($form['#az_groups']['groups'][$gid])) {
+        // Already in the group - don't do anything
+      }
+      else {
+        // Create a new content_entity
+        $plugin_id = 'group_node:' . $node->bundle();
+        $group = Group::load($gid);
+        $group->addContent($node, $plugin_id);
+      }
+    } else {     // If the groups in NOT selected
+      if (!empty($form['#az_groups']['groups'][$gid])) {
+        $gcid = $form['#az_groups']['groups'][$gid];
+        $storage = \Drupal::entityManager()->getStorage('group_content');
+        $group_content = $storage->load($gcid);
+        $group_content->delete();
+      }
+    }
+  }
+
+  return;
+}
+
+function az_groups_preprocess_group(&$variables) {
+
+  $group = &$variables['group'];
+  $az_wysiwyg = &drupal_static('az_wysiwyg', null);  // Save statically - used by WysiwygFilter
+  $az_wysiwyg = [
+    'group' => $group->id(),
+    'view_mode' => $variables['view_mode'],
+  ];
+
+  $block_entity = Drupal\block\Entity\Block::load('groupoperations');
+  $variables['block_groupoperations'] = \Drupal::entityTypeManager()->getViewBuilder('block')->view($block_entity);
+
+  $block_entity = Drupal\block\Entity\Block::load('azbooknavigation');
+  $variables['block_booknavigation'] = \Drupal::entityTypeManager()->getViewBuilder('block')->view($block_entity);
+
+  $variables['view_group_members'] = views_embed_view('group_members', 'group_members');
+
+  // Add trademarks for SAM.
+  _az_content_add_SAM_tm($variables['content']['field_body'][0]['body']['content']['#text']);
+
+  if (\Drupal::currentUser()->hasPermission('show unpublished book pages')) {
+    $status = [\Drupal\node\NodeInterface::PUBLISHED, \Drupal\node\NodeInterface::NOT_PUBLISHED];
+  } else {
+    $status = \Drupal\node\NodeInterface::PUBLISHED;
+  }
+
+  // Create Articles tab
+  $articles = [
+    'type' => 'entity-stream',
+    'id' => 'articles',
+    'label' => 'Articles',
+    'types' => ['article'],
+    'groups' => $group->id(),
+    'title' => 'Articles',
+    'status' => $status,
+    'empty' => 'NO DISPLAY',
+  ];
+
+  // Create Featured Content tab
+  $featured = [
+    'type' => 'entity-stream',
+    'id' => 'featured-content',
+    'label' => 'Featured',
+    'types' => ['book', 'article'],
+    'sticky' => true,
+    'groups' => $group->id(),
+    'title' => 'Featured Content',
+    'status' => $status,
+    'empty' => 'NO DISPLAY',
+  ];
+
+  // Create Book pages tab
+  $bookpages = [
+    'type' => 'entity-stream',
+    'id' => 'book-pages',
+    'label' => 'Pages',
+    'types' => ['book'],
+    'groups' => $group->id(),
+    'title' => 'Book Pages',
+    'status' => $status,
+    'empty' => 'NO DISPLAY',
+  ];
+
+  // Create Recent Comments tab
+  $comments = [
+    'type' => 'entity-stream',
+    'id' => 'recent-comments',
+    'label' => 'Comments',
+    'title' => 'Recent Comments',
+    'entityType' => 'comment',
+    'types' => ['article', 'event', 'topic', 'book', 'news'],
+    'groups' => $group->id(),
+    'empty' => 'No comments posted for this community',
+  ];
+
+  // Create Events tab
+  $events = [
+    'type' => 'entity-stream',
+    'id' => 'events',
+    'label' => 'Events',
+    'types' => 'event',
+    'groups' => $group->id(),
+    'title' => 'Upcoming Events',
+    'status' => $status,
+    'empty' => 'NO DISPLAY',
+  ];
+
+  // Create Resources tab
+  $resources = [
+    'type' => 'entity-stream',
+    'id' => 'resource',
+    'label' => 'Resources',
+    'types' => ['link', 'document', 'video'],
+    'entityType' => 'media',
+    'groups' => $group->id(),
+    'title' => 'Resources',
+    'status' => $status,
+//  'empty' => 'NO DISPLAY',
+  ];
+
+  // Create Images tab
+  $images = [
+    'type' => 'entity-stream',
+    'id' => 'image',
+    'label' => 'Images',
+    'types' => ['image'],
+    'entityType' => 'media',
+    'groups' => $group->id(),
+    'title' => 'Images',
+    'pageNumItems' => 40,
+    'status' => $status,
+    'empty' => 'NO DISPLAY',
+  ];
+
+  $variables['tabs'] = _az_content_build_tabs('main', [
+    $featured['id'] => $featured,
+    $articles['id'] => $articles,
+    $bookpages['id'] => $bookpages,
+    $comments['id'] => $comments,
+    $events['id'] => $events,
+    $resources['id'] => $resources,
+    $images['id'] => $images,
+  ]);
+
+  return;
+}
+
+

@@ -1,0 +1,14 @@
+name: AZ Glossify
+description: 'Customized version of the glossify API module to automatically create links or tooltips based on other content or taxonomy terms.'
+type: module
+package: "AZ"
+configure: 'admin/config/content/formats'
+# core: 8.x
+dependencies:
+  - filter
+
+# Information added by Drupal.org packaging script on 2017-05-15
+version: '8.x-1.x-dev'
+core: '8.x'
+project: 'az_glossify'
+datestamp: 1494861489

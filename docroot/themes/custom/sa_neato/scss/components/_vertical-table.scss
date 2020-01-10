@@ -1,0 +1,9 @@
+li.vertical-tabs__menu-item {
+  background-color: lighten($base-background-color, 10%);
+  &.is-selected  {
+     background-color: lighten($base-background-color, 30%);
+     .vertical-tabs__menu-item-title {
+       color: $base-font-color;
+     }
+  }
+}

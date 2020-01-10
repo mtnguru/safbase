@@ -1,0 +1,29 @@
+
+.az-slideOut {
+  max-height: 0;
+//@include transition-3d($duration: 1500ms);
+  overflow-y: hidden;
+}
+
+.az-hidden {
+  display: none !important;
+}
+/*
+.ui-dialog.az-dialog {
+  background: $color-controls;
+  .ui-dialog-titlebar {
+  }
+  .ui-dialog-titlebar-close {
+    color: black;
+  }
+}
+
+.ui-dialog-buttonpane .form-actions .form-submit {
+  background: $color-button;
+}
+
+
+.az-error {
+  color: red;
+}
+*/

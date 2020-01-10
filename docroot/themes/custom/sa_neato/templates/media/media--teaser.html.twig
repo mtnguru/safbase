@@ -1,0 +1,48 @@
+{#
+/**
+ * @file
+ * Default theme implementation to present a media entity.
+ *
+ * Available variables:
+ * - name: Name of the media.
+ * - content: Media content.
+ *
+ * @see template_preprocess_media()
+ *
+ * @ingroup themeable
+ */
+#}
+{% set bundle = content.name['#bundle'] %}
+<article id="node-{{ media.id }}" class="media {{ attributes.class }} {{ view_mode }} {{ 'type-' ~ bundle }}"{{ attributes }}>
+  <h3{{ title_attributes }}><a href="/media/{{ media.id }}" rel="bookmark">{{ name }}</a></h3>
+
+  <div class="information">
+    {% if state != 'published' %}
+      <span class="state {{ state|replace('_', '-') }}">{{ state|capitalize|replace('_', ' ') }}</span> -
+    {% endif %}
+    <span class="type az-fa-{{ bundle|lower|replace(' ', '-') }}">{{ bundle|capitalize }}</span> -
+    <span class="changed" title="{{ changed_ago }}">{{ changed }}</span>
+    {% if (show_author) %}
+      - <span class="author">{{ field_author }}</span>
+    {% endif %}
+  </div>
+
+  {{ kint() }}
+  {% if content.name['#bundle'] == 'image' %}
+    <div>Image</div>
+  {% elseif content.name['#bundle'] == 'video' %}
+    {{ content.field_media_video_embed_field }}
+    {{ content.field_description }}
+  {% elseif content.name['#bundle'] == 'link' %}
+    {# content.field_media_video_embed_field #}
+    {{ content.field_description }}
+  {% elseif content.name['#bundle'] == 'document' %}
+    <div class="url-container">
+      <div class="label">Open Document - </div>
+      <a href="{{ file_url }}" target="_blank">{{ file_name }}</a>
+    </div>
+    {{ content.field_description }}
+  {% else %}
+    <div>Unknown media bundle - {{ bundle }}</div>
+  {% endif %}
+</article>

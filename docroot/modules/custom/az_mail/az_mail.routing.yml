@@ -1,0 +1,7 @@
+az_mail.description:
+  path: 'az_mail'
+  defaults:
+    _form: '\Drupal\az_mail\Form\AzMailContactForm'
+  requirements:
+    _permission: 'access content'
+

@@ -1,0 +1,10 @@
+services:
+  az_theme.twig_extension:
+    arguments: ['@renderer']
+    class: Drupal\az_theme\TwigExtension\AzTwig
+    tags:
+      - { name: twig.extension }
+  theme.negotiator.az_theme:
+    class: Drupal\az_theme\Theme\AzThemeNegotiator
+    tags:
+      - { name: theme_negotiator, priority: 10 } 

@@ -1,0 +1,112 @@
+.block-recent-content {
+
+  .views-row {
+    clear: both;
+    padding: rem(15) 0 rem(5);
+    position: relative;
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: rem(-10);
+      left: 0;
+      right: 0;
+      border-top: 1px solid $base-separator-color;
+    }
+
+    &:first-child {
+      padding-top: 0;
+
+      &:after {
+//      border: 0;
+      }
+    } // &:first-child
+
+    &:last-child {
+      padding-bottom: 0;
+    } // &:last-child
+  } // .views-row
+
+  .teaser-container {
+
+    .changed-container {
+      margin-bottom: 5px;
+      @include clearfix;
+
+      .changed {
+        color: $base-date-color;
+        font-size: .90em;
+        font-style: italic;
+        padding-right: 20px;
+      } // .changed
+    }
+
+    .header-container {
+      vertical-align: top;
+      display: inline-block;
+      margin-bottom: 10px;
+
+      .author-picture {
+        float: left;
+        padding-right: 20px;
+
+        img {
+          display: block;
+          border-radius: 25%;
+        } // img
+      } // .author
+
+      .author-container {
+        float: left;
+
+        .author-name {
+          line-height: 1.2;
+        } // .author-name
+
+        .author-title {
+          color: $base-date-color;
+          font-size: 80%;
+        } // .author-title
+      } // .author.body
+    } // .header-container
+
+    .body-container {
+      @include clearfix;
+      clear: both;
+      vertical-align: top;
+      min-height: 150px;
+
+      h3 {
+        font-size: 1.8em;
+        margin-bottom: rem(10);
+
+        a {
+          color: $color-green;
+        }
+      } // h3
+
+      .media {
+        display: inline-block;
+        float: right;
+
+        img {
+          height: auto;
+          border-radius: $base-border-radius;
+          margin: 0 0 1em 1.2em;
+        } // img
+      } // .image
+
+      .short-description {
+//      float: left;
+      } // .short-description
+
+      .body {
+      } // .body
+    } // .text-container
+  } // .teaser-container
+
+  .more-link {
+    padding: .5em 3em .5em 0;
+    font-size: 90%;
+  }
+} // .view-group-content

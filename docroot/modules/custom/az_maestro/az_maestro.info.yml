@@ -1,0 +1,5 @@
+name: AZ Maestro
+type: module
+description: JavaScript program that is the main dashboard
+core: 8.x
+package: AZ

@@ -1,0 +1,19 @@
+.sidebar {
+
+  .teaser {
+
+    .teaser-image {
+      display: inline-block;
+      img {
+        width: 40px;
+        height: auto;
+        border-radius: $base-border-radius;
+      }
+    } // .teaser-image
+
+    .teaser-body {
+      display: inline-block;
+      vertical-align: top;
+    } // .teaser-body
+  } // .teaser
+} // .sidebar

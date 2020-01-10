@@ -1,0 +1,68 @@
+global-styling:
+  version: VERSION
+  css:
+    base:
+      css/sa_neato.css: {}
+  dependencies:
+    - lightning_media/browser.styling
+    
+
+global-scripts:
+  version: VERSION
+  js:
+#   js/scripts.js: {}
+    js/js-src/menuTop.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/jquery.once
+    - core/jquery.tooltip
+
+left-nav:
+  js:
+    js/js-src/leftNav.js: {}
+  dependencies:
+    - sa_neato/mediaquery
+     
+mediaquery:
+  js:
+    bower_components/formstone/dist/js/mediaquery.js: {}
+    js/initMediaQuery.js: {}
+  dependencies:
+    - core/underscore
+    - sa_neato/html5_enabler
+    - sa_neato/matchmedia_polyfill
+    - sa_neato/formstone
+    - sa_neato/custom_event
+
+formstone:
+  js:
+    bower_components/formstone/dist/js/core.js: {}
+  dependencies:
+    - core/jquery
+
+html5_enabler:
+  js:
+    js/html5Enabler.js: {}
+
+matchmedia_polyfill:
+  js:
+    js/matchMedia.js: {}
+
+custom_event:
+  js:
+    js/customEvent.js: {}
+
+menu:
+  js:
+    js/js-src/menu.js: {}     
+
+form:
+  js:
+    js/js-src/form.js: {}
+
+
+swiftmailer:
+  css:
+    base:
+      css/sa_mail.css: {}

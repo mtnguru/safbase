@@ -1,0 +1,19 @@
+<footer id="site-footer" role="contentinfo">
+  <div id="footer-wrapper">
+  {#<div class="terms"><a href="/terms-of-use">Terms of Use</a></div> #}
+    <div class="contact"><a href="/contact">Contact us</a></div>
+    <div class="copyright">Copyright All Rights Reserved <span class="az-fa-copyright"></span>2018 by Ethereal Matters, LLC</div>
+    {# if page.footer_top %}
+      <section class="footer-top">
+        {{ page.footer_top }}
+      </section>
+    {% endif %}
+
+    {% if page.footer_bottom %}
+      <section class="footer-bottom">
+        {{ page.footer_bottom }}
+      </section>
+    {% endif #}
+  </div>
+</footer>
+

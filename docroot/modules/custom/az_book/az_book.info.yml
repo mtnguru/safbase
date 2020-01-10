@@ -1,0 +1,5 @@
+name: AZ Book
+type: module
+description: Modify book menus and content
+core: 8.x
+package: AZ

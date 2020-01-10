@@ -1,0 +1,5 @@
+name: AZ WYSIWYG
+description: 'Add custom markup to ckeditor for footnotes, topics and page breaks.'
+core: 8.x
+package: AZ
+type: module

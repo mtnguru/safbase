@@ -1,0 +1,435 @@
+<?php
+
+/**
+ * @file
+ * Contains az_mail.module.
+ * Handles all emailing of notifications to users of new content and group emails.
+ * Article Insert
+ */
+use Drupal\az_user\CreateUserList;
+use Drupal\comment\Entity\Comment;
+use Drupal\Component\Render\HtmlEscapedText;
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Markup;
+use Drupal\node\Entity\Node;
+
+/**
+ * Remove site roles from list of roles.
+ * Set send email widget to false.
+ *
+ * @param $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ * @param $form_id
+ */
+function _az_mail_email_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Remove site roles from list of roles - Leave group roles.
+  foreach ($form['field_group_roles']['widget']['#options'] as $key => $option) {
+    if ($key == 'theories-administrator' ||
+        $key == 'theories-anonymous' ||
+        preg_match('/\\d/', $key) > 0 ) {   // look for keys with digits - they are site roles
+      unset($form['field_group_roles']['widget']['#options'][$key]);
+    }
+  }
+
+  // Set send email on save to false.
+  $form['field_send_email']['widget']['value']['#default_value'] = false;
+/*$form['send_email'] = [
+    '#type' => 'checkbox',
+    '#title' => 'Send email on save',
+    '#default_value' => false,
+    '#weight' => 10,
+  ]; */
+
+//$form['actions']['submit']['#submit'][] = '_az_mail_node_submit';
+}
+
+function az_mail_form_node_email_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  _az_mail_email_form_alter($form, $form_state, $form_id);
+}
+
+function az_mail_form_node_email_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  _az_mail_email_form_alter($form, $form_state, $form_id);
+}
+
+function _az_mail_node_submit(&$form, FormStateInterface $form_state) {
+  return;
+}
+
+/**
+ * Implements HOOK_mail().
+ */
+function az_mail_mail($key, &$message, $params) {
+
+  $options = [
+    'langcode' => $message['langcode'],
+  ];
+
+  switch ($key) {
+    case 'page_mail':
+      // Contact form does not call hook_mail - WTF?
+      break;
+
+    case 'email_presave':
+    case 'comment_presave':
+    case 'user_presave':
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['subject'] = t('[Ethereal Matters] @subject', array('@subject' => $params['subject']), $options);
+      $message['body'][] = Markup::create($params['message']);
+      $message['headers']['Content-Type'] = SWIFTMAILER_FORMAT_HTML;
+      break;
+  }
+  return;
+}
+
+/**
+ * Implements hook_mail_alter().
+ *
+ * This function is not required to send an email using Drupal's mail system.
+ *
+ * hook_mail_alter() provides an interface to alter any aspect of email sent by
+ * Drupal. You can use this hook to add a common site footer to all outgoing
+ * email, add extra header fields, and/or modify the email in anyway. HTML-izing
+ * the outgoing email is one possibility.
+ */
+function az_mail_mail_alter(&$message) {
+  // For the purpose of this example, modify all the outgoing messages and
+  // attach a site signature. The signature will be translated to the language
+  // in which message was built.
+
+  $options = [
+    'langcode' => $message['langcode'],
+  ];
+
+  switch ($message['key']) {
+    // Send a simple message from the contact form.
+    case 'page_mail':
+      // Since user-entered text may have unintentional HTML entities in it like
+      // '<' or '>', we need to make sure these entities are properly escaped,
+      // as the body will later be transformed from HTML to text, meaning
+      // that a normal use of '<' will result in truncation of the message.
+//    $message['body'][] = SafeMarkup::checkPlain($params['message']);
+//    $message['body'][] = HtmlEscapedText($params['message']);
+//    $message['body'][] = $params['message'];
+
+      // Note that the message body is an array, not a string.
+//    $account = \Drupal::currentUser();
+//    $message['body'][] = t('@name sent you the following message:', ['@name' => $account->getUsername()], $options);
+      $from = \Drupal::config('system.site')->get('mail');
+      $message['body'][0] = $message['params']['contact_message']->message->value;
+      $message['body'][] = t('E-mail sent from @site-name', ['@site-name' => $from], $options);
+      $message['headers']['Content-Type'] = SWIFTMAILER_FORMAT_PLAIN;
+
+      break;
+    case 'email_presave':
+      break;
+  }
+
+  $signature = '<div class="signature">Mail sent from <a href="https://etherealmatters.org">Ethereal Matters</a></div>';
+  if (is_array($message['body'])) {
+    $message['body'][] = Markup::create($signature);
+  }
+  else {
+    $message['body'] .= $signature;
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ *
+ * Send an email to Ninjas when a new user is created.
+ *
+ * @param \User $user
+ */
+function az_mail_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
+
+////////// Send email to ninjas only
+
+  $ninjaUids = \Drupal::entityQuery('user')
+    ->condition('status', 1)
+    ->condition('roles', 'ninja')
+    ->execute();
+
+  if ($entity->getEntityTypeId() == 'user' && empty($ninjaUids[$entity->id()])) {
+    foreach ($ninjaUids as $uid) {
+      $params['subject'] = t('A new user has been created.');
+
+      $params['message'] = <<<BODY
+<div class="user-name">Username: <a href="#" class="user-link">{$entity->name->value}</a></div>
+<div class="user-name">Name: {$entity->field_first_name->value} {$entity->field_last_name->value}</div>
+<div class="user-name">Location: {$entity->field_descriptive_location->value}</div>
+<hr>
+BODY;
+
+      // Send mail
+      $ninja = \Drupal\user\Entity\User::load($uid);
+      _az_mail_send_mail('user_presave', $ninja, $params);
+    }
+  }
+}
+
+/**
+ * Implements HOOK_node_presave().
+ *
+ * Send email when node is saved
+ *   email - build recipient list from checkboxes
+ *   article, book, event, ticket - send email to those with 'ninja' role.
+ **/
+function az_mail_node_presave(Node $node) {
+  switch ($node->bundle()) {
+    case 'email':
+      $set = ['email_new_content' => 'immediate'];
+      if ($values = $node->field_roles->getValue()) {
+        foreach ($values as $value) {
+          $set['role'][] = $value['target_id'];
+        }
+      }
+      if ($values = $node->field_groups->getValue()) {
+        foreach ($values as $value) {
+          $set['group_member'][] = $value['target_id'];
+        }
+      }
+      if ($values = $node->field_group_roles->getValue()) {
+        foreach ($values as $value) {
+          $set['group_role'][] = $value['target_id'];
+        }
+      }
+
+      $recipients = CreateUserList::queryUsers($set);
+
+      // Set the subject line
+      $params['subject'] = $node->title->value;
+
+      $mailit = $node->field_send_email->value;
+      if ($mailit) {
+        $fullmessage = "Sending mail to the following:\n";
+      } else {
+        $fullmessage = "No mail will be sent - mailing list:\n";
+      }
+      drupal_set_message($fullmessage);
+      $n = 0;
+      foreach ($recipients as $recipient) {
+        $n++;
+        $message = '';
+        $user = \Drupal\user\Entity\User::load($recipient->uid);
+        $resetlink = '<a href="' . user_pass_reset_url($user) . '">by clicking here</a>';
+        $body = $node->get('body')->value;
+        $body = preg_replace('/\$username/', $recipient->name, $body);
+        $body = preg_replace('/\$firstname/', $user->field_first_name->value, $body);
+        $body = preg_replace('/\$lastname/', $user->field_last_name->value, $body);
+        $body = preg_replace('/\$user_reset/', $resetlink, $body);
+        $params['message'] = $body;
+
+        /*  // To prevent email from looking like spam, the addresses in the Sender and
+            // Return-Path headers should have a domain authorized to use the
+            // originating SMTP server.
+            $headers['Sender'] = $headers['Return-Path'] = $site_mail;
+            $headers['From'] = $site_config->get('name') . ' <' . $site_mail . '>';
+            if ($reply) {
+              $headers['Reply-to'] = $reply;
+            } */
+
+        if ($mailit) {
+          $user = \Drupal\user\Entity\User::load($recipient->uid);
+          _az_mail_send_mail('email_presave', $user, $params);
+        }
+        else {
+          $message .= t('@name - @email - @id', [
+              '@name' => $recipient->name,
+              '@email' => $recipient->mail,
+              '@id' => $recipient->uid
+            ]) . "\n";
+          drupal_set_message($message);
+        }
+      }
+
+      \Drupal::logger('az_mail')->notice($fullmessage);
+      break;
+
+    case 'article':
+    case 'book':
+    case 'event':
+    case 'ticket':
+      $author = \Drupal\user\Entity\User::load($node->getOwnerId());
+
+      ////////// Send email to ninjas
+
+      $ninjaUids = az_user_get_users_with_permission('receive new content notifications');
+
+      if (empty($ninjaUids[$node->getOwnerId()])) { // Only send if author is not a ninja
+        foreach($ninjaUids as $uid => $record) {
+          $params['subject'] = t('A new page has been posted');
+
+          $params['message'] = <<<BODY
+<p>Author: <span class="author-name">{$author->label()}</span><br>
+Status: <span class="status">{$node->moderation_state->value}</span></p>
+<div class="article-title"><a href="#" class="article-link">{$node->label()}</a></div>
+{$node->body->value}
+<hr>
+BODY;
+          // Send mail
+          $ninja = \Drupal\user\Entity\User::load($uid);
+          _az_mail_send_mail('comment_presave', $ninja, $params);
+        }
+      }
+      break;
+  }
+  return;
+}
+
+function _az_mail_send_mail($source, $recipient, $params) {
+
+  $result = \Drupal::service('plugin.manager.mail')->mail(
+    'az_mail',
+    $source,
+    $recipient->getEmail(),
+    $recipient->getPreferredLangcode(),
+    $params,
+    NULL,
+    TRUE);
+  $message = ($result['result'] === true) ? 'Success - ' : 'Failed - ';
+
+  $name = $recipient->getUsername();
+  $mail = $recipient->getEmail();
+  $id = $recipient->uid;
+
+  if (\Drupal::currentUser()->hasPermission('show email log messages')) {
+    $message .= t('@name - @email - @id', [
+        '@name' => $recipient->getUsername(),
+        '@email' => $recipient->getEmail(),
+        '@id' => $recipient->id(),
+      ]) . "\n";
+    drupal_set_message($message);
+    \Drupal::logger('az_mail')->notice($message);
+  }
+}
+
+/**
+ * Implements HOOK_entity_presave().
+ *
+ */
+function az_mail_entity_presave(EntityInterface $entity) {
+  return;
+}
+
+/**
+ * Implements HOOK_entity_update().
+ *
+ */
+function az_mail_entity_update(EntityInterface $entity) {
+  return;
+}
+
+/**
+ * Implement HOOK_comment_presave().
+ *
+ * @param \Drupal\comment\Entity\Comment $comment
+ */
+function az_mail_comment_presave(Comment $comment) {
+
+  $commenter = \Drupal\user\Entity\User::load($comment->getOwnerId());
+  $commenterUrl = $commenter->toUrl()->setAbsolute()->toString();
+
+  ////////// Send email to article author
+
+  $articleId = $comment->get('entity_id')->getValue()[0]['target_id'];
+  $article = Node::load($articleId);
+  $articleUrl = $article->toUrl()->setAbsolute()->toString();
+
+  // Load the articles author
+  $aauthor = \Drupal\user\Entity\User::load($article->getOwnerId());
+
+  $params['subject'] = t('A comment has been posted to your article');
+
+  $params['message'] = <<<BODY
+<div class="article-title"><a href="{$articleUrl}" class="article-link">{$article->label()}</a></div>
+<hr>
+<p>Comment Author: <a href="{$commenterUrl}" class="author-link"><span class="author-name">{$comment->getAuthorName()}</span></a></p>
+{$comment->comment_body->value}
+<hr>
+BODY;
+
+  // Send mail
+  _az_mail_send_mail('comment_presave', $aauthor, $params);
+
+  ////////// Send email to other commenters
+
+  /*
+  $cids = \Drupal::entityQuery('comment')
+    ->condition('entity_id', $articleId)
+    ->condition('entity_type', 'node')
+    ->sort('cid', 'DESC')
+    ->execute();
+
+  $uids = [];
+  foreach($cids as $cid) {
+    $ocomment = Comment::load($cid);
+    $uid = $ocomment->getOwnerId();
+    if ($uid != $aauthor && $uid != $comment->getOwnerId()) {
+      $uids[$uid] = $uid;
+    }
+  }
+
+  foreach($uids as $uid) {
+    $params['subject'] = t('A new comment has been posted to an article you commented on');
+
+    $params['message'] = <<<BODY
+<div class="article-title"><a href="{$articleUrl}" class="article-link">{$article->label()}</a></div>
+<hr>
+<p>Comment Author: <span class="author-name">{$comment->getAuthorName()}</span></p>
+{$comment->comment_body->value}
+<hr>
+BODY;
+
+    // Send mail
+    $user = \Drupal\user\Entity\User::load($uid);
+    _az_mail_send_mail('comment_presave', $user, $params);
+  }
+  */
+
+  ////////// Send email to ninjas
+
+  $ninjaUids = \Drupal::entityQuery('user')
+    ->condition('status', 1)
+    ->condition('roles', 'ninja')
+    ->execute();
+  foreach($ninjaUids as $uid) {
+    if ($uid == $article->getOwnerId() || !empty($uids[$uid])) continue;
+
+    $params['subject'] = t('A new comment has been posted');
+
+    $params['message'] = <<<BODY
+<div class="article-title"><a href="{$articleUrl}" class="article-link">{$article->label()}</a></div>
+<hr>
+<p>Comment Author: <span class="author-name">{$comment->getAuthorName()}</span></p>
+{$comment->comment_body->value}
+<hr>
+BODY;
+
+    // Send mail
+    $user = \Drupal\user\Entity\User::load($uid);
+    _az_mail_send_mail('comment_presave', $user, $params);
+  }
+}
+
+/**
+ * Implements HOOK_media_presave().
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ */
+function az_mail_media_presave(EntityInterface $entity) {
+  return;
+}
+
+/**
+ * Implements HOOK_file_presave().
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ */
+function az_mail_file_presave(EntityInterface $entity) {
+  return;
+}
+
+

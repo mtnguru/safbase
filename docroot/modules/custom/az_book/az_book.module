@@ -1,0 +1,56 @@
+<?php
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
+
+
+/**
+ * Implements hook_theme().
+ */
+function az_book_theme() {
+  return [
+    'az_book_navigation' => [
+      'variables' => [
+        'book_title' => '',
+        'book_url' => '',
+        'book_pages' => [],
+        'book_id' => '',
+        'book_title_classes' => false,
+        'group_id' => '',
+        'group_name' => '',
+        'group_url' => '',
+        'group_logo_url' => false,
+        'group_links' => false,
+        'hide_unpublished' => false,
+        'misc_links' => false,
+        'status' => false,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for node entities.
+ *
+ * Kludge to prevent a node from having it's book link created twice which
+ * creates an error.
+ *
+ * Attempt to find why this happens, no luck. It may be related to the
+ * workflow module. A clean lightning install does not have the problem.
+ */
+function az_book_node_insert(EntityInterface $node) {
+  // Set a flag that the node is inserted. check for this flag in az_book_node_update().
+    $node->azInserted = true;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for node entities.
+ */
+function az_book_node_update(EntityInterface $node) {
+  /** @var \Drupal\book\BookManagerInterface $book_manager */
+  if ($node->azInserted != null) {
+    $node->book['bid'] = null;  // Tells BookManager.php - updateOutline() not to create
+                                // a book link. It was created in book_node_insert.
+  }
+}

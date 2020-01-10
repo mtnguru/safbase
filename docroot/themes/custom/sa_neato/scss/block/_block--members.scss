@@ -1,0 +1,27 @@
+.block-members {
+
+  table {
+    margin: 0;
+
+    .views-field-created {
+    }
+
+    td {
+      font-size: 85%;
+      padding: .5em;
+      &:first-child {
+        padding-left: 0;
+      }
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+
+    th {
+      padding: .5em;
+      a{
+        color: $color-title;
+      }
+    }
+  } // table
+} // #block-views-block-group-members-group-members

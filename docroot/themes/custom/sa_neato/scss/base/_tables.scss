@@ -1,0 +1,49 @@
+table {
+  border-collapse: collapse;
+  font-feature-settings: "kern", "liga", "tnum";
+  margin: $small-spacing auto $base-spacing;
+  table-layout: auto;
+  width: 100%;
+  line-height: 1.2;
+
+  caption {
+    font-size: 120%;
+    padding: 10px 0;
+    color: $color-light-title;
+
+  }
+}
+
+th {
+  border-bottom: 1px solid shade($base-border-color, 25%);
+  font-weight: 600;
+  padding: $small-spacing 0;
+  text-align: left;
+}
+
+td {
+  border-bottom: $base-border;
+  padding: $small-spacing 0;
+  article {
+    p {
+      margin: 0;
+    }
+  }
+  &.selected {
+
+  }
+}
+
+tr {
+  &.selected  {
+    td.views-field {
+      background: $table-selected-background;
+    }
+  }
+}
+
+tr,
+td,
+th {
+  vertical-align: middle;
+}

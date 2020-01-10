@@ -1,0 +1,62 @@
+.az-page {
+  div.content-stream {
+
+    ////////////////////// teaser
+    &.teaser {
+
+      > .title-container {
+        border-bottom: 2px solid $base-separator-color;
+        h2 {
+          padding: 10px 0;
+          margin: 0;
+        }
+      }
+
+      .az-row {
+        padding: 15px 0;
+        border-bottom: 1px solid $base-separator-color;
+      }
+    }
+
+    ////////////////////// teaser-short
+    &.teaser-short {
+
+      .az-row {
+        padding: 10px 0;
+
+        border-bottom: 1px solid $base-separator-color;
+        &:not(:last-child) {
+          //      border-bottom: 1px solid $base-separator-color;
+        }
+      }
+    }
+
+    &.teaser {
+      .more-container.all {
+        min-height: 50px;
+      }
+    }
+  }
+
+  .more-container {
+    text-align: center;
+    position: relative;
+
+    input {
+      margin: 20px auto;
+    }
+
+    .status-container {
+      font-size: 75%;
+      padding: 0 10px;
+      background-color: $base-background-color;
+      color: $color-turquoise;
+      border: 1px solid $base-separator-color;
+      border-radius: 8px;
+      position: absolute;
+      right: 0;
+      margin: 0 auto;
+      top: -8px;
+    }
+  }
+}

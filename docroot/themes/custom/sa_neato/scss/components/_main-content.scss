@@ -1,0 +1,146 @@
+span.marker {
+  color: #f59;
+}
+
+article.az-page.full {
+  .field--name-name {
+    font-weight: bold;
+    margin-top: 10px;
+    color : tint($color-title, 50%);
+  }
+  .field--name-field-description {
+    font-style: italic;
+    margin: 10px 0;
+    text-align: left;
+    margin-top: 10px;
+    font-size: 90%;
+  }
+
+  .field--name-field-media {
+    text-align: center;
+    margin-bottom: 20px;
+
+    img {
+      margin: 0 auto;
+    }
+  }
+}
+
+.main-container {
+
+  .header-container {
+    @include clearfix;
+
+    .header {
+
+      .new {
+        display: inline-block;
+        margin-left: 3em;
+      }
+
+      .changed {
+        color: $base-date-color;
+        font-size: .90em;
+        font-style: italic;
+      } // .changed
+
+      .title {
+        margin: 0 0 5px;
+      }
+
+      .information {
+        margin-bottom: 10px;
+      }
+    }
+
+    .block-right {
+      line-height: 1.2em;
+      float: right;
+      width: 255px;
+
+      .topics {
+        float: right;
+        margin-bottom: 20px;
+
+        .field__items {
+          width: 150px;
+          padding-right: 0;
+        }
+        .field__item {
+          padding: 0 0 .2em;
+          a {
+            color: $color-topic;
+          }
+        }
+      }
+    }
+
+    .field--name-field-social-media {
+      clear: both;
+      float: right;
+      margin-bottom: 15px;
+
+      ul {
+        margin: 5px 0 0;
+      }
+      li {
+        margin-right: 0;
+        margin-left: 5px;
+        padding: 0;
+      }
+
+      img {
+        width: 25px;
+      }
+
+      .field__label {
+        text-align: center;
+        float: none;
+      }
+    }
+  }
+
+  .body-container {
+    @include clearfix;
+    clear: both;
+    vertical-align: top;
+//  min-height: 150px;
+    margin-bottom: 20px;
+
+//  h3 {
+//    font-size: 1.8em;
+//    margin-bottom: rem(10);
+//  } // h3
+
+    .article-link {
+      margin-bottom: 20px;
+    }
+
+    .field--name-field-media {
+      clear: both;
+
+      .media {
+//      margin-bottom: .5em;
+      } // .image
+    }
+
+
+    .short-description {
+      //      float: left;
+    } // .short-description
+  } // .body-container
+
+  .node__links {
+    @include clearfix;
+
+    ul {
+      margin: 0;
+      float: right;
+
+      .inline li {
+        padding: 0 20px 0 0;
+      }
+    }
+  }
+} // .main-container
+

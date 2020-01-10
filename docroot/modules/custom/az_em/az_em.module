@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Contains az_em.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function az_em_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the az_em module.
+    case 'help.page.az_em':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Ethereal Matters site specific code') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function az_em_theme() {
+  return [
+    'az_em' => [
+      'render element' => 'children',
+    ],
+  ];
+}

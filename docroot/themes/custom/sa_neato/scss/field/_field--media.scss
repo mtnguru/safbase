@@ -1,0 +1,84 @@
+.field--name-field-media {
+
+  margin-bottom: 20px;
+//text-align: center;
+
+  > article {
+    margin: 0 auto !important;
+  }
+
+
+  >.az-image {
+    float: none;
+  }
+
+  >.az-view-mode-media-small,
+  >.az-view-mode-media-small-w-desc {
+    @include media($bp320only) {
+      width: 90%;
+    } // $bp320only
+
+    @include media($bp580only) {
+      width: 80%;
+    } // $bp580only
+
+    @include media($bp960only) {
+      width: 70%;
+      float: none;
+    } // $bp960only
+
+    @include media($bp1280only) {
+      width: 60%;
+    } // $bp1280only
+
+    @include media($bp1920) {
+      width: 50%;
+    } // $bp1920
+  }
+
+  >.az-view-mode-media-medium,
+  >.az-view-mode-media-medium-w-desc {
+    @include media($bp320only) {
+      width: 80%;
+    } // $bp320only
+
+    @include media($bp580only) {
+      width: 70%;
+    } // $bp580only
+
+    @include media($bp960only) {
+      width: 50%;
+    } // $bp960only
+
+    @include media($bp1280only) {
+      width: 33%;
+    } // $bp1280only
+
+    @include media($bp1920) {
+      width: 25%;
+    } // $bp1920
+  }
+
+  >.az-view-mode-media-large,
+  >.az-view-mode-media-large-w-desc {
+    @include media($bp320only) {
+      width: 90%;
+    } // $bp320only
+
+    @include media($bp580only) {
+      width: 90%;
+    } // $bp580only
+
+    @include media($bp960only) {
+      width: 80%;
+    } // $bp960only
+
+    @include media($bp1280only) {
+      width: 70%;
+    } // $bp1280only
+
+    @include media($bp1920) {
+      width: 60%;
+    } // $bp1920
+  }
+}

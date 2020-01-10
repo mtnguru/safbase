@@ -1,0 +1,21 @@
+{
+  "name": "juilliard",
+  "description": "Juilliard",
+  "main": "",
+  "license": "MIT",
+  "homepage": "https://www.juilliard.edu",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "formstone": "^1.3.0",
+    "gsap": "^1.19.0",
+    "html5shiv": "^3.7.3",
+    "scrollmagic": "^2.0.5",
+    "swiper": "^3.4.0"
+  }
+}

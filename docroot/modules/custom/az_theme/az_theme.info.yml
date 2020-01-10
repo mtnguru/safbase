@@ -1,0 +1,5 @@
+name: AZ Theme
+type: module
+description: Sets themes and adds some Twig Utilities
+core: 8.x
+package: AZ

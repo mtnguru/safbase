@@ -1,0 +1,5 @@
+name: AZ Domains
+type: module
+description: Enhance functionality of the Domain Modules
+core: 8.x
+package: AZ

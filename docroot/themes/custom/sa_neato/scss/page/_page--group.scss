@@ -1,0 +1,54 @@
+body.entity-group-canonical {
+
+  .content-container h1.page-title {
+    display: none;
+  }
+
+  #home {
+    .content-container {
+      > div > h2 {
+        display: none;
+      }
+    }
+  }
+  #main-content-group {
+    @include clearfix;
+
+    .sidebar-left {
+
+      @include media(max-width $bp580) {
+        width: 100%;
+      }
+
+      @include media($bp960) {
+        float: left;
+        width: 325px;
+        padding-right: 40px;
+      }
+    }
+
+    .main-content {
+      position: relative;
+
+      @include media(max-width $bp580) {
+        width: 100%;
+      }
+      @include media($bp960) {
+        float: left;
+        width: calc(100% - 325px);
+      }
+    }
+  }
+
+  article.teaser {
+    .group-container {
+      display: none;
+    }
+  }
+}
+
+body.page-node-type-atomizer {
+  main.outer-wrapper {
+    max-width: none;
+  }
+}

@@ -1,0 +1,6 @@
+az content query args:
+  title: 'AZ Content Query Args'
+  description: 'Allow user to override any of the query argument in URL'
+az content view tickets:
+  title: 'AZ Content View Tickets'
+  description: 'View tickets'

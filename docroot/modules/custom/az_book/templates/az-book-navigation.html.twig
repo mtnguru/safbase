@@ -1,0 +1,102 @@
+{#
+/**
+ * @file
+ * Default theme implementation for rendering book outlines within a block.
+ *
+ * This template is used only when the block is configured to "show block on all
+ * pages", which presents multiple independent books on all pages.
+ *
+ * Available variables:
+ * - book_menus: Book outlines.
+ *   - id: The parent book ID.
+ *   - title: The parent book title.
+ *   - menu: The top-level book links.
+ *
+ * @see template_preprocess_book_all_books_block()
+ *
+ * @ingroup themeable
+ */
+#}
+{{ attach_library('sa_neato/menu') }}
+
+<nav role="navigation" aria-label="{% trans %}Book outline for {{ title }}{% endtrans %}">
+  {% macro buildMenu(page) %}
+    {% import _self as self %}
+    <li class="{{ page.class }}">{{ page.link }}
+
+      {% if page.children|length %}
+        <div class="list-wrapper">
+          <ul>
+            {% for child in page.children %}
+              {{ self.buildMenu(child) }}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </li>
+  {% endmacro %}
+
+  {% from _self import buildMenu %}
+
+  <div class="title-container">
+    <div class="group-logo"><a href="{{ group_url }}"><img src="{{ group_logo_url }}"></a></div>
+    {{ title_prefix }}
+    {% if group_name %}
+      {% if group_name == 'Structured Atom Model' %}
+        <h2 {{ title_attributes }}><a href="{{ group_url }}">{{ group_name }}<span class="trademark az-fa-trademark"></span></a></h2>
+      {% else %}
+        <h2 {{ title_attributes }}><a href="{{ group_url }}">{{ group_name }}</a></h2>
+      {% endif %}
+    {% endif %}
+    {{ title_suffix }}
+  </div>
+
+  <div class="body-container">
+    {% if group_links %}
+      <div id="group-links">
+        {{ group_links }}
+      </div>
+      <hr>
+    {% endif %}
+
+    {% if book_title %}
+      <div id="book-title">
+        <a class="{{ book_title_classes }}" href="{{ book_url }}">{{ book_title|raw }}</a>
+        {% if hide_unpublished %}
+          <div id="book-buttons">
+            <div title="Show unpublished pages" id="book-show-all" class="fa fa-bolt"></div>
+            <div title="Edit book page titles and order" id="book-edit">
+              <a href="{{ '/admin/structure/book/' ~ book_id }}" class="fa fa-book"></a>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      {% if book_pages %}
+        <div id="book-pages" class="hide-unpublished">
+          <ul>
+            {% for page in book_pages %}
+              {# kint(page) #}
+              {{ buildMenu(page) }}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+      <hr>
+    {% endif %}
+
+    {% if status is not empty %}
+      <div id="book-status">
+        {{ status|raw }}
+      </div>
+      <hr>
+    {% endif %}
+
+    {% if misc_links %}
+      <div id="misc-links">
+        {{ misc_links }}
+      </div>
+    {% endif %}
+  </div>
+
+</nav>

@@ -1,0 +1,31 @@
+.views-field-field-picture {
+
+  .image-style-user-tiny {
+    width: 36px;
+    height: auto;
+    border-radius: 25%;
+    display: block;
+  }
+}
+
+.text-formatted {
+  figure {
+    &.align-left {
+      margin: 0 2em 1em 0;
+    }
+    &.align-right {
+      margin: 0 0 1em 2em;
+    }
+    .field--name-image {
+      margin-bottom: .5em;
+    }
+    figcaption {
+      text-align: center;
+      font-style: italic;
+    }
+
+    img {
+      border-radius: $base-border-radius;
+    }
+  }
+}

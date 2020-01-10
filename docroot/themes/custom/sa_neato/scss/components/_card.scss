@@ -1,0 +1,113 @@
+#az-page-upcoming-events {
+
+  .page-content {
+    margin: 0 -10px;
+  }
+
+  .stream-container.card {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+
+    .az-row {
+//    padding-bottom: 99999px;
+//    margin-bottom: -99999px;
+//    float: left;
+
+      @include media($bp320only) {
+        width: 100%;
+      }
+      // $bp320only
+
+      @include media($bp580only) {
+        width: 100%;
+      }
+      // $bp580only
+
+      @include media($bp960only) {
+        width: 50%;
+      }
+      // $bp960
+
+      @include media($bp1280) {
+        width: 49.5%;
+      }
+      // $bp1280
+
+      @include media($bp1920) {
+        width: 33%;
+      }
+      // $bp1920
+
+      > article {
+        margin: 10px;
+        border: 1px solid $color-border;
+        padding: 20px;
+        background-color: lighten($color-dark-blue, 15%);
+        border-radius: 8px;
+        @extend %box-shadow;
+
+        h2 {
+          font-size: 136%;
+        }
+
+        .field--name-field-event-date {
+          .field__item {
+            display: inline-block;
+            padding-top: 3px;
+          }
+          time {
+            font-style: italic;
+            line-height: 1.1;
+            display: block;
+          }
+        }
+        p
+        .field--name-field-location {
+          font-weight: bold;
+        }
+
+        .field--name-body {
+          margin-top: 15px;
+        }
+
+        .field--name-field-website-link {
+          border-top: 1px solid $color-border;
+          background-color: lighten($color-dark-blue, 7.5%);
+          margin: 20px -20px -20px;
+          padding: 10px 0;
+          text-align: center;
+          font-weight: bold;
+          border-bottom-left-radius: 8px;
+          border-bottom-right-radius: 8px;
+        }
+
+        .node__links {
+          display: none;
+        }
+      }
+    }
+
+  }
+
+  .more-container {
+    display: none;
+  }
+
+  @include media($bp320only) {
+  }
+  // $bp320only
+
+  @include media($bp580only) {
+  }
+  // $bp580only
+
+  @include media($bp960only) {
+  }
+  // $bp960
+
+  @include media($bp1280) {
+  }
+  // $bp1280
+
+}

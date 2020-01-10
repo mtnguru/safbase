@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Default theme implementation to present a media entity.
+ *
+ * Available variables:
+ * - name: Name of the media.
+ * - content: Media content.
+ *
+ * @see template_preprocess_media()
+ *
+ * @ingroup themeable
+ */
+#}
+<article{{ attributes.addClass('az-image') }}>
+  {% if content.image %}
+    {{ content.image }}
+  {% endif %}
+
+  {% if content.name %}
+    {{ content.name }}
+  {% endif %}
+
+  {% if content.field_description %}
+    {{ content.field_description }}
+  {% endif %}
+</article>

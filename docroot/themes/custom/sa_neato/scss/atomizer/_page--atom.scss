@@ -1,0 +1,43 @@
+body.page-node-type-atom {
+  .main-container {
+  }
+
+  .az-properties {
+    float: left;
+    width: 315px;
+    table {
+      td.field__label {
+        text-align: right;
+      }
+    }
+  }
+
+  .field--name-body {
+    max-width: 800px;
+  }
+
+  .field--name-field-atomic-structure {
+    width: calc(100% - 315px);
+    width: 100%;
+  }
+
+  @include media(max-width $bp580max) {
+  }
+
+  @include media($bp960) {
+    .az-properties {
+      float: left;
+    }
+
+    .field--name-field-atomic-structure {
+      position: relative;
+//    float: left;
+      width: calc(100% - 315px);
+      .az-wrapper {
+        margin-left: 20px;
+      }
+    }
+  }
+
+}
+

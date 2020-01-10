@@ -1,0 +1,111 @@
+// body.user-login
+body.user-login {
+
+  .status-messages {
+    margin: 0 auto;
+    width: 500px;
+    margin-bottom: 30px;
+  }
+
+  form.user-login-form {
+
+    @include media($bp960) {
+      text-align: center;
+    }
+
+    .login-form {
+
+      @include media(max-width $bp580max) {
+        margin: 0 auto 20px;
+        padding-bottom: 10px;
+        width: 300px;
+        text-align: left;
+        border-bottom: 2px solid $base-separator-color;
+      }
+
+      @include media($bp320only) {
+      }
+
+      @include media($bp580only) {
+      }
+
+      @include media($bp960) {
+        width: 300px;
+        vertical-align: top;
+        display: inline-block;
+      }
+
+      label {
+        display: inline-block;
+        width: 100px;
+      }
+
+      input[type="password"],
+      input[type="text"] {
+        display: inline-block;
+        width: 190px;
+      }
+
+      .description {
+        display: none;
+//      margin: 0 5%;
+//      margin-left: 100px;
+      }
+
+      .form-item {
+        margin: 1em 0;
+      }
+
+      .form-actions {
+        text-align: center;
+
+        #edit-submit {
+          margin: 0 auto;
+          width: 100px;
+        }
+      }
+
+      .header {
+        h2 {
+          font-size: 138%;
+        }
+      }
+
+      .forgot-password {
+        margin-top: 15px;
+        text-align: center;
+      }
+    }
+
+    .join-block {
+      display: inline-block;
+
+      @include media($bp320only) {
+//      margin: 0 30px;
+      }
+
+      @include media($bp580only) {
+        margin: 0 10%;
+      }
+
+      @include media($bp960) {
+        display: inline-block;
+        vertical-align: top;
+        padding-left: 50px;
+        text-align: left;
+        width: calc(100% - 310px);
+      }
+
+      strong {
+        font-size: 150%;
+      }
+
+      ul {
+        padding-left: 25px;
+      }
+    }
+  }
+} // body.page-node-type-article
+
+
+

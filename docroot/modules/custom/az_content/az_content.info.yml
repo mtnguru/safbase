@@ -1,0 +1,5 @@
+name: AZ Content
+type: module
+description: Modify items in the content area.
+core: 8.x
+package: AZ

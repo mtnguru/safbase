@@ -1,0 +1,5 @@
+name: 'AZ Ethereal Matters Custom'
+type: module
+description: 'Ethereal Matters site specific code'
+core: 8.x
+package: 'Custom'

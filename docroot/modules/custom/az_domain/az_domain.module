@@ -1,0 +1,41 @@
+<?php
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
+
+/**
+ * @file
+ * Contains az_domain.module.
+ */
+
+/**
+ * Implements hook_theme().
+ *
+ * @param $variables
+ */
+function az_domain_theme(&$variables) {
+  return [
+    // Display atom select list items and their sublists.
+    'user_popup_menu' => [
+      'variables' => [
+        'uid' => 0,
+      ],
+    ],
+  ];
+
+}
+
+/**
+ * Implements hook_preprocess_html().
+ *
+ * @param $variables
+ */
+function az_domain_preprocess_html(&$variables) {
+  $active = \Drupal::service('domain.negotiator')->getActiveDomain();
+
+  $variables['active_domain'] = str_replace('_', '-', $active->id());
+  return;
+}
+
+

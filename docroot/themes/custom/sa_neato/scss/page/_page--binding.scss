@@ -1,0 +1,11 @@
+table.binding-energies {
+  width: auto;
+  margin: 0;
+  td {
+    &.nuclet {
+    }
+    &.value {
+      text-align: right;
+    }
+  }
+}

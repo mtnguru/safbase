@@ -1,0 +1,12 @@
+@include media($bp320only) {
+} // $bp320only
+
+@include media($bp580only) {
+} // $bp580only
+
+@include media($bp960only) {
+} // $bp960
+
+@include media($bp1280) {
+} // $bp960
+

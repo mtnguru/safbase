@@ -1,0 +1,33 @@
+body.path-user {
+  #block-em-neato-page-title,
+  #block-sa-neato-page-title {
+//  display: none;
+  }
+  #block-em-neato-local-tasks,
+  #block-sa-neato-local-tasks {
+//  display: none;
+  }
+
+  form.user-form {
+    @extend %text-input;
+  }
+
+  .form-item-name {
+    margin-bottom: 30px;
+  }
+
+  #group-social-media {
+    fieldset.form-item {
+      border: 0;
+      border-bottom: 1px solid $base-separator-color;
+      padding: 0;
+      legend {
+        padding: 10px 0 0;
+        font-weight: bold;
+      }
+    }
+    fieldset:last-child {
+      border: 0;
+    }
+  }
+}

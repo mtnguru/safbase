@@ -1,0 +1,156 @@
+
+%small-label {
+  z-index: 11;
+
+  @include media($bp320only) {
+    padding: 8px 0 0 10px;
+    font-size: 80%;
+  } // $bp320only
+
+  @include media($bp580) {
+    padding: 5px 0 0 10px;
+    font-size: 80%;
+  } // $bp580
+
+  &::before {
+    display: block;
+    opacity: 1;
+  } // &::before
+} // %small-label
+
+%text-input {
+
+
+  fieldset.field-group-fieldset,
+  fieldset#edit-status--wrapper,
+  fieldset#edit-roles--wrapper {
+    width: 500px;
+  }
+
+  .form-type-number,
+  .form-type-entity-autocomplete,
+  .form-type-date,
+  .form-type-email,
+  .form-type-password,
+  .form-type-tel,
+  .form-type-url,
+  .form-type-textfield {
+    width: 500px;
+    position: relative;
+
+    &:hover,
+    &:focus,
+    &.populated,
+    &[value]:not([value='']) {
+      label {
+        @extend %small-label;
+      }
+    }
+
+    input,
+    textarea {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      border-width: 1px 1px 1px 4px;
+      border-style: solid;
+      background-color: lighten($base-background-color, 15%);
+      border-radius: 0;
+      appearance: none;
+      color: $base-font-color;
+      outline: none;
+      font-size: 110%;
+      @include transition-3d;
+
+      @include media($bp320only) {
+        height: 40px;
+        padding: 11px 10px 0;
+        line-height: 20px;
+      } // $bp320only
+
+      @include media($bp580) {
+        height: 50px;
+        padding: 15px 0 0 15px;
+      } // $bp580
+
+      &:valid {
+        border-color: darken($color-green, 25%);
+      } // &:valid
+
+      &:hover {
+        color: $base-font-color;
+        cursor: default;
+
+        + label::before {
+          display: block;
+          opacity: 1;
+        } // + label:before
+      } // &:hover
+
+      &:focus,
+      &.populated,
+      &[value]:not([value='']) {
+        cursor: text;
+        border-color: $color-green;
+
+        + label {
+          @extend %small-label;
+        } // label
+      } // &:focus, &.populated, &[value]:not([value=''])
+
+    } // input[type=date], input[type=email], input[type=tel], input[type=text], select, textarea
+    label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-weight: 300;
+      color: $color-light-grey;
+      z-index: 10;
+      @include transition-3d;
+
+      @include media($bp320only) {
+        padding: 10px 0 0 15px;
+      } // $bp320only
+
+      @include media($bp580) {
+        padding: 12px 0 0 20px;
+      } // $bp580
+
+      &::before {
+        display: none;
+        top: 0;
+        opacity: 0;
+        @include transition-3d;
+      } // &::before
+    } // label
+  }
+
+  .description {
+//  display: none;
+  }
+
+//select:hover + label {
+//  @extend %small-label;
+//} // select:hover + label
+
+//.js-form-type-select {
+//  position: relative;
+//  z-index: 10;
+
+//  select.form-select {
+//    @extend %select-custom;
+//    border-color: $color-blue !important;
+//    font-weight: 300 !important;;
+
+//    @include media($bp320only) {
+//      border-width: 1px !important;
+//    } // $bp320only
+
+//    @include media($bp580) {
+//      height: 68px !important;
+//      padding-left: rem($content-padding-desktop) !important;
+//    } // $bp580
+//  } // select.form-select
+//} // .js-form-type-select
+
+} // %text-input

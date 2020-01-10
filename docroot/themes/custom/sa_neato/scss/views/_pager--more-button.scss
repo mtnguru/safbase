@@ -1,0 +1,38 @@
+.view {
+  nav.pager {
+    .pager__items {
+      padding: 30px 0 10px;
+
+      a {
+        color: white;
+        padding: 5px 10px;
+        width: 40px;
+        border-radius: 5px;
+        background: $color-blue;
+      }
+
+      .is-active {
+        a {
+          background: darken($color-blue, 10%);
+        }
+      }
+    }
+
+  }
+
+  .js-pager__items {
+
+    text-align: center;
+    margin: 10px 0;
+
+    a {
+      margin: 0 auto;
+      display: block;
+      color: white;
+      padding: 5px;
+      width: 160px;
+      background: $color-blue;
+      border-radius: 5px;
+    }
+  }
+}

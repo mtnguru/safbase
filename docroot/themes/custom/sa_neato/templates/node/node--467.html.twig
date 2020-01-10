@@ -1,0 +1,31 @@
+
+<article id="node-{{ node.id }}" class="{{ attributes.class }} {{ view_mode }} {{ 'type-' ~ node.bundle }}"{{ attributes }}>
+  <section class="section-top">
+    <section class="sidebar-right">
+      {% if logged_in %}
+        {# <div class="block-welcome block-border">{{ snippet_home_welcome }}</div> #}
+      {% else %}
+        <div class="block-login block-border">{{ snippet_home_login }}</div>
+      {% endif %}
+
+      <div class="snippet-ethereal-matters az-block">
+        {{ snippet_home_em }}
+      </div>
+    </section>
+
+    <section class="content-left">
+      <div class="snippet-announcement">{{ snippet_home_announcement }}</div>
+      <div class="snippet-communities">{{ snippet_home_communities }}</div>
+      <div class="block-view-communities">{{ view_home_communities }}</div>
+    </section>
+  </section>
+
+  <section class="section-bottom">
+    <div class="activity">
+      <hr>
+      <div class="block-recent-activity">{{ block_recent_activity }}</div>
+    </div>
+  </section>
+
+  {{ content.links }}
+</article>

@@ -1,0 +1,1237 @@
+<?php
+
+
+/**
+ * @file
+ * Contains az_content.module.
+ */
+
+use Drupal\az_content\AzContentQuery;
+use Drupal\az_content\AzStream;
+use Drupal\az_groups\AzGroupQuery;
+use Drupal\comment\Entity\Comment;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
+use Drupal\user\Entity\User;
+use Drupal\Component\Utility\Random;
+use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+/**
+ * Implements hook_theme().
+ */
+function az_content_theme() {
+  return [
+    'az_tabs' => [
+      'variables' => [
+        'tabs' => NULL,
+        'id' => NULL,
+      ],
+    ],
+    'block_donate' => [
+      'variables' => [
+        'title' => NULL,
+        'description' => NULL,
+        'more_url' => NULL,
+      ],
+    ],
+    'block_contribute' => [
+      'variables' => [
+        'title' => NULL,
+        'description' => NULL,
+        'more_url' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function az_content_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+/*if ($form['#form_id'] == 'entity_embed_dialog') {
+    $form['shitty'] = [
+      '#type' => 'container',
+      'checkbox' => [
+        '#type' => 'checkbox',
+        '#title' => t('hey james dude'),
+        '#default_value' => false,
+      ],
+    ];
+  } */
+  return;
+}
+
+function az_content_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $node = $form_state->getFormObject()->getEntity();
+  $type = $node->getType();
+  if (in_array($type, ['article', 'glossary', 'book', 'news'])) {
+/*  $form['updateChangedContainer'] = [
+      '#type' => 'container',
+      '#weight' => 6,
+      'updateChanged' => [
+        '#type' => 'checkbox',
+        '#title' => t('Update Changed Date'),
+        '#default_value' => false,
+        '#description' => t('Change the update time for the article. Update time determines the sort order of content when sorted by date.'),
+      ],
+    ];
+*/
+
+    $form['publishChangedContainer'] = [
+      '#type' => 'container',
+      '#weight' => 6,
+      'publishChanged' => [
+        '#type' => 'checkbox',
+        '#title' => t('Update Published Date'),
+        '#default_value' => false,
+        '#description' => t('Change the publish time for the article. Publish time is used to determine Email Recent Content notifications.'),
+      ],
+    ];
+
+//  $form['mailitContainer'] = [
+//    '#type' => 'container',
+//    '#weight' => 6,
+//    'mailit' => [
+//      '#type' => 'checkbox',
+//      '#title' => t('Send email notification'),
+//      '#default_value' => false,
+//    ],
+//  ];
+
+    $form['#az_content'] = [
+      'moderation_state' => $node->moderation_state->value,
+    ];
+
+    $form['#validate'][] = '_az_content_node_validate';
+    $form['actions']['submit']['#submit'][] = '_az_content_node_submit';
+//  foreach (array_keys($form['actions']) as $action) {
+//    if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
+//      $form['actions'][$action]['#submit'][] = '_az_content_node_submit';
+//    }
+//  }
+  }
+}
+
+function _az_content_node_validate(&$form, FormStateInterface &$form_state) {
+  $node = $form_state->getFormObject()->getEntity();
+//if ($form_state->hasValue('updateChanged') && !$form_state->getValue('updateChanged')) {
+//  $form_state->setValue(['changed'], $node->changed->value);
+//}
+  if ($form_state->hasValue('publishChanged') && !$form_state->getValue('publishChanged')) {
+    $form_state->setValue(['field_publish_date', 0, 'value'], $node->changed->value);
+  }
+}
+
+function _az_content_node_submit(&$form, FormStateInterface &$form_state) {
+  $node = $form_state->getFormObject()->getEntity();
+//if ($form_state->hasValue('updateChanged') && !$form_state->getValue('updateChanged')) {
+//  $node->set('changed', $form_state->getValue('changed'));
+//};
+
+  // if the node moderation state has changed and is now published then set the published date.
+  if ($form_state->hasValue('publishChanged') ||
+        ($form_state->getValue('moderation_state')[0]['value'] == 'published' &&
+         !in_array($form['#az_content']['moderation_state'], ['published', 'archived']))) {
+    $date= DrupalDateTime::createFromTimestamp((int)\Drupal::time()->getRequestTime('UTC'));
+    $node->field_publish_date->value = format_date($date->getTimestamp() , 'custom', 'Y-m-d\TH:i:s', 'UTC');
+  }
+
+  $node->save();
+  return;
+}
+
+function az_content_form_node_ticket_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $request = \Drupal::request();
+  if ($request->query->has('group')) {
+    $gid = $request->query->get('group');
+    $group = \Drupal::entityTypeManager()->getStorage('group')->load($gid);
+    $form['field_group']['widget'][0]['target_id']['#default_value'] = $group;
+  }
+
+  if ($request->query->has('node')) {
+    $nid = $request->query->get('node');
+    $node = is_numeric($nid) ? Node::load($nid) : NULL;
+    $form['field_page']['widget'][0]['target_id']['#default_value'] = $node;
+    $form['field_page']['widget'][0]['target_id']['#default_value'] = $node;
+  }
+}
+
+/**
+ * Implements hook_entity_access().
+ *
+ * Limit access to hidden groups.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @param $op
+ * @param \Drupal\Core\Session\AccountInterface $account
+ * @return \Drupal\Core\Access\AccessResultForbidden|\Drupal\Core\Access\AccessResultNeutral
+ */
+function az_content_entity_access(EntityInterface $entity, $op, AccountInterface $account) {
+  switch ($entity->getEntityTypeId()) {
+    case 'node':
+      // If node is atom builder then chech if user has that permission. -- entity 511? weird
+      if (($entity->id() == '511')  && !\Drupal::currentUser()->hasPermission('atomizer display atom builder')) {
+        return AccessResult::forbidden();
+      }
+      break;
+
+    case 'group':
+      if ($entity->field_status->value == 'hidden') {
+        if ($entity->field_status->value == 'hidden' && !\Drupal::currentUser()->hasPermission('az groups view hidden')) {
+          return AccessResult::forbidden();
+        }
+      }
+      break;
+
+    case 'group_content':
+      $gid = $entity->gid->value;
+      if ($gid) {
+        $group = \Drupal::entityManager()->getStorage('group')->load($gid);
+        $status = $group->field_status->value;
+        if ($status == 'hidden' && !\Drupal::currentUser()->hasPermission('az groups view hidden')) {
+          return AccessResult::forbidden();
+        }
+      }
+      break;
+  }
+
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_node_access().
+ *
+ * Custom access permissions for nodes.
+ *   Forbid access to content in hidden groups. LLC
+ *
+ * @param \Drupal\node\NodeInterface $node
+ * @param $op
+ * @param \Drupal\Core\Session\AccountInterface $account
+ * @return \Drupal\Core\Access\AccessResultForbidden|\Drupal\Core\Access\AccessResultNeutral
+ */
+function az_content_node_access(NodeInterface $node, $op, AccountInterface $account) {
+  if ($gid = AzGroupQuery::nodeInGroup($node)) {
+    $group = \Drupal::entityManager()->getStorage('group')->load($gid);
+
+    // If the group is hidden check if user has permission 'az groups view hidden'
+    $status = $group->field_status->value;
+    if ($status == 'hidden' && !\Drupal::currentUser()->hasPermission('az groups view hidden')) {
+      return AccessResult::forbidden();
+    }
+    // If node has field_private set then check if current user is a member.
+    if ($node->hasField('field_private') && $node->field_private->value) {
+      if (!$group->getMember(\Drupal::currentUser()->getAccount())) {
+        return AccessResult::forbidden();
+      }
+    }
+  }
+  return AccessResult::neutral();
+}
+
+function az_content_preprocess_html(&$variables) {
+//_az_content_add_SAM_tm($variables['head_title']['title']->string);
+}
+
+function az_content_preprocess_page_title(&$variables) {
+//_az_content_add_SAM_tm($variables['title']);
+}
+
+/**
+ * Implements hook_node_presave().
+ *
+ * @param \Drupal\node\Entity\Node $node
+ */
+function az_content_node_presave(Node $node) {
+  if  ($node->getType() == 'article' || $node->getType() == 'book') {
+
+    // If there is a primary image add reference back to the page.
+    if ($node->hasField('field_media')) {
+      $mediaRef = $node->field_media;
+      $value = $mediaRef->getValue();
+      if (!empty($value[0])) {
+        $media = \Drupal::entityManager()->getStorage('media')->load($value[0]['target_id']);
+        if ($media != null) {
+          _az_content_add_node_to_media($media, $node->id());
+        }
+      }
+    }
+
+    // Find media in body and create reference back to the page.
+    $bodyValue = $node->get('body')->getValue();
+    if (!empty($bodyValue[0])) {
+      preg_match_all("/data-entity-uuid=\".*?\"/", $bodyValue[0]['value'], $matches);
+      foreach($matches[0] as $match) {
+        $uuid = explode('"', $match)[1];
+        $media = \Drupal::entityManager()->loadEntityByUuid('media', $uuid);
+        if ($media != null) {
+          _az_content_add_node_to_media($media, $node->id());
+        }
+      }
+    }
+  }
+  return;
+}
+
+/**
+ * Implements HOOK_entity_presave().
+ *
+ */
+function az_content_entity_presave(EntityInterface $entity) {
+  return;
+}
+
+/**
+ * Implement HOOK_comment_presave().
+ *
+ * @param \Drupal\comment\Entity\Comment $comment
+ */
+function az_content_comment_presave(Comment $comment) {
+  $articleId = $comment->get('entity_id')->getValue()[0]['target_id'];
+  $bodyRef = $comment->get('comment_body');
+  $bodyValue = $bodyRef->getValue();
+  if (!empty($bodyValue[0])) {
+    preg_match_all("/data-entity-uuid=\".*?\"/", $bodyValue[0]['value'], $matches);
+    foreach($matches[0] as $match) {
+      $uuid = explode('"', $match)[1];
+      $media = \Drupal::entityManager()->loadEntityByUuid('media', $uuid);
+      _az_content_add_node_to_media($media, $articleId);
+    }
+  }
+  return;
+}
+
+/**
+ * Implements HOOK_media_presave().
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ */
+function az_content_media_presave(EntityInterface $entity) {
+  return;
+}
+
+/**
+ * Implements HOOK_file_presave().
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ */
+function az_content_file_presave(EntityInterface $entity) {
+  return;
+}
+
+/**
+ * Implements HOOK_preprocess_comment().
+ * @param $variables
+ */
+function az_content_preprocess_comment(&$variables) {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  return;
+}
+
+/**
+ * Implements HOOK_preprocess_page().
+ *
+ * If this is the structuredatom.com and the user is not logged in then redirect
+ * to the /under-construction.
+ *
+ * @param $variables
+ */
+function az_content_preprocess_page(&$variables) {
+  return;
+}
+
+/**
+ * Implements HOOK_preprocess_field().
+ *
+ * @param $variables
+ */
+function az_content_preprocess_field(&$variables) {
+ switch ($variables['element']['#field_name']) {
+    case 'field_structure':
+      $variables['structure'] = $variables['items'][0]['content']['#context']['value'];
+      break;
+  }
+}
+
+/**
+ * Add a node reference to the media entity field_usage field.
+ *
+ * @param $media
+ * @param $articleId
+ */
+function _az_content_add_node_to_media($media, $articleId) {
+  $articles = $media->get('field_usage');
+  $found = false;
+  if (!empty($articles)) {
+    $values = $articles->getValue();
+    foreach ($values as $value) {
+      if ($value['target_id'] == $articleId) {
+        $found = TRUE;
+      }
+    }
+  }
+  if (!$found) {
+    $media->field_usage->appendItem($articleId);
+    $media->save();
+  }
+}
+
+/**
+ * Implements HOOK_preprocess_block().
+ *
+ * @param $variables
+ */
+function az_content_preprocess_block(&$variables) {
+  switch ($variables['plugin_id']) {
+    case 'ie_top_nav_block':
+    case 'em_top_nav_block':
+    case 'sa_top_nav_block':
+      $current_path = \Drupal::service('path.current')->getPath();
+      $variables['page_url'] = \Drupal::service('path.alias_manager')->getAliasByPath($current_path);
+      $uid = \Drupal::currentUser()->id();
+      if ($uid > 0) {
+        $user = \Drupal::entityTypeManager()->getStorage('user')->load($uid);
+        if ($user->field_picture->isEmpty()) {
+          $variables['user_name'] = $user->name[0]->value;
+        }
+        else {
+          $fid = $user->field_picture[0]->target_id;
+          $file = \Drupal\file\Entity\File::load($fid);
+          $variables['user_picture_url'] = \Drupal\image\Entity\ImageStyle::load('thumbnail')
+            ->buildUrl($file->getFileUri());
+        }
+      }
+      break;
+  }
+}
+
+function az_content_wrap_block($title, $block) {
+  return [
+    '#type' => 'container',
+    '#attributes' => ['class' => ['block-sidebar']],
+    'title' => [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['title-container']],
+      'markup' => ['#markup' => '<h2>' . $title . '</h2>'],
+    ],
+    'content' => [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['content-container']],
+      'markup' => $block,
+    ],
+  ];
+}
+
+/**
+ * Create the set array - merge $set with default settings.
+ *
+ * @param $set
+ * @return array
+ */
+function _az_content_init_stream_set($set) {
+  $set += [
+    'id' => 'init-stream',
+    'types' => ['article', 'event', 'book', 'news', 'glossary'],
+    'more' => 'ajax',
+    'viewMode' => 'teaser',
+    'entityType' => 'node',
+    'pageNum' => 0,
+    'pageNumItems' => 10,
+    'empty' => 'No content found',
+  ];
+  $set = _az_content_add_query_args($set);
+
+  // Unset any settings that == 'UNSET'
+  foreach ($set as $key => $setting) {
+    if ($setting === 'UNSET') {
+      unset($set[$key]);
+    }
+  }
+
+  return $set;
+}
+
+function _az_content_build_block($id, $set) {
+  switch ($set['type']) {
+
+    // If this is stream then add the #items to the tab.
+    case 'entity-table':
+    case 'entity-stream':
+      $set = _az_content_init_stream_set($set);
+
+      // If using a pager set the pager id
+      if (isset($set['more']) && $set['more'] == 'pager' && !isset($set['pagerId'])) {
+        $pagerId = &drupal_static('azPagerId', 0);
+        $set['pagerId'] = $pagerId++;
+      }
+
+      // Query for total number matches
+      $set['count'] = true;
+      switch ($set['entityType']) {
+        case 'node':
+          $set['totalRows'] = AzContentQuery::nodeQuery($set);
+          break;
+        case 'comment':
+          $set['totalRows'] = AzContentQuery::commentQuery($set);
+          break;
+        case 'user':
+          $set['totalRows'] = AzContentQuery::userQuery($set);
+          break;
+        case 'media':
+          $set['totalRows'] = AzContentQuery::mediaQuery($set);
+          break;
+      }
+      $set['count'] = false;
+
+      // If there are no items and empty == NO DISPLAY then return null - tab doesn't display
+      if ($set['totalRows'] == 0  && $set['empty'] == 'NO DISPLAY') {
+        return null;
+      }
+      break;
+
+    case 'entity-render':
+      break;
+  }
+
+  $classes = [
+    'content-block',
+    'entity-type-' . str_replace('_', '-', $set['entityType']),
+    'view-mode-' . str_replace('_', '-', $set['viewMode']),
+  ];
+  if (isset($set['class'])) {
+    $classes[] = $set['class'];
+  }
+
+  $block = [
+    '#type' => 'container',
+    '#attributes' => [
+      'id' => 'az-page-' . $id,
+      'class' => $classes,
+    ],
+    '#attached' => [
+      'library' => 'az_content/az-content',
+      'drupalSettings' => [
+        'azcontent' => [$id => $set],
+      ],
+    ],
+  ];
+
+  if (!empty($set['title'])) {
+    $block['title'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['title-container'],
+      ],
+      'markup' => ['#markup' => '<h2>' . $set['title'] . '</h2>'],
+      'close' => ['#markup' => '<div class="az-fa-times az-close"></div>'],
+    ];
+  }
+
+  $block['page'] = [
+    '#type' => 'container',
+    '#attributes' => [
+      'class' => ['page-content'],
+    ],
+  ];
+
+  if (isset($set['load']) && $set['load'] == 'immediate') {
+    $block['page']['stream'] = AzStream::create($set);      // Load the first page.
+  };
+
+  return $block;
+}
+
+function _az_content_build_tab(&$set) {
+
+  $label = (isset($set['label'])) ? $set['label'] : '';
+  switch ($set['type']) {
+
+    // If this is stream then add the #items to the tab.
+    case 'entity-table':
+    case 'entity-stream':
+      $set = _az_content_init_stream_set($set);
+
+      // If using a pager set the pager id
+      if (isset($set['more']) && $set['more'] == 'pager' && !isset($set['pagerId'])) {
+        $pagerId = &drupal_static('azPagerId', 0);
+        $set['pagerId'] = $pagerId++;
+      }
+
+      // Query for total number matches
+      $set['count'] = true;
+      switch ($set['entityType']) {
+        case 'node':
+          $set['totalRows'] = AzContentQuery::nodeQuery($set);
+          break;
+        case 'comment':
+          $set['totalRows'] = AzContentQuery::commentQuery($set);
+          break;
+        case 'user':
+          $set['totalRows'] = AzContentQuery::userQuery($set);
+          break;
+        case 'media':
+          $set['totalRows'] = AzContentQuery::mediaQuery($set);
+          break;
+      }
+      $set['count'] = false;
+
+      // If there are no items and empty == NO DISPLAY then return null - tab doesn't display
+      if ($set['totalRows'] == 0  && $set['empty'] == 'NO DISPLAY') {
+        return null;
+      }
+
+      $label .= ' - ' . $set['totalRows'];  // Add number of items found by query.
+      break;
+
+    case 'entity-render':
+      break;
+  }
+
+  $classes = [
+    'entity-type-' . str_replace('_', '-', $set['entityType']),
+    'view-mode-' . str_replace('_', '-', $set['viewMode']),
+  ];
+  if (isset($set['class'])) {
+    $classes[] = $set['class'];
+  }
+
+  $tab = [
+    'id' => $set['id'],
+    'label' => $label,
+    'classes' => $classes,
+    'title' => (isset($set['title'])) ? $set['title'] : null,
+  ];
+  return $tab;
+}
+
+function _az_content_build_tabs($id, $sets) {
+
+  $tabs = [];
+  foreach ($sets as $key => &$set) {
+    if (!empty($set)) {
+      if ($tab = _az_content_build_tab($set)) {
+        $tabs[] = $tab;
+      };
+    }
+  }
+
+  return [
+    '#theme' => 'az_tabs',
+    '#id' => $id,
+    '#tabs' => $tabs,
+    '#attached' => [
+      'library' => 'az_content/az-content',
+      'drupalSettings' => [
+        'azcontent' => $sets,
+      ],
+    ],
+  ];
+}
+
+function _az_content_add_group_logo($node, &$variables) {
+  if ($gid = AzGroupQuery::nodeInGroup($node)) {
+    $group = \Drupal::entityManager()->getStorage('group')->load($gid);
+    $variables['group_url'] = \Drupal::service('path.alias_manager')
+      ->getAliasByPath('/group/' . $gid);
+    $variables['group_label'] = $group->label->value;
+    $file = \Drupal\file\Entity\File::load($group->field_logo_image->getValue()[0]['target_id']);
+    $variables['group_logo_url'] = \Drupal\image\Entity\ImageStyle::load('300x100')
+      ->buildUrl($file->getFileUri());
+  }
+}
+
+function _az_content_has_new_content($variables) {
+  // Add marker if content is New, Updated or has already been read.
+  switch (node_mark($variables['node']->id(), $variables['node']->getChangedTime())) {
+    case 0:
+      $mark = '';
+      break;
+    case 1:
+      $mark = 'New';
+      break;
+    case 2:
+      $mark = 'Updated';
+      break;
+  };
+  $variables['has_new_content'] = [
+    '#type' => 'container',
+    '#attributes' => ['class' => ['marker']],
+    'label' => ['#markup' => $mark],
+  ];
+}
+
+function _az_content_add_query_args($set) {
+  $query = \Drupal::request()->query->all();
+  foreach ($query as $key => $arg) {
+    if (\Drupal::currentUser()->hasPermission('az content query args') ||
+        in_array($key, ['pageNumItems', 'pageNum', 'view_mode']) ||
+        in_array($key, (isset($set['args'])) ? $set['args'] : [])) {
+      $parts = explode(',', $arg);
+      $set[$key] = (count($parts) == 1) ? $parts[0] : $parts;
+    }
+  }
+  return $set;
+}
+
+function _az_content_add_SAM_tm(&$text) {
+  $text = preg_replace('/\bSAM\b/', '<span class="sam-tm">SAM</span>', $text, -1, $count);
+  $text = preg_replace('/Structured Atom Model/', '<span class="sam-tm">Structured Atom Model</span>', $text, -1, $count);
+  $text = preg_replace('/\bAtomizer\b/', '<span class="sam-tm">Atomizer</span>', $text, -1, $count);
+}
+
+/**
+ * Implements HOOK_preprocess_node().
+ *
+ * @param $variables
+ */
+function az_content_preprocess_node(&$variables) {
+  // Add marker if content is New, Updated or has already been read.
+  $node = $variables['node'];
+  $type = $node->getType();
+  $viewMode = $variables['view_mode'];
+  
+  $az_wysiwyg = &drupal_static('az_wysiwyg', []);
+  $az_wysiwyg = [  // The wysiwyug filter needs this information.
+    'node' => $node,
+    'view_mode' => $viewMode
+  ];
+
+  $variables['bundle_name'] = $node->type->entity->label();
+
+  if ($viewMode == 'full' || $viewMode == 'teaser') {
+    $variables['has_new_content'] = _az_content_has_new_content($variables);
+  }
+
+  // Use Changed time to format date and ago.
+  $changed = $node->getChangedTime();
+  $variables['changed'] = \Drupal::service('date.formatter')->format($changed);
+  $variables['changed_ago'] = \Drupal::service('date.formatter')->formatDiff(
+    $changed, REQUEST_TIME, ['granularity' => 2, 'return_as_object' => TRUE]
+  );
+
+  $variables['nid'] = $node->id();
+
+  // Get the status and moderation_state
+  if ($node->hasField('moderation_state') &&
+      $node->moderation_state->value && 
+      $type != 'email' && 
+      $type != 'birkeland') {
+    $variables['state'] = $node->moderation_state->value;
+  } else {
+    $variables['state'] = ($node->status->value) ? 'published' : 'draft';
+  }
+
+  $variables['show_author'] = ($node->hasField('field_show_author') && $node->field_show_author->value) ? true : false;
+
+  switch ($type) {
+    case 'article':   $variables['fontAwesomeIcon'] = 'fa-file-alt';    break;
+    case 'book':      $variables['fontAwesomeIcon'] = 'fa-book';        break;
+    case 'event':     $variables['fontAwesomeIcon'] = 'fa-file-alt';    break;
+    case 'news':      $variables['fontAwesomeIcon'] = 'fa-file-alt';    break;
+    case 'page':      $variables['fontAwesomeIcon'] = 'fa-file-alt';    break;
+    case 'ticket':    $variables['fontAwesomeIcon'] = 'fa-file-alt';    break;
+    case 'glossary':  $variables['fontAwesomeIcon'] = 'fa-file-alt';    break;
+    default:          $variables['fontAwesomeIcon'] = 'fa-bomb';        break;
+  }
+
+  switch ($type) {
+    case 'article':
+    case 'book':
+    case 'news':
+    case 'page':
+    case 'event':
+    case 'ticket':
+    case 'glossary':
+
+      _az_content_add_SAM_tm($variables['content']['body'][0]['#text']);
+      $title = $node->title->value;
+      _az_content_add_SAM_tm($title);
+      $variables['title'] = ['#markup' => $title];
+
+      if ($viewMode == 'teaser') {
+        _az_content_add_group_logo($node, $variables);
+      }
+
+      if ($viewMode == 'full') {
+        // Add block showing any tickets submitted for this page.
+        if (\Drupal::currentUser()->hasPermission('az content view tickets')) {
+          $tickets = [
+            'type' => 'entity-stream',
+            'id' => 'related-tickets',
+            'title' => 'Tickets',
+            'viewMode' => 'teaser_short',
+            'types' => 'ticket',
+            'pages' => $node->id(),
+            'class' => 'block-border',
+            'empty' => 'NO DISPLAY',
+          ];
+        }
+
+        // Create book navigation block
+        if (in_array($type, ['article', 'glossary', 'news', 'book'])) {
+          $block_entity = Drupal\block\Entity\Block::load('azbooknavigation');
+          $variables['sidebar']['block_booknavigation'] = \Drupal::entityTypeManager()
+            ->getViewBuilder('block')
+            ->view($block_entity);
+        }
+
+        // If field_contribute has content - add contribute block
+        if ($node->hasField('field_contribute') && !$node->field_contribute->isEmpty()) {
+          $block_entity = Drupal\block\Entity\Block::load('azcontributeblock');
+          $variables['sidebar']['block_contribute'] = \Drupal::entityTypeManager()
+            ->getViewBuilder('block')
+            ->view($block_entity);
+        }
+
+        // If field_display_image_map has a value then add the map views map block.
+        if ($node->hasField('field_display_image_map') && $node->field_display_image_map->value == true) {
+          $block_entity = Drupal\block\Entity\Block::load('views_block__az_media_block_map_usage');
+          $variables['sidebar']['block_views_image_map'] = \Drupal::entityTypeManager()
+            ->getViewBuilder('block')
+            ->view($block_entity);
+        }
+
+        // Create sidebar block of recent activity for the same topic.
+        $tids = null;
+        if ($type == 'glossary') {
+          $tids = $node->id();
+        } else {
+          if ($node->hasField('field_topics')) {
+            foreach ($node->field_topics->getValue() as $topic) {
+              $tids[] = $topic['target_id'];
+            };
+          }
+        }
+        if (!empty($tids)) {
+          $variables['sidebar']['related'] = _az_content_build_block('related-content', [
+            'type' => 'entity-stream',
+            'id' => 'related-content',
+            'status' => NODE_PUBLISHED,
+            'title' => 'Related Content',
+            'viewMode' => 'teaser_short',
+            'exclude' => $node->id(),
+            'topics' => $tids,
+            'class' => 'block-border',
+            'empty' => 'NO DISPLAY'
+          ]);
+        }
+
+        // Add the Donate block.
+        $block_entity = Drupal\block\Entity\Block::load('azdonateblock');
+        $variables['sidebar']['block_donate'] =
+          \Drupal::entityTypeManager()->getViewBuilder('block')->view($block_entity);
+      }
+      break;
+
+    case 'landing_page':
+
+      // Dashboard - Front page
+      if (\Drupal::service('path.matcher')->isFrontPage()) { _az_content_create_home($node, $variables); } // Home page
+      if ($node->id() == 311)  { _az_content_create_dashboard($node, $variables); }                         // User Dashboard
+//    if ($node->id() == 799)  { _az_content_create_dashboard($node, $variables); }                         // User Dashboard
+      if ($node->id() == 585)  { _az_content_create_upcoming_events($node, $variables); }                   // Upcoming events
+      break;
+
+    case 'atom':
+      if (\Drupal::currentUser()->hasPermission('atomizer display structure')) {
+        $variables['display_notes'] = true;
+      }
+      $element = Node::load($node->field_element->target_id);
+      $variables['valence'] = $element->field_valence->value;
+      break;
+
+    case 'molecule':
+      if (\Drupal::currentUser()->hasPermission('atomizer display structure')) {
+        $variables['display_notes'] = true;
+      }
+      break;
+  }
+
+  if ($node->id() == "424") {
+    _az_content_group_status_page($node, $variables);
+  }
+}
+
+/**
+ * Create the group book status page
+ *
+ * Create a hierarchical menu of the full book with unpublished pages listed
+ * but not linked to.
+ *
+ * @param $node
+ * @param $variables
+ */
+function _az_content_group_status_page($node, &$variables) {
+  function another ($word) {
+  }
+
+  // Rethink this  - do I really want a menu showing - maybe we just talk about it? Do I want to maintain a page like that?
+  //
+  // Read in the book menu
+  // Create hierarchical menu - this could be done in a template - like I did for the real menu.
+
+  another('fart');
+  return;
+}
+
+/**
+ * Given a node id and view mode - render the content of that node.
+ *
+ * @param $nid
+ * @param string $viewMode
+ * @return array
+ */
+function _az_content_render_node($nid, $viewMode = 'full') {
+  $node = \Drupal::entityManager()->getStorage('node')->load($nid);
+  $body = $node->body->value;
+  _az_content_add_SAM_tm($body);
+  $node->body->setValue([
+    'value' => $body,
+    'format' => $node->body->format,
+  ]);
+  return \Drupal::entityTypeManager()->getViewBuilder('node')->view($node, $viewMode);
+}
+
+function _az_content_wrap_block($title, $content) {
+  $build = [
+    'content' => [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['content-container']],
+      'content' => $content,
+    ],
+  ];
+  if (!empty($title)) {
+    $build['title'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['title-container']],
+      'markup' => ['#markup' => '<h2>' . $title . '</h2>'],
+    ];
+  }
+  return $build;
+}
+
+function _az_content_create_home($node, &$variables) {
+
+  $variables['snippet_home_em']          = _az_content_render_node(377, 'full');
+  $variables['snippet_home_welcome']     = _az_content_wrap_block('Welcome back', _az_content_render_node(482, 'full'));
+  $variables['snippet_home_login']       = _az_content_wrap_block(null, _az_content_render_node(481, 'full'));
+  $variables['snippet_home_communities'] = _az_content_render_node(479, 'full');
+
+  // Get view with active communities
+  $variables['view_home_communities'] = views_embed_view('az_groups', 'block_communities');
+
+  /*
+  $variables['block_recent_activity'] = _az_content_build_block('recent-activity', [
+    'type' => 'entity-stream',
+    'id' => 'recent-activity',
+    'status' => NODE_PUBLISHED,
+    'title' => 'Recent Activity',
+    'viewMode' => 'teaser',
+    'pageNumItems' => 6,
+    'more' => 'none',
+    'empty' => 'NO DISPLAY',
+  ]);
+  */
+}
+
+/**
+ * Create the dashboard page.
+ *
+ * @param $node
+ * @param $variables
+ */
+function _az_content_create_dashboard($node, &$variables) {
+  $uid = \Drupal::currentUser()->id();
+  $user = User::load($uid);
+
+  // Create Announcement block at top of page
+  if (!$node->field_announcement->isEmpty()) {
+    $nid = $node->field_announcement->getValue()[0]['target_id'];
+    $variables['snippet_dashboard_announcement'] = _az_content_render_node($nid, 'full');
+  }
+
+  // Create Recent Activity tab
+  $activity = [
+    'type' => 'entity-stream',
+    'id' => 'recent-activity',
+    'label' => 'Activity',
+    'types' => ['article', 'event', 'glossary', 'book', 'news'],
+    'title' => 'Recent Activity',
+    'groupsExclude' => 12,
+    'status' => NODE_PUBLISHED,
+    'empty' => 'No activity for this site',
+  ];
+
+  // Create Recent Comments tab
+  $comments = [
+    'type' => 'entity-stream',
+    'id' => 'recent-comments',
+    'label' => 'Comments',
+    'title' => 'Recent Comments',
+    'entityType' => 'comment',
+    'types' => 'UNSET',
+    'empty' => 'No comments have been submitted.',
+  ];
+
+  // If the user is logged in then create the My Activity, My Comments and My Media tabs
+  if ($uid != 0) {
+
+    // Create the user block in the upper left corner.
+    $variables['user_id'] = $user->id();
+    $variables['user_name'] = $user->name->value;
+    $picture = $user->field_picture->getValue();
+    if ($user->field_picture->isEmpty()) {
+      $field = \Drupal\field\Entity\FieldConfig::loadByName('user', 'user', 'field_picture');
+      $default_image = $field->getSetting('default_image');
+      $file = \Drupal::entityManager()
+        ->loadEntityByUuid('file', $default_image['uuid']);
+    }
+    else {
+      $file = \Drupal\file\Entity\File::load($picture[0]['target_id']);
+    }
+
+
+    $variables['user_picture_url'] = \Drupal\image\Entity\ImageStyle::load('thumbnail')
+      ->buildUrl($file->getFileUri());
+
+    $variables['view_my_groups'] = views_embed_view('az_my_groups', 'user_block');
+
+    if (AccessResult::allowedIfHasPermission($user, 'view any unpublished content')) {
+      // Create Unpublished Activity tab
+      $unpublished = [
+        'type' => 'entity-stream',
+        'id' => 'unpublished-activity',
+        'label' => 'Unpublished',
+        'title' => 'Unpublished Activity',
+        'status' => NODE_NOT_PUBLISHED,
+        'empty' => 'NO DISPLAY',
+      ];
+    }
+
+    if (\Drupal::currentUser()->hasPermission('az content view tickets')) {
+      $tickets = [
+        'type' => 'entity-stream',
+        'id' => 'tickets',
+        'label' => 'Tickets',
+        'title' => 'Tickets',
+        'types' => 'ticket',
+        'empty' => 'NO DISPLAY',
+      ];
+    }
+
+    // Create My Activity tab
+    $my_activity = [
+      'type' => 'entity-stream',
+      'id' => 'my-activity',
+      'label' => 'My Activity',
+      'title' => 'My Activity',
+      'author' => $user->id(),
+      'types' => 'UNSET',
+      'empty' => 'You have no activity',
+    ];
+
+    // Create Users Tickets tab
+    $my_tickets = [
+      'type' => 'entity-stream',
+      'id' => 'my-tickets',
+      'label' => 'My Tickets',
+      'author' => $user->id(),
+      'title' => 'My Tickets',
+      'types' => 'ticket',
+      'empty' => 'NO DISPLAY',
+    ];
+
+    // Create Users Assigned Tickets tab
+    $my_assigned = [
+      'type' => 'entity-stream',
+      'id' => 'assigned',
+      'label' => 'My Assigned Tickets',
+      'assigned' => $user->id(),
+      'title' => 'My Assigned Tickets',
+      'types' => 'ticket',
+      'empty' => 'NO DISPLAY',
+    ];
+
+    // Create My Comments tab
+    $my_comments = [
+      'type' => 'entity-stream',
+      'id' => 'my-comments',
+      'label' => 'My Comments',
+      'title' => 'My Comments',
+      'entityType' => 'comment',
+      'authorComment' => $user->id(),
+      'types' => 'UNSET',
+      'empty' => 'NO DISPLAY',
+    ];
+
+  }
+  else {
+    $snippet = \Drupal::entityManager()->getStorage('node')->load(325);
+    $dashboard_block = \Drupal::entityTypeManager() ->getViewBuilder('node') ->view($snippet, 'full');
+  }
+
+  $sets = [];
+  if (isset($activity))    { $sets[$activity['id']]    = $activity; }
+  if (isset($unpublished)) { $sets[$unpublished['id']] = $unpublished; }
+  if (isset($tickets))     { $sets[$tickets['id']]     = $tickets; }
+  if (isset($comments))    { $sets[$comments['id']]    = $comments; }
+  if (isset($my_activity)) { $sets[$my_activity['id']] = $my_activity; }
+  if (isset($my_comments)) { $sets[$my_comments['id']] = $my_comments; }
+  if (isset($my_tickets))  { $sets[$my_tickets['id']]  = $my_tickets; }
+  if (isset($my_assigned)) { $sets[$my_assigned['id']] = $my_assigned; }
+  if (isset($my_media))    { $sets[$my_media['id']]    = $my_media; }
+  $variables['tabs'] = _az_content_build_tabs('main', $sets);
+
+  $variables['sidebar'] = [
+    'dashboard_block' => (isset($dashboard_block)) ? $dashboard_block : NULL,
+  ];
+
+  // Create sidebar donate block.
+  $block_entity = Drupal\block\Entity\Block::load('azdonateblock');
+  $variables['sidebar']['block_donate'] = \Drupal::entityTypeManager()
+    ->getViewBuilder('block')
+    ->view($block_entity);
+}
+
+/**
+ * Create the Upcoming events page.
+ *
+ * @param $node
+ * @param $variables
+ */
+function _az_content_create_upcoming_events($node, &$variables) {
+  $uid = \Drupal::currentUser()->id();
+  $user = User::load($uid);
+
+  // Create Announcement block at top of page
+  if (!$node->field_announcement->isEmpty()) {
+    $nid = $node->field_announcement->getValue()[0]['target_id'];
+    $variables['snippet_dashboard_announcement'] = _az_content_render_node($nid, 'full');
+  }
+
+  // Create Upcoming Events list
+  $variables['events'] = _az_content_build_block('upcoming-events', [
+    'entityType' => 'node',
+    'type' => 'entity-stream',
+    'id' => 'upcoming-events',
+    'viewMode' => 'card',
+//  'label' => 'Upcoming Events',
+    'types' => ['event'],
+//  'title' => 'Upcoming Events',
+    'status' => \Drupal\node\NodeInterface::PUBLISHED,
+    'empty' => 'No upcoming events for this site',
+  ]);
+}
+
+/**
+ * Alter the results of the particular embedded entity type build array.
+ *
+ * @param array &$build
+ *   A renderable array representing the embedded entity content.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The embedded entity object.
+ * @param array $context
+ *   The context array.
+ */
+function az_content_entity_embed_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, array &$context) {
+  if (!empty($build['entity']['#view_mode'])) {
+    $build['#attributes']['class'][] = 'az-view-mode-' . str_replace('_', '-', $build['entity']['#view_mode']);
+  }
+}
+
+//////////////////////// Start entity_embed module api functions
+
+/**
+ * @addtogroup hooks
+ * @{
+ */
+
+/**
+ * Alter the Entity Embed Display plugin definitions.
+ *
+ * @param array &$info
+ *   An associative array containing the plugin definitions keyed by plugin ID.
+ */
+function az_content_entity_embed_display_plugins_alter(array &$info) {
+  return;
+}
+
+/**
+ * Alter the Entity Embed Display plugin definitions for a given context.
+ *
+ * Usually used to remove certain Entity Embed Display plugins for specific
+ * entities.
+ *
+ * @param array &$definitions
+ *   Remove options from this list if they should not be available for the given
+ *   context.
+ * @param array $contexts
+ *   The provided context, typically an entity.
+ */
+function az_content_entity_embed_display_plugins_for_context_alter(array &$definitions, array $contexts) {
+  return;  // Return - testing this hook
+  // Do nothing if no entity is provided.
+  if (!isset($contexts['entity'])) {
+    return;
+  }
+  $entity = $contexts['entity'];
+
+  // For video and audio files, limit the available options to the media player.
+  if ($entity instanceof \Drupal\file\FileInterface && in_array($entity->bundle(), ['audio', 'video'])) {
+    $definitions = array_intersect_key($definitions, array_flip(['file:jwplayer_formatter']));
+  }
+
+  // For images, use the image formatter.
+  if ($entity instanceof \Drupal\file\FileInterface && in_array($entity->bundle(), ['image'])) {
+    $definitions = array_intersect_key($definitions, array_flip(['image:image']));
+  }
+
+  // For nodes, use the default option.
+  if ($entity instanceof \Drupal\node\NodeInterface) {
+    $definitions = array_intersect_key($definitions, array_flip(['entity_reference:entity_reference_entity_view']));
+  }
+}
+
+/**
+ * Alter the context of an embedded entity before it is rendered.
+ *
+ * @param array &$context
+ *   The context array.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object.
+ */
+function az_content_entity_embed_context_alter(array &$context, \Drupal\Core\Entity\EntityInterface $entity) {
+  return;
+}
+
+/**
+ * Alter the context of an particular embedded entity type before it is rendered.
+ *
+ * @param array &$context
+ *   The context array.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object.
+ */
+function az_content_node_embed_context_alter(array &$context, \Drupal\Core\Entity\EntityInterface $entity) {
+  return;
+}
+
+function az_content_get_icon($name) {
+  static $icons = [
+    'article' => 'fa-file-alt',
+    'book' =>    'fa-book',
+    'event' =>    'fa-calendar-alt',
+    'news' =>     'fa-newspaper',
+    'page' =>     'fa-file-alt',
+    'ticket' =>   'fa-file-alt',
+    'glossary' => 'fa-file-alt',
+    'theme' =>    'fa-paint-brush',
+  ];
+
+  return 'fas ' . (empty($icons[$name])) ? $icons[$name] : 'fa-bomb';
+}

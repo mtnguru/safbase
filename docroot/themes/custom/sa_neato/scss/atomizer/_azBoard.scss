@@ -1,0 +1,94 @@
+body.atomizer-money-game-builder {
+  #site-header {
+    display: none;
+  }
+}
+
+.az-html-wrapper {
+  width: 100%;
+  @include fixed-aspect(9/16 * 100%, '.az-html');
+
+  .rotate-45 {
+    transform: rotate(45deg);
+  }
+
+  .rotate-90 {
+    transform: rotate(90deg);
+  }
+
+  .rotate-135 {
+    transform: rotate(135deg);
+  }
+
+  .rotate-180 {
+    transform: rotate(180deg);
+  }
+
+  .rotate-225 {
+    transform: rotate(225deg);
+  }
+
+  .rotate-270 {
+    transform: rotate(270deg);
+  }
+
+  .rotate-315 {
+    transform: rotate(315deg);
+  }
+
+  .az-html {
+    overflow: hidden;
+  }
+
+  .az-popup {
+    padding: 15px 30px 30px;
+    border: 3px solid $color-brown;
+    border-radius: 8px;
+    box-shadow: $color-dark-brown 1px 1px 10px;
+    background: $color-tan;
+    color: black;
+    position: absolute;
+    top: 8%;
+    //  bottom: 8%;
+    left: 10%;
+    right: 10%;
+    margin: auto auto;
+    max-width: 500px;
+    z-index: 5;
+  }
+
+  &.introduction {
+    .az-html {
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-image: url('/modules/custom/atomizer/config/episodes/v1/introduction/images/money1.jpg');
+      filter: blur(3px);
+    }
+    .az-popup {
+      display: block;
+    }
+  }
+
+  &#introduction-video {
+    .az-popup {
+      width: 90%;
+      max-width: 1000px;
+      .field--name-field-media-video-embed-field > div {
+        margin-top: 20px;
+        border: 5px solid $color-brown;
+        @include fixed-aspect(9/16 * 100%, '.video-embed-field-responsive-video');
+      }
+
+      iframe {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+}

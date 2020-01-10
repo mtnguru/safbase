@@ -1,0 +1,14 @@
+form.node-episode-form,
+form.node-episode-edit-form {
+  .field--type-string-long {
+    textarea {
+      font-family: monospace;
+      line-height: 1.15;
+    }
+  }
+  .field--type-text-long,
+  .field--type-string-long {
+    margin-bottom: 1em !important;
+  }
+}
+

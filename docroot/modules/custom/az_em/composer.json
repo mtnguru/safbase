@@ -1,0 +1,14 @@
+{
+  "name": "drupal/az_em",
+  "type": "drupal-module",
+  "description": "Ethereal Matters site specific code",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/az_em",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/az_em",
+    "source": "http://cgit.drupalcode.org/az_em"
+  },
+  "require": { }
+}

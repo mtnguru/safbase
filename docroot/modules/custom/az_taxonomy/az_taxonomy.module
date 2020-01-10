@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Contains az_taxonomy.module.
+ */
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function az_taxonomy_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  return;
+}
+
+/**
+ * Implements template_preprocess_taxonomy_term().
+ */
+function az_taxonomy_preprocess_taxonomy_term(&$variables) {
+  $vid = $variables['term']->vid->getValue()[0]['target_id'];
+  if ($vid == 'topics') {
+    $variables['view_recent_content'] = views_embed_view('az_content', 'block_topic');
+
+  }
+  return;
+}
+

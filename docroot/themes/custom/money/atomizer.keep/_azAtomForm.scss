@@ -1,0 +1,76 @@
+div.az-atom-form {
+  top: 10px !important;
+  bottom: 10px;
+}
+
+form.node-atom-form,
+form.node-atom-edit-form {
+  font-size: 14px;
+
+
+  #edit-field-atomic-structure-wrapper {
+    textarea {
+      font-family: monospace;
+      line-height: 1.15;
+    }
+  }
+
+  .form-item {
+    margin: 5px 0;
+
+
+    .description {
+      display: none;
+    }
+  }
+
+  .fieldgroup {
+    margin: 0;
+    width: auto;
+
+    legend {
+      border-radius: 8px;
+      padding: 3px 10px;
+    }
+
+    .fieldset-wrapper {
+      margin-left: 10px;
+    }
+  }
+
+  .form-type-radio.form-item {
+    margin: 0;
+  }
+
+  .form-type-entity-autocomplete,
+  .form-type-number,
+  .form-type-textfield {
+
+    label {
+      color: white;
+      display: inline-block;
+      width: 150px;
+    }
+    input {
+      display: inline-block;
+      width: 200px;
+      padding: 3px 5px;
+    }
+  }
+
+  .field--name-field-stability {
+    margin: 15px 0;
+  }
+
+  .field--name-field-valence {
+    margin-bottom: 15px;
+    .tabledrag-toggle-weight-wrapper {
+      display: none;
+    }
+  }
+
+  .form-type-vertical-tabs {
+    display: none;
+  }
+}
+

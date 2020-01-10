@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Contains az_components.module..
+ */
+
+use Drupal\az_components\AtomizerFiles;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Component\Serialization\Yaml;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_help().
+ */
+function az_components_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the az_components module.
+    case 'help.page.az_components':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Components to make the website come alive') . '</p>';
+      $output .= '<ul>';
+      $output .= '<li>'. t('Wrap text area in divs to create a more slider') . '</li>';
+      $output .= '</ul>';
+      return $output;
+
+    default:
+  }
+}
+
+
+/**
+ * Implements hook_wysiwyg_editor_settings_alter().
+ */
+function az_components_editor_js_settings_alter(array &$settings) {
+  foreach (array_keys($settings['editor']['formats']) as $text_format_id) {
+    if ($settings['editor']['formats'][$text_format_id]['editor'] === 'ckeditor') {
+//    $settings['editor']['formats'][$text_format_id]['editorSettings']['skin'] = 'moono-lisa, /libraries/ckeditor/skins/';
+    }
+  }
+}

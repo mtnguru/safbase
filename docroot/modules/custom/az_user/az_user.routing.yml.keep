@@ -1,0 +1,32 @@
+entity.user.full_form:
+  path: '/user/{user}/full'
+  defaults:
+    _entity_form: user.register
+    _title: 'User Full Form'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+
+entity.user.account_form:
+  path: '/user/{user}/account'
+  defaults:
+    _entity_form: user.account
+    _title: 'Account Settings'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+
+entity.user.admin_form:
+  path: '/user/{user}/admin'
+  defaults:
+    _entity_form: user.admin
+    _title: 'User Administration Form'
+  requirements:
+    _permission: 'administer users'
+
+entity.user.email_form:
+  path: '/user/{user}/email'
+  defaults:
+    _entity_form: myentity.email_notifications
+    _title: 'Email Notifications'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+

@@ -1,0 +1,4 @@
+az_mail.description:
+  title: 'AZ Mail: contact form'
+  description: 'Callback for generating form.'
+  route_name: az_mail.description

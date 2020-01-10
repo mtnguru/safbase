@@ -1,0 +1,26 @@
+{
+  "name": "sa_neato",
+  "version": "8.1.2",
+  "devDependencies": {
+    "browser-sync": "^2.26.7",
+    "duplexer2": "^0.1.4",
+    "gulp-notify": "^2.2.0",
+    "gulp-sass": "^2.3.2",
+    "gulp-sass-glob": "^1.0.9",
+    "gulp-shell": "^0.5.2",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^1.5.1",
+    "gulp-util": "^3.0.8",
+    "gulp-watch": "^4.3.5",
+    "rimraf": "*",
+    "run-sequence": "^1.1.5"
+  },
+  "scripts": {
+    "postinstall": "node_modules/.bin/rimraf node_modules/**/*.info && gulp sass && gulp compress"
+  },
+  "dependencies": {
+    "bourbon-neat": "^3.0.1",
+    "gulp": "^4.0.2",
+    "node-sass": "^4.12.0"
+  }
+}

@@ -1,0 +1,252 @@
+
+#block-azbooknavigation {
+  line-height: 1.2;
+
+  div.content-container {
+
+    .title-container {
+      position: relative;
+      margin-bottom: 20px;
+
+      .group-logo {
+        @extend %box-shadow;
+        img {
+          width: 100%;
+        }
+      }
+
+      h2 {
+        z-index: 10;
+        text-align: center;
+        position: absolute;
+        margin: 0;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background-color: rgba(25,50,0,.2);
+        font-size: 150%;
+
+        a {
+          display: block;
+          margin: 0 .5em;
+          color: $color-group;
+          @include vertical-center;
+
+          .trademark {
+            font-size: 50%;
+            margin-left: 5px;
+            margin-top: -10px;
+            vertical-align: super;
+          }
+        }
+      }
+    }
+
+    .body-container {
+      font-size: 90%;
+    }
+
+    #group-links {
+      margin-bottom: 15px;
+
+      > div {
+        margin-bottom: 5px;
+      }
+
+      .atom-viewer-link {
+        a {
+          text-align: center;
+          display: block;
+          background-color: lighten($color-orange, 5%);
+          color: darken($color-purple, 10%);
+          padding: 5px 10px;
+          font-size: 110%;
+          border-radius: 6px;
+          border: 1px solid $color-purple;
+          margin: 0 5% 10px;
+          font-weight: bold;
+        }
+      }
+
+      h4 {
+        text-align: center;
+        margin: 0;
+        font-size: 120%;
+      }
+    }
+
+    #book-title {
+      position: relative;
+
+      a {
+        display: block;
+        padding: 3px;
+
+        &.menu-item--active {
+          background-color: $secondary-background-color;
+        }
+      }
+    }
+
+    #book-pages {
+      position: relative;
+      margin-left: 12px;
+      margin-bottom: 10px;
+
+      &.hide-unpublished {
+        .menu-item--unpublished {
+          display: none;
+        }
+      }
+
+      > ul {
+        margin: 1px 0 0;
+        padding: 0;
+      }
+
+      ul ul {
+        padding: 0 0 0 .8em;
+      }
+    }
+
+    #book-status {
+      margin-bottom: 15px;
+    }
+
+    #misc-links {
+      margin-bottom: 20px;
+    }
+
+    hr {
+      margin: 0 0 12px;
+    }
+  }
+
+  h1 {
+    font-size: 225%;
+    margin-bottom: 10px;
+    a {
+      color: $color-title;
+      &:hover {
+        color: lighten($color-title, 25%);
+      }
+    }
+  }
+
+  #book-buttons {
+    position: absolute;
+    top: -12px;
+    right: 0;
+
+    > div {
+      float: left;
+      opacity: .20;
+      @include transition-3d;
+      &#book-show-all,
+      a {
+        padding: 3px;
+        color: $base-font-color;
+        text-decoration: none;
+      }
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  li.menu-item {
+    list-style-image: none;
+    list-style-type: none;
+    position: relative;
+    padding: 0;
+    @include transition-3d;
+
+    &::before {
+      content: '';
+      width: 1em;
+      height: 1em;
+      display: block;
+      position: absolute;
+      top: .20em;
+      left: -.80em;
+    }
+
+    a {
+      display: block;
+      color: $base-link-color;
+      margin-top: 1px;
+      padding: 3px 0 3px 4px;
+    }
+  }
+
+  li.menu-item--children {
+    &::before {
+      @include transition(all 250ms ease-in-out);
+      background-image: url($images-path + 'right-arrow.svg');
+      background-size: cover;
+      background-position: center;
+    }
+
+    > .list-wrapper {
+      max-height: 0;
+      @include transition-3d($duration: 1500ms);
+      overflow-y: hidden;
+    }
+  }
+
+  li {
+    &.menu-item--children:hover {
+      > .list-wrapper {
+//      height: inherit;
+      }
+    }
+
+    &.menu-item--expanded {
+      &::before {
+        @include transition(all 250ms ease-in-out);
+        @include transform(rotate(90deg));
+        background-image: url($images-path + 'right-arrow.svg');
+        display: block;
+      }
+
+      > .list-wrapper {
+        max-height: 600px;
+        > ul {
+          display: block;
+        }
+      }
+    }
+
+    &.menu-item--placeholder {
+      > a {
+        color: $color-placeholder
+      }
+    }
+
+    &.menu-item--needs-review {
+      > a {
+        color: $color-needs-review;
+      }
+    }
+
+    &.menu-item--confidential {
+      > a {
+        color: $color-confidential;
+      }
+    }
+
+    &.menu-item--draft {
+      > a {
+        color: $color-draft;
+      }
+    }
+
+    &.menu-item--active {
+      > a {
+        background-color: $secondary-background-color;
+      }
+    }
+  }
+}

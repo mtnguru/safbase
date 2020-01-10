@@ -1,0 +1,118 @@
+@function page-margin () {
+  @return $color-white;
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+
+  main {
+    @include outer-container;
+    padding: 1.5em 0;
+    @include clearfix;
+  }
+
+  &.no-sidebars {
+    main {
+      section#content {
+        @include span-columns(36);
+      }
+    }
+  }
+
+  &.one-sidebar.sidebar-first {
+    main {
+      aside {
+        &#sidebar-first {
+          @include span-columns(12);
+          padding-right: 2em;
+        }
+      }
+
+      section#content {
+        @include span-columns(24);
+      }
+    }
+  }
+
+  &.one-sidebar.sidebar-second {
+    main {
+      aside {
+        &#sidebar-second {
+          @include span-columns(12);
+          padding-left: 2em;
+        }
+      }
+
+      section#content {
+        @include span-columns(24);
+      }
+    }
+  }
+
+  &.two-sidebars {
+    main {
+      aside {
+        &#sidebar-first {
+          @include span-columns(9);
+          padding-right: rem(25);
+        }
+
+        &#sidebar-second {
+          @include span-columns(9);
+          padding-left: 2em;
+        }
+      }
+
+      section#content {
+        @include span-columns(12);
+      }
+    }
+  }
+}
+
+$page-padding-mobile: 20px;
+$page-padding-tablet: 20px;
+$page-padding-desktop: 40px;
+$page-padding-widescreen: 60px;
+
+%layout-padding-mobile {
+  @include media($bp320only) {
+    padding-left: $page-padding-mobile;
+    padding-right: $page-padding-mobile;
+  } // $bp320only
+} // %layout-padding-mobile
+
+%layout-padding-tablet {
+  @include media($bp580only) {
+    padding-left: $page-padding-tablet;
+    padding-right: $page-padding-tablet;
+  } // $bp580only
+} // %layout-padding-tablet
+
+%layout-padding-desktop {
+  @include media($bp960only) {
+    padding-left: $page-padding-desktop;
+    padding-right: $page-padding-desktop;
+  } // $bp960only
+} // %layout-padding-desktop
+
+%layout-padding-widescreen {
+  @include media($bp1280) {
+    padding-left: $page-padding-widescreen;
+    padding-right: $page-padding-widescreen;
+  } // $b1280
+} // %layout-padding-widescreen
+
+%layout-padding {
+  @extend %layout-padding-mobile;
+  @extend %layout-padding-tablet;
+  @extend %layout-padding-desktop;
+  @extend %layout-padding-widescreen;
+} // %layout-padding
+
+.outer-container {
+  @include outer-container;
+}
+

@@ -1,0 +1,133 @@
+<?php
+/**
+ *
+ * @file - az_media_entity_image.module
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+function az_media_entity_image_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  return;
+}
+
+function az_media_entity_image_form_entity_browser_media_browser_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['#validate'][] = 'az_media_entity_image_validate';
+  $form['actions']['submit']['#submit'][] = 'az_media_entity_image_submit';
+  return;
+}
+
+function az_media_entity_image_validate($form, FormStateInterface $form_state) {
+  // $form_state->values['entity']['field_author'];
+  // $form_state->values['entity']['field_create_date'];
+  // $form_state->values['entity']['field_dimenstions'];
+  // $form_state->values['entity']['field_geofield'];
+  $values = $form_state->getValues();
+  $name = $form_state->getValue('name');
+  $entity = $form_state->getValue('entity');
+  $geofield = $form_state->getValue(['entity', 'field_geofield']);
+  return;
+}
+
+function az_media_entity_image_submit($form, FormStateInterface $form_state) {
+  return;
+}
+
+function az_media_entity_image_entity_embed_display_plugins_alter(array &$info) {
+  // Don't allow users to embed images alone - only allow rendered media_entities.
+  unset($info['media_image']);
+  return;
+}
+
+function az_media_entity_image_entity_embed_display_plugins_for_context_alter(array &$definitions, array $contexts) {
+  // Do nothing if no entity is provided.
+  if (!isset($contexts['entity'])) {
+    return;
+  }
+  $entity = $contexts['entity'];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * FORM ID: media_image_form
+ * Set default photographer to be the logged in user.
+ */
+function az_media_entity_image_form_media_image_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+//$form['field_author']['widget'][0]['target_id']['#default_value'] = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+  $form['#validate'][] = 'az_media_entity_image_form_media_image_form_validate';
+  $form['actions']['submit']['#submit'][] = 'az_media_entity_image_form_media_image_form_submit';
+}
+function az_media_entity_image_form_media_image_form_validate ($form, FormStateInterface $form_state) {
+  return;
+}
+
+function az_media_entity_image_form_media_image_form_submit ($form, FormStateInterface $form_state) {
+  return;
+}
+
+function az_media_entity_image_form_entity_browser_image_browser_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  return;
+}
+
+/**
+ * Implements hook_file_presave().
+ *
+ * Preprocess image: Reduce filesize by resizing image and changing 'quality'
+ * using the convert command from the gd graphics library.
+ *
+ * @param $file
+ */
+function az_media_entity_image_file_presave($file) {
+  // Preprocess images - resize (scale) and reduce 'quality'
+  if (strstr($file->getMimeType(), 'image') && $file->source != 'icon_file') {
+
+    $srcPath = \Drupal::service('file_system')->realpath($file->getFileUri());  // /home/atom/private
+    $info = pathinfo($srcPath);
+    if ($info['extension'] == 'png') {
+      $uinfo = parse_url($file->getFileUri());
+      $filename = $uinfo['host'] . '.jpg';
+      $file->setFileUri($uinfo['scheme'] . '://' . $filename);
+      $file->setFilename($filename);
+    }
+    else {
+      $filename = $info['basename'];
+    }
+
+
+    $destPath = $info['dirname'] . '/' . $filename;
+
+    if ($srcPath != $destPath) {
+      $tmpPath = file_directory_temp() . '/tmp_' . $filename;
+
+      $initialSize = filesize($srcPath);
+      $dims = getimagesize($srcPath);
+
+      // Default settings - Reduces 4M cell phone image file to appx 200-500KB.
+      $quality = 50;
+      $resolution = array(
+        'width' => 10000,
+        'height' => 10000,
+      );
+
+      // If image is greater than max resolution in width or height then resize it.
+      $res = ($dims[0] > $resolution['width'] || $dims[1] > $resolution['height'])
+        ? "-resize " . $resolution['width'] . 'x' . $resolution['height']
+        : '';
+
+      // Create and execute gd library convert command
+      $cmd = "convert $res -quality $quality '$srcPath' '$tmpPath';" .
+        " cp '$tmpPath' '$destPath'; ";
+//      " rm '$tmpPath';";
+
+      if ($srcPath != $destPath) {
+//      $cmd .= " rm '$srcPath'";
+      }
+      `$cmd`;
+
+      $finalSize = filesize($destPath);
+      drupal_set_message('File saved: ' . $srcPath . ' -> ' . $destPath .
+        '   Size: ' . $initialSize . ' -> ' . $finalSize);
+    }
+  }
+}
+

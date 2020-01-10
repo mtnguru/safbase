@@ -1,0 +1,9 @@
+.az-stream {
+  .views-row {
+    padding: 1em 0;
+    border-bottom: $base-border;
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+}

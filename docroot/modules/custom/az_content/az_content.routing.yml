@@ -1,0 +1,8 @@
+content.getContent:
+  path: 'content/getContent'
+  defaults:
+    _title: "Get different type of content"
+    _controller: '\Drupal\az_content\Controller\ContentController::getContent'
+  requirements:
+    _permission: 'access content'
+

@@ -1,0 +1,9 @@
+$content-padding-mobile: 20;
+$content-padding-desktop: 30;
+
+$content-min-width-mobile: ($min-width-mobile - ($content-padding-mobile * 2));
+$content-min-width-tablet: ($min-width-tablet - ($content-padding-mobile * 2));
+$content-min-width-desktop: ($min-width-desktop - ($content-padding-desktop * 2));
+$content-min-width-widescreen: ($min-width-widescreen - ($content-padding-desktop * 2));
+
+

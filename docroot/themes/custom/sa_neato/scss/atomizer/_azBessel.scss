@@ -1,0 +1,26 @@
+#bessel-graph-dialog-container {
+  width: 28%;
+
+  float: right;
+  position: absolute;
+  top: -10px;
+  left: 250px;
+
+  .content-pane {
+    .image-wrapper {
+      position: relative;
+    }
+    img {
+      width: 100%;
+      vertical-align: bottom;
+    }
+    canvas {
+      border: 1px solid #000;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  }
+}

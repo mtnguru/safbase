@@ -1,0 +1,9 @@
+// @mixin minimize-text
+// Use to hide display of text within elements.
+// Useful to give accessible descriptions for elements such as icons, buttons, etc
+
+@mixin minimize-text {
+  font-size: 0 !important;
+  line-height: 0 !important;
+  text-shadow: unset !important;
+} // @mixin minimize-text

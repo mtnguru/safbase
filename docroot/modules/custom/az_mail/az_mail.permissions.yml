@@ -1,0 +1,10 @@
+receive new content notifications:
+  title: Receive New Content Notifications
+  description: When new content is added send an email - intended for administrators only.
+receive new user notifications:
+  title: Receive New User Notifications
+  description: When new user is added send an email - intended for administrators only.
+show email log messages:
+  title: Show email log messages
+  description: Show log messages showing who has been emailed.
+

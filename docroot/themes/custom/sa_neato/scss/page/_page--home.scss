@@ -1,0 +1,39 @@
+article#node-467 {
+  @include clearfix;
+
+  .section-top {
+    .sidebar-right {
+      @include media(max-width $bp580) {
+        width: 100%;
+      }
+      @include media($bp960) {
+        float: right;
+        width: 360px;
+        padding-left: 30px;
+      }
+    }
+
+    .content-left {
+      position: relative;
+      @include clearfix;
+
+      @include media(max-width $bp580) {
+        width: 100%;
+      }
+
+      @include media($bp960) {
+        float: right;
+        width: calc(100% - 360px);
+      }
+    }
+  }
+
+  .section-bottom {
+    margin-bottom: 30px;
+    width: 100%;
+  }
+
+  .statistics-counter {
+    display: none;
+  }
+}

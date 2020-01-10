@@ -1,0 +1,139 @@
+.fas {
+  margin-right: 3px;
+  font-size: 120%;
+}
+
+/*
+.fas-bars {
+  ::before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 400;
+    content: "\f133";
+  }
+}
+*/
+
+// .fa-event        { @extend .fa-calendar; }
+// .fa-article      { @extend .fa-file-alt; }
+
+/*
+.fa-dot-circle-o {
+  &::before {
+//  font-size: 120%;
+//  margin-top: -3px;
+  }
+}
+
+.sam-tm {
+  &::after {
+    font-family: FontAwesome;
+    display: inline-block;
+    content: "\f25c";
+    font-size: 35%;
+    position: relative;
+    top: -1.9em;
+    padding-left: .2em;
+    padding-right: .2em;
+  }
+}
+
+.az-fa-info-circle,
+.az-fa-dot-circle-o,
+.fa-info-circle,
+.fa-dot-circle-o {
+  font-size: 120% !important;
+  margin-top: -3px;
+}
+
+.az-fa {
+  font-family: FontAwesome;
+  display: inline-block;
+  padding-right: 5px;
+  width: (18em/14);
+  text-align: center;
+  font-weight: 200;
+}
+
+.az-fa-accessibility:before     { @extend .az-fa; content: "\f29a"; }
+.az-fa-adjust:before            { @extend .az-fa; content: "\f042"; }
+.az-fa-arrow-down:before        { @extend .az-fa; content: "\f063"; }
+.az-fa-arrow-left:before        { @extend .az-fa; content: "\f060"; }
+.az-fa-arrow-right:before       { @extend .az-fa; content: "\f061"; }
+.az-fa-arrow-up:before          { @extend .az-fa; content: "\f062"; }
+.az-fa-arrows-alt:before        { @extend .az-fa; content: "\f0b2"; }
+.az-fa-bars:before              { @extend .az-fa; content: "\f0c9"; }
+.az-fa-birkeland:before,
+.az-fa-bolt:before              { @extend .az-fa; content: "\f0e7"; }
+.az-fa-book-page:before         { @extend .az-fa; content: "\f02d"; }
+.az-fa-book:before              { @extend .az-fa; content: "\f02d"; }
+.az-fa-atom:before,
+.az-fa-bullseye:before          { @extend .az-fa; content: "\f140"; }
+.az-fa-calculator:before        { @extend .az-fa; content: "\f1ec"; }
+.az-fa-event:before,
+.az-fa-calendar:before          { @extend .az-fa; content: "\f073"; }
+.az-fa-camera:before            { @extend .az-fa; content: "\f030"; }
+.az-fa-chart-bar:before         { @extend .az-fa; content: "\f080"; }
+.az-fa-chart-line:before        { @extend .az-fa; content: "\f201"; }
+.az-fa-clock-o:before           { @extend .az-fa; content: "\f017"; }
+.az-fa-close:before             { @extend .az-fa; content: "\f00d"; }
+.az-fa-cog:before               { @extend .az-fa; content: "\f013"; }
+.az-fa-comment:before           { @extend .az-fa; content: "\f075"; }
+.az-fa-comment-o:before         { @extend .az-fa; content: "\f0e5"; }
+.az-fa-comments-o:before        { @extend .az-fa; content: "\f0e6"; }
+.az-fa-commenting-o:before      { @extend .az-fa; content: "\f27b"; }
+.az-fa-copyright:before         { @extend .az-fa; content: "\f1f9"; }
+.az-fa-cube:before              { @extend .az-fa; content: "\f1b2"; }
+.az-fa-dot-circle-o:before      { @extend .az-fa; content: "\f192"; }
+.az-fa-email:before,
+.az-fa-envelope:before          { @extend .az-fa; content: "\f0e0"; }
+.az-fa-document:before,
+.az-fa-file:before              { @extend .az-fa; content: "\f15b"; }
+.az-fa-file-alt:before          { @extend .az-fa; content: "\f15c"; }
+.az-fa-file-o:before            { @extend .az-fa; content: "\f016"; }
+.az-fa-file-image-o:before      { @extend .az-fa; content: "\f1c5"; }
+.az-fa-article:before,
+.az-fa-file-text:before         { @extend .az-fa; content: "\f0f6"; }
+.az-fa-element:before,
+.az-fa-fire:before              { @extend .az-fa; content: "\f06d"; }
+.az-fa-folder:before            { @extend .az-fa; content: "\f07b"; }
+.az-fa-futbol-o:before          { @extend .az-fa; content: "\f1e3"; }
+.az-fa-globe:before             { @extend .az-fa; content: "\f0ac"; }
+.az-fa-heart-o:before           { @extend .az-fa; content: "\f08a"; }
+.az-fa-info-circle:before       { @extend .az-fa; content: "\f05a"; }
+.az-fa-list:before              { @extend .az-fa; content: "\f03a"; }
+.az-fa-mouse-pointer:before     { @extend .az-fa; content: "\f245"; }
+.az-fa-news:before,
+.az-fa-newspaper:before         { @extend .az-fa; content: "\f1ea"; }
+.az-fa-paintbrush:before        { @extend .az-fa; content: "\f1fc"; }
+.az-fa-pencil:before            { @extend .az-fa; content: "\f040"; }
+.az-fa-scene:before,
+.az-fa-image:before,
+.az-fa-picture-o:before         { @extend .az-fa; content: "\f03e"; }
+.az-fa-play:before              { @extend .az-fa; content: "\f04b"; }
+.az-fa-glossary:before,
+.az-fa-glossary-term:before,
+.az-fa-puzzle-piece:before      { @extend .az-fa; content: "\f12e"; }
+.az-fa-question:before          { @extend .az-fa; content: "\f128"; }
+.az-fa-refresh:before           { @extend .az-fa; content: "\f021"; }
+.az-fa-repeat:before            { @extend .az-fa; content: "\f01e"; }
+.az-fa-reply:before             { @extend .az-fa; content: "\f112"; }
+.az-fa-snippet:before,
+.az-fa-scissors:before          { @extend .az-fa; content: "\f0c4"; }
+.az-fa-share:before             { @extend .az-fa; content: "\f064"; }
+.az-fa-sitemap:before           { @extend .az-fa; content: "\f0e8"; }
+.az-fa-tasks:before             { @extend .az-fa; content: "\f0ae"; }
+.az-fa-ticket:before            { @extend .az-fa; content: "\f145"; }
+.az-fa-times:before             { @extend .az-fa; content: "\f00d"; }
+.az-fa-times-circle-o:before    { @extend .az-fa; content: "\f05c"; }
+.az-fa-trademark:before         { @extend .az-fa; content: "\f25c"; }
+.az-fa-undo:before              { @extend .az-fa; content: "\f0e2"; }
+.az-fa-upload:before            { @extend .az-fa; content: "\f093"; }
+.az-fa-video:before,
+.az-fa-video-camera:before      { @extend .az-fa; content: "\f03d"; }
+.az-fa-window-maximize:before   { @extend .az-fa; content: "\f2d0"; }
+.az-fa-window-minimize:before   { @extend .az-fa; content: "\f2d1"; }
+*/
+
+// .az-book {
+//   @extend .az-fa-book;
+// }

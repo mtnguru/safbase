@@ -1,0 +1,125 @@
+<?php
+
+/**
+ * @file
+ * Glossify module.
+ */
+
+use Drupal\az_glossify\GlossifyBase;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function az_glossify_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.az_glossify':
+      return 'todo';
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function az_glossify_theme() {
+  return [
+    'az_glossify_tooltip' => [
+      'variables' => ['word' => NULL, 'tip' => NULL],
+    ],
+    'az_glossify_link' => [
+      'variables' => ['word' => NULL, 'tip' => NULL, 'tipurl' => NULL],
+    ],
+  ];
+}
+
+/**
+ * {@inheritdoc}
+ */
+function _az_glossify_process_text($text, &$matched) {
+
+  $terms = [];
+
+  // Query for topics taxonomy term data.
+  $query = \Drupal::database()->select('taxonomy_term_field_data', 'tfd');
+  $query->addfield('tfd', 'tid', 'id');
+  $query->addfield('tfd', 'name');
+  $query->addfield('tfd', 'name', 'name_norm');
+  $query->addField('tfd', 'description__value', 'description');
+  $query->condition('tfd.vid', 'topics', 'IN');
+
+  $query->leftjoin('taxonomy_term__field_include_in_glossary', 'tfg', 'tfg.entity_id = tfd.tid');
+  $query->addField('tfg', 'field_include_in_glossary_value', 'in_glossary');
+  $query->condition('tfg.field_include_in_glossary_value', '1');
+
+  $query->leftjoin('taxonomy_term__field_tooltip', 'tft', 'tft.entity_id = tfd.tid' );
+  $query->addField('tft', 'field_tooltip_value', 'tooltip');
+
+  $results = $query->execute()->fetchAllAssoc('name_norm');
+  // Build terms array.
+  foreach ($results as $result) {
+    // Make name_norm lowercase, it seems not possible in PDO query?
+    $result->name_norm = strtolower($result->name_norm);
+    $terms[$result->name_norm] = $result;
+  }
+
+  // Process text.
+  if (count($terms) > 0) {
+    $text = GlossifyBase::parseTooltipMatch(
+      $text,
+      $terms,
+      false,  // case sensitivity
+      true,  // first only
+      'tooltips_links',
+      '/taxonomy/term/[id]',
+      $matched
+    );
+  }
+  return $text;
+}
+
+function _az_glossify_add_topics(&$node, $matched) {
+  $tids = $node->field_topics->getValue();
+  foreach ($matched as $name => $tid) {
+    $found = false;
+    foreach ($tids as $i => $val) {
+      if ($val['target_id'] == $tid) {
+        $found = true;
+      }
+    }
+    if (!$found) {
+      $node->field_topics->appendItem($tid);
+    }
+  }
+}
+
+function az_glossify_node_presave(EntityInterface $node) {
+
+  $type = $node->getType();
+  $matched = [];
+  if ($type == 'article') {
+    $text = $node->body->value;
+    $newText = _az_glossify_process_text($text, $matched);
+    $node->body->setValue([
+      'value' => $newText,
+      'format' => 'full_html'
+    ]);
+  }
+  if ($type == 'page') {
+    $sections = $node->field_sections->getValue();
+    foreach($sections as $section){
+      foreach($section['subform']['field_subsections'] as $subsection) {
+        if (!empty($subsection['subform'])) {
+          $text = $subsection['subform']['body'][0]['value'];
+          $newText = _az_glossify_process_text($text, $matched);
+          $subsection['subform']['body'][0]['value'] = $newText;
+        }
+      }
+    }
+    $node->field_sections->setValue($sections);
+  }
+  _az_glossify_add_topics($node, $matched);
+
+  return;
+}
+
