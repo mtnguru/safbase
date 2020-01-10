@@ -12,7 +12,6 @@
 
 # Don't include node_modules and bower_components
 *node_modules
-*bower_components
 
 # Ignore site files directory
 /docroot/sites/default/files
