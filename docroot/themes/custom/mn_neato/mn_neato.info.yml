@@ -1,11 +1,11 @@
-name: The Money Game Theme
+name: The Money Game Theme - Old
 type: theme
 description: Custom sub-theme for the Money Game - based on the the Neato base theme.
 base theme: neato
 core: 8.x
 libraries:
-  - money/global-styling
-  - money/global-scripts
+  - mn_neato/global-styling
+  - mn_neato/global-scripts
 regions:
   header: Header
   featured: Featured

@@ -1,0 +1,49 @@
+div.az-dialog {
+
+  background-color: $dialog-bg-color;
+  border-radius: 10px;
+  border: 2px solid $dialog-bd-color;
+  overflow: hidden;
+
+  position: absolute ;
+
+  .title-pane {
+    background-color: $dialog-title-bg-color;
+    i {
+      padding-right: .5em;
+      font-size: 85%;
+    }
+    h3 {
+      padding: .4em;
+      margin: 0;
+      font-size: 120%;
+    }
+    .button {   // Close button in upper right
+      width: 20px;
+      height: 20px;
+      margin-top: 8px;
+      margin-right: 10px;
+      float: right;
+      &:before {
+        font-size: 110%;
+        padding-right: 0;
+      }
+    }
+  }
+
+  .button-pane {
+    @include clearfix;
+    padding: 7px 15px;
+    background-color: $dialog-button-bg-color;
+    height: 20px;
+    button {
+      float: right;
+      margin-left: 5px;
+      border-radius: 7px;
+    }
+  }
+
+  .ui-icon {
+    background-image: url($images-path + 'ui-icons_ffffff_256x240.png');
+  }
+}

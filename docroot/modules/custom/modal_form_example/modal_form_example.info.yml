@@ -1,0 +1,6 @@
+name: Modal Form Example
+type: module
+description: 'Modal Form Example module'
+package: Example
+version: VERSION
+core: 8.x

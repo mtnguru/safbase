@@ -1,2 +1,0 @@
-!function(t){"use strict";function n(n){t.trim(n.val()).length?n.addClass("populated").parent().addClass("populated"):n.removeClass("populated").parent().removeClass("populated")}var a=function(a){n(a),a.on("blur",function(){n(t(this))})};Drupal.behaviors.az_form={attach:function(n){t(n).find("input");t(n).find("input").once("AzForm").each(function(){a(t(this))})}}}(jQuery);
-//# sourceMappingURL=maps/form.js.map
