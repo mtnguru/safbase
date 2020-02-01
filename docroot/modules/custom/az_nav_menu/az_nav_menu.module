@@ -1,0 +1,23 @@
+<?php
+
+
+/**
+ * @file
+ * Contains az_nav_menu.module.
+ */
+
+
+/**
+ * Implements hook_theme().
+ *
+ * @param $variables
+ */
+function az_nav_menu_theme(&$variables) {
+  return [
+    'user_popup_menu' => [
+      'variables' => [
+        'uid' => 0,
+      ],
+    ],
+  ];
+}

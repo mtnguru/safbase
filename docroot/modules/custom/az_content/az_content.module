@@ -33,20 +33,6 @@ function az_content_theme() {
         'id' => NULL,
       ],
     ],
-    'block_donate' => [
-      'variables' => [
-        'title' => NULL,
-        'description' => NULL,
-        'more_url' => NULL,
-      ],
-    ],
-    'block_contribute' => [
-      'variables' => [
-        'title' => NULL,
-        'description' => NULL,
-        'more_url' => NULL,
-      ],
-    ],
   ];
 }
 
@@ -232,14 +218,6 @@ function az_content_node_access(NodeInterface $node, $op, AccountInterface $acco
     }
   }
   return AccessResult::neutral();
-}
-
-function az_content_preprocess_html(&$variables) {
-//_az_content_add_SAM_tm($variables['head_title']['title']->string);
-}
-
-function az_content_preprocess_page_title(&$variables) {
-//_az_content_add_SAM_tm($variables['title']);
 }
 
 /**
@@ -678,12 +656,6 @@ function _az_content_add_query_args($set) {
   return $set;
 }
 
-function _az_content_add_SAM_tm(&$text) {
-  $text = preg_replace('/\bSAM\b/', '<span class="sam-tm">SAM</span>', $text, -1, $count);
-  $text = preg_replace('/Structured Atom Model/', '<span class="sam-tm">Structured Atom Model</span>', $text, -1, $count);
-  $text = preg_replace('/\bAtomizer\b/', '<span class="sam-tm">Atomizer</span>', $text, -1, $count);
-}
-
 /**
  * Implements HOOK_preprocess_node().
  *
@@ -719,8 +691,7 @@ function az_content_preprocess_node(&$variables) {
   // Get the status and moderation_state
   if ($node->hasField('moderation_state') &&
       $node->moderation_state->value && 
-      $type != 'email' && 
-      $type != 'birkeland') {
+      $type != 'email') 
     $variables['state'] = $node->moderation_state->value;
   } else {
     $variables['state'] = ($node->status->value) ? 'published' : 'draft';
@@ -748,9 +719,7 @@ function az_content_preprocess_node(&$variables) {
     case 'ticket':
     case 'glossary':
 
-      _az_content_add_SAM_tm($variables['content']['body'][0]['#text']);
       $title = $node->title->value;
-      _az_content_add_SAM_tm($title);
       $variables['title'] = ['#markup' => $title];
 
       if ($viewMode == 'teaser') {
@@ -780,6 +749,7 @@ function az_content_preprocess_node(&$variables) {
             ->view($block_entity);
         }
 
+	/*
         // If field_contribute has content - add contribute block
         if ($node->hasField('field_contribute') && !$node->field_contribute->isEmpty()) {
           $block_entity = Drupal\block\Entity\Block::load('azcontributeblock');
@@ -787,6 +757,7 @@ function az_content_preprocess_node(&$variables) {
             ->getViewBuilder('block')
             ->view($block_entity);
         }
+        */
 
         // If field_display_image_map has a value then add the map views map block.
         if ($node->hasField('field_display_image_map') && $node->field_display_image_map->value == true) {
@@ -820,35 +791,17 @@ function az_content_preprocess_node(&$variables) {
             'empty' => 'NO DISPLAY'
           ]);
         }
-
-        // Add the Donate block.
-        $block_entity = Drupal\block\Entity\Block::load('azdonateblock');
-        $variables['sidebar']['block_donate'] =
-          \Drupal::entityTypeManager()->getViewBuilder('block')->view($block_entity);
       }
       break;
 
     case 'landing_page':
 
       // Dashboard - Front page
-      if (\Drupal::service('path.matcher')->isFrontPage()) { _az_content_create_home($node, $variables); } // Home page
+      if (\Drupal::service('path.matcher')->isFrontPage()) { 
+        _az_content_create_home($node, $variables); 
+      } // Home page
       if ($node->id() == 311)  { _az_content_create_dashboard($node, $variables); }                         // User Dashboard
-//    if ($node->id() == 799)  { _az_content_create_dashboard($node, $variables); }                         // User Dashboard
       if ($node->id() == 585)  { _az_content_create_upcoming_events($node, $variables); }                   // Upcoming events
-      break;
-
-    case 'atom':
-      if (\Drupal::currentUser()->hasPermission('atomizer display structure')) {
-        $variables['display_notes'] = true;
-      }
-      $element = Node::load($node->field_element->target_id);
-      $variables['valence'] = $element->field_valence->value;
-      break;
-
-    case 'molecule':
-      if (\Drupal::currentUser()->hasPermission('atomizer display structure')) {
-        $variables['display_notes'] = true;
-      }
       break;
   }
 
@@ -889,7 +842,6 @@ function _az_content_group_status_page($node, &$variables) {
 function _az_content_render_node($nid, $viewMode = 'full') {
   $node = \Drupal::entityManager()->getStorage('node')->load($nid);
   $body = $node->body->value;
-  _az_content_add_SAM_tm($body);
   $node->body->setValue([
     'value' => $body,
     'format' => $node->body->format,

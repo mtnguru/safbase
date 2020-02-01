@@ -1,0 +1,13 @@
+section#featured {
+  background: $base-bg-color;
+  margin: 0 auto;
+  max-width: var(--max-page-width);
+  padding: var(--spacing);
+
+  h1.page-title {
+    text-align: center;
+    font-size: 200%;
+    line-height: --line-height--heading; 
+    margin-bottom: 0;
+  }
+}

@@ -1,0 +1,9 @@
+global-styling:
+  version: VERSION
+  css:
+    base:
+      css/neato_neato_starter.css: {}
+global-scripts:
+  version: VERSION
+  js:
+    js/scripts.js: {}

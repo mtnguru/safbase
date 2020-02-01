@@ -1,0 +1,28 @@
+#site-header {
+  margin: 0 auto;
+  background: linear-gradient(173deg, rgba(48, 111, 161, 1) 0%, rgba(10, 25, 36, 1) 100%);
+  color: $color-white;
+  border-bottom: solid 3px #fcb400;
+
+  ul.menu {
+    a {
+      text-decoration: none;
+
+      &.is-active {
+        color: $color-white;
+      }
+    }
+  }
+
+  div#block-au-branding {
+    position: absolute;
+    top: 8px;
+    left: 20px;
+//  background-color: #218;
+//  border-radius: 47%;
+
+    > a {
+      text-decoration: none;
+    }
+  }
+}

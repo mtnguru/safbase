@@ -1,0 +1,568 @@
+/**
+ * @file
+ * Collapsible details.
+ *
+ * @see collapse.js
+ */
+
+@import "../base/variables.pcss.css";
+
+/**
+ * Available modifiers are:
+ *  - .au_claro-details--accordion
+ *  - .au_claro-details--accordion-item
+ *
+ * Despite the fact that 'accordion' isn't used anywhere right now, we
+ * implemented it (since the design defines that).
+ * This variant can be used by setting the '#accordion' to TRUE for a
+ * Details render element:
+ * @code
+ * $build['detail_accordion'] = [
+ *   '#type' => 'details',
+ *   '#accordion' => TRUE,
+ * ];
+ *
+ * 'Accordion item' is used for the details of the node edit sidebar. For
+ * creating accordion item list from a set of details, set the surrounding
+ * Container render element's '#accordion' key to TRUE.
+ *
+ * 'Vertical tabs item' is used for the children of the VerticalTabs render
+ * element.
+ */
+
+:root {
+  --size-summary-border-radius: calc(var(--details-border-size-radius) - var(--details-border-size));
+  --summary-accordion-padding-vertical: calc(var(--space-l) + ((var(--space-m) - var(--space-l)) / 2));
+  --summary-accordion-line-height: var(--space-l);
+}
+
+.au_claro-details {
+  display: block;
+  margin-top: var(--space-m);
+  margin-bottom: var(--space-m);
+  color: var(--color-text);
+  border: var(--details-border-size) solid var(--details-border-color);
+  border-radius: var(--details-border-size-radius);
+  background-color: var(--color-white);
+  box-shadow: var(--details-box-shadow);
+}
+
+.au_claro-details--accordion-item,
+.au_claro-details--vertical-tabs-item {
+  margin-top: 0;
+  margin-bottom: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.au_claro-details--accordion-item:first-of-type {
+  border-top-left-radius: var(--details-border-size-radius);
+  border-top-right-radius: var(--details-border-size-radius);
+}
+
+.au_claro-details--accordion-item:last-of-type {
+  border-bottom-right-radius: var(--details-border-size-radius);
+  border-bottom-left-radius: var(--details-border-size-radius);
+}
+
+/**
+ * Details summary styles.
+ */
+
+.au_claro-details__summary {
+  position: relative;
+  box-sizing: border-box;
+  padding: var(--space-m) var(--space-m) var(--space-m) var(--details-desktop-wrapper-padding-start); /* LTR */
+  list-style: none;
+  cursor: pointer;
+  transition: background-color var(--details-bg-color-transition-duration) ease-in-out;
+  word-wrap: break-word;
+  hyphens: auto;
+  color: var(--color-davysgrey);
+  border-radius: var(--size-summary-border-radius);
+  background-color: transparent;
+  line-height: var(--space-m);
+}
+[dir="rtl"] .au_claro-details__summary {
+  padding-right: var(--details-desktop-wrapper-padding-start);
+  padding-left: var(--space-m);
+}
+
+/* Modifiers */
+.au_claro-details__summary--accordion,
+.au_claro-details__summary--accordion-item,
+.au_claro-details__summary--vertical-tabs-item {
+  padding: var(--summary-accordion-padding-vertical) var(--space-l) var(--summary-accordion-padding-vertical) var(--details-desktop-wrapper-padding-start); /* LTR */
+  background: var(--color-white);
+  line-height: var(--summary-accordion-line-height);
+}
+[dir="rtl"] .au_claro-details__summary--accordion,
+[dir="rtl"] .au_claro-details__summary--accordion-item,
+[dir="rtl"] .au_claro-details__summary--vertical-tabs-item {
+  padding-right: var(--details-desktop-wrapper-padding-start);
+  padding-left: var(--space-l);
+}
+
+/**
+ * Accordion list items must not have border radius except they are the first
+ * or the last ones.
+ */
+.au_claro-details__summary--accordion-item {
+  border-radius: 0;
+}
+
+.au_claro-details--accordion-item:first-child .au_claro-details__summary--accordion-item {
+  border-top-left-radius: var(--details-border-size-radius);
+  border-top-right-radius: var(--details-border-size-radius);
+}
+
+.au_claro-details--accordion-item:last-child .au_claro-details__summary--accordion-item {
+  border-bottom-right-radius: var(--details-border-size-radius);
+  border-bottom-left-radius: var(--details-border-size-radius);
+}
+
+/**
+ * Details marker styles.
+ */
+
+/* Remove the marker on Chrome */
+.au_claro-details__summary::-webkit-details-marker {
+  display: none;
+}
+
+.au_claro-details__summary::before {
+  position: absolute;
+  top: 50%;
+  left: var(--space-s); /* LTR */
+  display: inline-block;
+  width: var(--space-m);
+  height: var(--space-m);
+  margin-top: calc(var(--space-m) / -2);
+  content: "";
+  transition: transform var(--details-transform-transition-duration) ease-in 0s;
+  transform: rotate(0); /* LTR */
+  text-align: center;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M5.2109375,1.3144531 3.7890625,2.7226562 9.0917969,8.0761719 3.7890625,13.429688 5.2109375,14.837891 11.908203,8.0761719Z' fill='%23545560'/%3E%3C/svg%3E") no-repeat 50% 50%;
+  background-size: contain;
+}
+[dir="rtl"] .au_claro-details__summary::before {
+  right: var(--space-s);
+  left: auto;
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .au_claro-details__summary::before {
+    transition: none;
+  }
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .au_claro-details__summary::before {
+    width: 0.5625rem;
+    height: 0.5625rem;
+    margin-top: calc(0.5625rem / -2);
+    transition: transform var(--details-transform-transition-duration) ease-in 0s, margin var(--details-transform-transition-duration) ease-in 0s;
+    transform: rotate(45deg); /* LTR */
+    border: 0.125rem solid;
+    border-width: 0.125rem 0.125rem 0 0;
+    background: none;
+  }
+
+  [dir="rtl"] .au_claro-details__summary::before {
+    transform: rotate(225deg);
+  }
+}
+
+/**
+ * Safari (at least version 12.1) cannot handle our details marker
+ * transition properly.
+ *
+ * Every additional pointer triggered toggle event freezes the transition,
+ * and the transition is continued and finished after the pointer leaves
+ * the Detail elements' summary.
+ *
+ * Even that it is possible to provide a JavaScript workaround for it (by
+ * adding/removing a helper class with JavaScript if the Details is
+ * toggled), that hack will make RTL details worse than without the hack.
+ *
+ * This weird query was found in
+ * https://stackoverflow.com/questions/16348489#25975282 (based on the
+ * answer it works for Safari 10.1+)
+ */
+/* stylelint-disable-next-line unit-whitelist */
+@media not all and (min-resolution: 0.001dpcm) {
+  @media {
+    .au_claro-details__summary::before {
+      transition: none;
+    }
+  }
+}
+
+/**
+ * Details summary focus.
+ */
+.au_claro-details__summary::after {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  bottom: -1px;
+  left: -1px;
+  content: "";
+  transition: opacity var(--details-box-shadow-transition-duration) ease-in-out;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: var(--details-border-size-radius);
+  box-shadow: inset 0 0 0 var(--details-summary-focus-border-size) var(--details-summary-shadow-color);
+}
+
+.au_claro-details > .au_claro-details__summary--accordion-item::after,
+.vertical-tabs__item > .au_claro-details__summary--vertical-tabs-item::after {
+  border-radius: 0;
+}
+
+.au_claro-details:first-child > .au_claro-details__summary--accordion-item::after,
+.vertical-tabs__item--first > .au_claro-details__summary--vertical-tabs-item::after {
+  border-top-left-radius: var(--details-border-size-radius);
+  border-top-right-radius: var(--details-border-size-radius);
+}
+
+.au_claro-details:last-child > .au_claro-details__summary--accordion-item::after,
+.vertical-tabs__item--last > .au_claro-details__summary--vertical-tabs-item::after {
+  border-bottom-right-radius: var(--details-border-size-radius);
+  border-bottom-left-radius: var(--details-border-size-radius);
+}
+
+/**
+ * Focus box of accordions and accordion items must not have bottom border
+ * radius if their accordion is expanded.
+ */
+.au_claro-details[open] > .au_claro-details__summary--accordion::after,
+.au_claro-details[open] > .au_claro-details__summary--accordion-item::after,
+.vertical-tabs__item--last[open] > .au_claro-details__summary--vertical-tabs-item::after {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/**
+ * Details summary states.
+ */
+.au_claro-details__summary:focus {
+  box-shadow: none;
+}
+
+[open] .au_claro-details__summary--accordion,
+[open] .au_claro-details__summary--accordion-item,
+[open] .au_claro-details__summary--vertical-tabs-item {
+  color: var(--color-absolutezero);
+}
+
+.au_claro-details__summary:hover::before,
+.au_claro-details__summary:hover:focus::before,
+.au_claro-details[open] > .au_claro-details__summary:focus::before,
+.au_claro-details[open] > .au_claro-details__summary--accordion::before,
+.au_claro-details[open] > .au_claro-details__summary--accordion-item::before,
+.au_claro-details[open] > .au_claro-details__summary--vertical-tabs-item::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M5.2109375,1.3144531 3.7890625,2.7226562 9.0917969,8.0761719 3.7890625,13.429688 5.2109375,14.837891 11.908203,8.0761719Z' fill='%230036B1'/%3E%3C/svg%3E");
+}
+
+.au_claro-details[open] > .au_claro-details__summary {
+  border-radius: var(--size-summary-border-radius) var(--size-summary-border-radius) 0 0;
+}
+
+.au_claro-details[open] > .au_claro-details__summary::before {
+  transform: rotate(90deg); /* for LTR and RTL */
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .au_claro-details__summary:hover::before,
+  .au_claro-details__summary:hover:focus::before {
+    background: none;
+  }
+
+  .au_claro-details[open] > .au_claro-details__summary::before,
+  [dir="rtl"] .au_claro-details[open] > .au_claro-details__summary::before {
+    margin-top: calc((0.5625rem / -2) - 0.125rem);
+    margin-right: 0.125rem;
+    transform: rotate(135deg); /* for LTR and RTL */
+    background: none;
+  }
+}
+
+.au_claro-details[open] > .au_claro-details__summary--accordion,
+.au_claro-details[open] > .au_claro-details__summary--accordion-item,
+.au_claro-details[open] > .au_claro-details__summary--vertical-tabs-item {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.au_claro-details__summary:hover {
+  color: var(--color-absolutezero);
+  background-color: var(--color-bgblue-hover);
+}
+
+/**
+ * Focus styles.
+ */
+
+/**
+ * Active has to be here for Firefox.
+ * Merges standard collapse-processed selectors.
+ */
+[open] > .au_claro-details__summary--accordion:not(:focus):not(:active)::after,
+[open] > .au_claro-details__summary--accordion-item:not(:focus):not(:active)::after,
+.collapse-processed[open] > .au_claro-details__summary--accordion .details-title:not(:focus)::after,
+.collapse-processed[open] > .au_claro-details__summary--accordion-item .details-title:not(:focus)::after,
+[open] > .au_claro-details__summary--vertical-tabs-item:not(:focus):not(:active)::after,
+.collapse-processed[open] > .au_claro-details__summary--vertical-tabs-item .details-title:not(:focus)::after {
+  opacity: 1;
+  border: var(--details-summary-focus-border-size) solid var(--color-absolutezero);
+  border-width: 0 0 0 var(--details-summary-focus-border-size); /* LTR */
+  box-shadow: none;
+}
+[dir="rtl"] [open] > .au_claro-details__summary--accordion:not(:focus)::after,
+[dir="rtl"] [open] > .au_claro-details__summary--accordion-item:not(:focus)::after,
+[dir="rtl"] .collapse-processed[open] > .au_claro-details__summary--accordion .details-title:not(:focus)::after,
+[dir="rtl"] .collapse-processed[open] > .au_claro-details__summary--accordion-item .details-title:not(:focus)::after,
+[dir="rtl"] [open] > .au_claro-details__summary--vertical-tabs-item:not(:focus)::after,
+[dir="rtl"] .collapse-processed[open] > .au_claro-details__summary--vertical-tabs-item .details-title:not(:focus)::after {
+  border-width: 0 var(--details-summary-focus-border-size) 0 0;
+}
+
+.au_claro-details__summary:focus::after,
+.au_claro-details__summary:active::after,
+.collapse-processed > .au_claro-details__summary .details-title:focus::after {
+  opacity: 1;
+}
+
+/**
+ * Safari workaround.
+ */
+/* stylelint-disable-next-line unit-whitelist */
+@media not all and (min-resolution: 0.001dpcm) {
+  @media {
+    .au_claro-details__summary::after {
+      transition: none;
+    }
+  }
+}
+
+.au_claro-details[open] > .au_claro-details__summary:focus {
+  color: var(--color-absolutezero);
+}
+
+/**
+ * Details wrapper and content.
+ *
+ * Accordion and accordion-item variants should have an extra background.
+ * In that case, we render an additional wrapper 'au_claro-details__content' that
+ * creates the visual margins around the content, and use the original
+ * wrapper for setting the background color.
+ *
+ * If there is no border or padding defined, margins of parent-child elements
+ * collapse to the highest value. We want to take benefit of this behavior,
+ * because the elements inside the details content won't cause too big
+ * vertical spacing.
+ */
+.au_claro-details__wrapper,
+.au_claro-details__content {
+  margin: var(--space-m);
+}
+
+.au_claro-details__wrapper--accordion,
+.au_claro-details__wrapper--accordion-item,
+.au_claro-details__wrapper--vertical-tabs-item {
+  margin: 0;
+}
+.au_claro-details__wrapper--accordion::before,
+.au_claro-details__wrapper--accordion::after,
+.au_claro-details__wrapper--accordion-item::before,
+.au_claro-details__wrapper--accordion-item::after,
+.au_claro-details__wrapper--vertical-tabs-item::before,
+.au_claro-details__wrapper--vertical-tabs-item::after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.au_claro-details__wrapper--accordion,
+.au_claro-details__wrapper--accordion-item,
+.au_claro-details__wrapper--vertical-tabs-item {
+  border-top: var(--details-border-size) solid var(--details-border-color);
+  background-color: var(--color-whitesmoke-o-40);
+}
+
+@media screen and (min-width: 48em) {
+  .au_claro-details__wrapper {
+    margin: var(--space-l) var(--details-desktop-wrapper-padding-start);
+  }
+
+  .au_claro-details__wrapper--accordion,
+  .au_claro-details__wrapper--accordion-item,
+  .au_claro-details__wrapper--vertical-tabs-item {
+    margin: 0;
+  }
+}
+
+@media screen and (min-width: 85em) {
+  .js .au_claro-details__wrapper--vertical-tabs-item {
+    margin: 0;
+    border-top: 0;
+    background-color: transparent;
+  }
+}
+
+.au_claro-details__content--accordion,
+.au_claro-details__content--accordion-item,
+.au_claro-details__content--vertical-tabs-item {
+  margin: var(--space-m) var(--space-m) var(--space-l);
+}
+
+@media screen and (min-width: 85em) {
+  .vertical-tabs .au_claro-details__content--vertical-tabs-item {
+    margin: var(--space-l);
+  }
+}
+
+/* Description. */
+.au_claro-details__description {
+  margin-bottom: var(--space-m);
+  color: var(--input-fg-color--description);
+  font-size: var(--font-size-xs); /* ~13px */
+  line-height: calc(17rem / 16); /* 17px */
+}
+.au_claro-details__description.is-disabled {
+  color: var(--input--disabled-fg-color);
+}
+
+/**
+ * Collapse processed for non-supporting browsers like IE or Edge.
+ */
+.collapse-processed > .au_claro-details__summary {
+  padding: 0;
+}
+
+.collapse-processed > .au_claro-details__summary::after {
+  content: none;
+}
+
+.collapse-processed > .au_claro-details__summary .details-title {
+  position: relative;
+  display: block;
+  padding: var(--space-m) var(--space-m) var(--space-m) var(--details-desktop-wrapper-padding-start); /* LTR */
+  text-decoration: none;
+  color: inherit;
+  border-radius: var(--size-summary-border-radius);
+}
+[dir="rtl"] .collapse-processed > .au_claro-details__summary .details-title {
+  padding-right: var(--details-desktop-wrapper-padding-start);
+  padding-left: var(--space-m);
+}
+
+.collapse-processed > .au_claro-details__summary--accordion .details-title,
+.collapse-processed > .au_claro-details__summary--accordion-item .details-title,
+.collapse-processed > .au_claro-details__summary--vertical-tabs-item .details-title {
+  padding: var(--summary-accordion-padding-vertical) var(--space-l) var(--summary-accordion-padding-vertical) var(--details-desktop-wrapper-padding-start); /* LTR */
+}
+[dir="rtl"] .collapse-processed > .au_claro-details__summary--accordion .details-title,
+[dir="rtl"] .collapse-processed > .au_claro-details__summary--accordion-item .details-title,
+[dir="rtl"] .collapse-processed > .au_claro-details__summary--vertical-tabs-item .details-title {
+  padding-right: var(--details-desktop-wrapper-padding-start);
+  padding-left: var(--space-l);
+}
+
+/* Focus and hover states. */
+.collapse-processed > .au_claro-details__summary .details-title:focus,
+.collapse-processed > .au_claro-details__summary .details-title:hover {
+  z-index: 1;
+  text-decoration: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.collapse-processed > .au_claro-details__summary .details-title::after {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  bottom: -1px;
+  left: -1px;
+  content: "";
+  transition: opacity var(--details-box-shadow-transition-duration) ease-in-out;
+  pointer-events: none;
+  opacity: 0;
+  border: var(--details-summary-focus-border-size) solid var(--color-focus);
+  border-radius: var(--details-border-size-radius);
+}
+
+.collapse-processed > .au_claro-details__summary .details-title:focus::after {
+  opacity: 1;
+}
+
+/* Accordion item modifiers for the focus box. */
+
+.collapse-processed > .au_claro-details__summary--accordion-item .details-title::after,
+.vertical-tabs__item > .au_claro-details__summary--vertical-tabs-item .details-title::after {
+  border-radius: 0;
+}
+
+.collapse-processed:first-child > .au_claro-details__summary--accordion-item .details-title::after,
+.vertical-tabs__item--first > .au_claro-details__summary--vertical-tabs-item .details-title::after {
+  border-top-left-radius: var(--details-border-size-radius);
+  border-top-right-radius: var(--details-border-size-radius);
+}
+
+.collapse-processed:last-child > .au_claro-details__summary--accordion-item .details-title::after,
+.vertical-tabs__item--last > .au_claro-details__summary--vertical-tabs-item .details-title::after {
+  border-bottom-right-radius: var(--details-border-size-radius);
+  border-bottom-left-radius: var(--details-border-size-radius);
+}
+
+.collapse-processed[open] > .au_claro-details__summary--accordion .details-title::after,
+.collapse-processed[open] > .au_claro-details__summary--accordion-item .details-title::after,
+.vertical-tabs__item[open] > .au_claro-details__summary--vertical-tabs-item .details-title::after {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/**
+ * Hide JS summary from the details polyfill to make it consistent with native
+ * details elements.
+ *
+ * @todo Consider removing this after https://www.drupal.org/node/2493957 has
+ * been solved.
+ */
+.au_claro-details__summary--accordion .summary,
+.au_claro-details__summary--accordion-item .summary,
+.au_claro-details__summary--vertical-tabs-item .summary {
+  display: none;
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .collapse-processed[open] > .au_claro-details__summary--accordion .details-title:not(:focus)::after,
+  .collapse-processed[open] > .au_claro-details__summary--accordion-item .details-title:not(:focus)::after,
+  .collapse-processed[open] > .au_claro-details__summary--vertical-tabs-item .details-title:not(:focus)::after {
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+    left: -1px;
+  }
+  .collapse-processed > .au_claro-details__summary .details-title::after {
+    top: -5px;
+    right: -5px;
+    bottom: -5px;
+    left: -5px;
+    border: 2px dotted;
+  }
+}
+
+.required-mark::after {
+  display: inline-block;
+  width: 0.4375rem;
+  height: 0.4375rem;
+  margin-right: 0.3em;
+  margin-left: 0.3em;
+  content: "";
+  vertical-align: super;
+  background-image: url(../../images/core/ee0000/required.svg);
+  background-repeat: no-repeat;
+  background-size: 0.4375rem 0.4375rem;
+}

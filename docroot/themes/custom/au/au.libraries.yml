@@ -1,0 +1,10 @@
+global-styling:
+  version: VERSION
+  css:
+    base:
+      css/au.css: {}
+global-scripts:
+  version: VERSION
+  js:
+    js/scripts.js: {}
+    js/js-src/menuTop.js: {}

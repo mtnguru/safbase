@@ -1,0 +1,17 @@
+name: Aureon Custom theme
+type: theme
+description: Custom Neato subtheme for Aureon Energy
+base theme: neato
+core: 8.x
+libraries:
+  - au/global-styling
+  - au/global-scripts
+regions:
+  header: Header
+  featured: Featured
+  breadcrumb: Breadcrumb
+  sidebar_first: 'Sidebar first'
+  content: Content
+  sidebar_second: 'Sidebar second'
+  footer_top: 'Footer Top'
+  footer_bottom: 'Footer Bottom'

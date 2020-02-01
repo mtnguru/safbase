@@ -25,7 +25,9 @@
         "drupal/fontawesome": "^2.14",
         "drupal/adminimal_theme": "^1.5",
         "drupal/webform": "^5.6",
-        "drupal/admin_toolbar": "^2.0"
+        "drupal/admin_toolbar": "^2.0",
+        "drupal/realname": "^1.0@RC",
+        "drupal/address": "^1.7"
     },
     "require-dev": {
         "drush/drush": "^9.0"

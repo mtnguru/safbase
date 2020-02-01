@@ -19,7 +19,7 @@ use Drupal\Core\Menu;
  *
  * @Block(
  *   id = "sa_top_nav_block",
- *   admin_label = @Translation("SA Top Navigation Block"),
+ *   admin_label = @Translation("Top Navigation Menu"),
  *   category = @Translation("AZ Domain")
  * )
  */

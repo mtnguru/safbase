@@ -1,0 +1,5 @@
+name: AZ Navigation Menu
+type: module
+description: Display top navigation menu
+core: 8.x
+package: AZ
