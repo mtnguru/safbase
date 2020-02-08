@@ -1,6 +1,6 @@
 // Main navigation header at top of the page.
 
-#site-header {
+#site-navigation {
 
   $base-border-color: gainsboro !default;
   $base-border-radius: 3px !default;
@@ -24,7 +24,7 @@
   $navigation-submenu-padding: 20px;
   $navigation-submenu-width: 20em;
 
-  background-image: url('/sites/default/files/au-nav.jpg');
+  background-image: url('/sites/default/files/sf-nav.jpg');
   background-size: cover;
   background-position-y: 15%;
 
@@ -548,3 +548,34 @@
   }
 }
 
+
+
+/*
+#site-header {
+  margin: 0 auto;
+  background: linear-gradient(173deg, rgba(48, 111, 161, 1) 0%, rgba(10, 25, 36, 1) 100%);
+  color: $color-white;
+  border-bottom: solid 3px #fcb400;
+
+  ul.menu {
+    a {
+      text-decoration: none;
+
+      &.is-active {
+        color: $color-white;
+      }
+    }
+  }
+
+  div#block-au-branding {
+    position: absolute;
+    top: 8px;
+    left: 20px;
+
+    > a {
+      text-decoration: none;
+    }
+  }
+
+}
+*/

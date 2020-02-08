@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Functions to support theming in the au theme.
+ * Functions to support theming in the sf theme.
  */
 
 use Drupal\Core\Url;
@@ -12,7 +12,7 @@ use Drupal\Core\Url;
  *
  * @param array $variables
  */
-function au_preprocess_html(&$variables) {
+function sf_preprocess_html(&$variables) {
   if (!empty($variables['page']['sidebar_first'])) {
     $sidebar_left = $variables['page']['sidebar_first'];
   }
@@ -43,7 +43,7 @@ function au_preprocess_html(&$variables) {
  *
  * @param array $variables
  */
-function au_preprocess_page(&$variables) {
+function sf_preprocess_page(&$variables) {
 
   $site_name = \Drupal::configFactory()->get('system.site')->get('name');
 
@@ -59,5 +59,5 @@ function au_preprocess_page(&$variables) {
  *
  * @param array $variables
  */
-function au_preprocess_node(&$variables) {
+function sf_preprocess_node(&$variables) {
 }

@@ -2,7 +2,7 @@ global-styling:
   version: VERSION
   css:
     base:
-      css/au.css: {}
+      css/sf.css: {}
 global-scripts:
   version: VERSION
   js:

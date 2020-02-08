@@ -27,7 +27,16 @@
         "drupal/webform": "^5.6",
         "drupal/admin_toolbar": "^2.0",
         "drupal/realname": "^1.0@RC",
-        "drupal/address": "^1.7"
+        "drupal/address": "^1.7",
+        "drupal/exif": "^1.2",
+        "drupal/geofield": "^1.8",
+        "drupal/ckeditor_smiley": "^1.0",
+        "drupal/ckeditor_font": "^1.0",
+        "drupal/colorbutton": "^1.1",
+        "drupal/linkit": "^4.3",
+        "drupal/geofield_map": "^2.57",
+        "drupal/likebtn": "^2.15",
+        "drupal/field_group": "^3.0"
     },
     "require-dev": {
         "drush/drush": "^9.0"

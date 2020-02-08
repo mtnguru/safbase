@@ -666,7 +666,7 @@ function az_content_preprocess_node(&$variables) {
   $node = $variables['node'];
   $type = $node->getType();
   $viewMode = $variables['view_mode'];
-  
+
   $az_wysiwyg = &drupal_static('az_wysiwyg', []);
   $az_wysiwyg = [  // The wysiwyug filter needs this information.
     'node' => $node,
@@ -690,8 +690,8 @@ function az_content_preprocess_node(&$variables) {
 
   // Get the status and moderation_state
   if ($node->hasField('moderation_state') &&
-      $node->moderation_state->value && 
-      $type != 'email') 
+      $node->moderation_state->value &&
+      $type != 'email') {
     $variables['state'] = $node->moderation_state->value;
   } else {
     $variables['state'] = ($node->status->value) ? 'published' : 'draft';
@@ -797,8 +797,8 @@ function az_content_preprocess_node(&$variables) {
     case 'landing_page':
 
       // Dashboard - Front page
-      if (\Drupal::service('path.matcher')->isFrontPage()) { 
-        _az_content_create_home($node, $variables); 
+      if (\Drupal::service('path.matcher')->isFrontPage()) {
+        _az_content_create_home($node, $variables);
       } // Home page
       if ($node->id() == 311)  { _az_content_create_dashboard($node, $variables); }                         // User Dashboard
       if ($node->id() == 585)  { _az_content_create_upcoming_events($node, $variables); }                   // Upcoming events
@@ -841,11 +841,17 @@ function _az_content_group_status_page($node, &$variables) {
  */
 function _az_content_render_node($nid, $viewMode = 'full') {
   $node = \Drupal::entityManager()->getStorage('node')->load($nid);
-  $body = $node->body->value;
-  $node->body->setValue([
-    'value' => $body,
-    'format' => $node->body->format,
-  ]);
+  if ($node) {
+    $body = $node->body->value;
+    $node->body->setValue([
+      'value' => $body,
+      'format' => $node->body->format,
+    ]);
+  } else {
+    $message = '_az_content_render_node: Could not find node ' . $nid . '.';
+    \Drupal::logger('my_module')->error($message);
+    return null;
+  }
   return \Drupal::entityTypeManager()->getViewBuilder('node')->view($node, $viewMode);
 }
 

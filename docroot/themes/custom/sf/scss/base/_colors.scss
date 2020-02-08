@@ -13,7 +13,7 @@ $color-brown: #554411;
 
 $color-light-green: #C9D9D4;
 $color-green: #33ff33;
-$color-dark-green: #55ff55;
+$color-dark-green: #107010;
 
 $color-light-blue: #C9D9FF;
 $color-blue: #5555FF;
@@ -42,8 +42,8 @@ $separator-color: $color-gold;
 $base-button-color: $color-dark-green;
 $base-button-color--contrast: $color-white;
 $base-button-color--inactive: lighten($base-button-color, 30%);
-$base-button-color--selected: darken($base-button-color, 30%);
-$base-button-color--hover: darken($base-button-color, 15%);
+$base-button-color--selected: darken($base-button-color, 15%);
+$base-button-color--hover: lighten($base-button-color, 10%);
 
 $action-color: #477DCA !default;
 

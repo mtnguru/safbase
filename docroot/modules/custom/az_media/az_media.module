@@ -29,9 +29,9 @@ function az_media_form_media_image_edit_form_alter(&$form, FormStateInterface $f
 }
 
 function az_media_form_media_image_edit_form_validate(&$form, FormStateInterface &$formState) {
-  if (!empty($formState->errors['field_create_date'])) {
-    $date = $formState->getValue('field_create_date');
-  }
+//if (!empty($formState->errors['field_create_date'])) {
+//  $date = $formState->getValue('field_create_date');
+//}
   return;
 }
 

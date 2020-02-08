@@ -117,7 +117,7 @@ rgba(0, 0, 0, 0.1);
   flex-grow: 1;
   align-items: center;
   box-sizing: border-box;
-  min-height: 3rem;
+  min-height: 2rem;
   padding: 0.75rem 1.5rem;
   text-decoration: none;
   color: #545560;
@@ -125,7 +125,7 @@ rgba(0, 0, 0, 0.1);
 }
 
 .tabs__link:focus {
-  min-height: calc(3rem + 2px);
+  min-height: calc(2rem + 2px);
   margin: -1px;
   padding-left: calc(1.5rem - 2px); /* LTR */
   text-decoration: none;
@@ -311,7 +311,7 @@ rgba(216, 217, 224, 0.8);
   }
 
   .is-horizontal .tabs__link:focus {
-    min-height: 3rem;
+    min-height: 2rem;
     margin: 0;
     padding-right: 2rem;
     padding-left: 2rem;
