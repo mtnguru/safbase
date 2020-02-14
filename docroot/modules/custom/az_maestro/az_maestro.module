@@ -28,9 +28,9 @@ function az_maestro_preprocess_node(&$variables) {
       // Create the user block in the upper left corner.
       $variables['user_id'] = $user->id();
       $variables['user_name'] = $user->name->value;
-      $picture = $user->field_picture->getValue();
-      if ($user->field_picture->isEmpty()) {
-        $field = \Drupal\field\Entity\FieldConfig::loadByName('user', 'user', 'field_picture');
+      $picture = $user->user_picture->getValue();
+      if ($user->user_picture->isEmpty()) {
+        $field = \Drupal\field\Entity\FieldConfig::loadByName('user', 'user', 'user_picture');
         $default_image = $field->getSetting('default_image');
         $file = \Drupal::entityManager()
           ->loadEntityByUuid('file', $default_image['uuid']);

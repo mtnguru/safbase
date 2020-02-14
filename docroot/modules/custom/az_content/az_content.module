@@ -202,6 +202,7 @@ function az_content_entity_access(EntityInterface $entity, $op, AccountInterface
  * @return \Drupal\Core\Access\AccessResultForbidden|\Drupal\Core\Access\AccessResultNeutral
  */
 function az_content_node_access(NodeInterface $node, $op, AccountInterface $account) {
+  /*
   if ($gid = AzGroupQuery::nodeInGroup($node)) {
     $group = \Drupal::entityManager()->getStorage('group')->load($gid);
 
@@ -217,6 +218,7 @@ function az_content_node_access(NodeInterface $node, $op, AccountInterface $acco
       }
     }
   }
+  */
   return AccessResult::neutral();
 }
 
@@ -366,19 +368,17 @@ function _az_content_add_node_to_media($media, $articleId) {
  */
 function az_content_preprocess_block(&$variables) {
   switch ($variables['plugin_id']) {
-    case 'ie_top_nav_block':
-    case 'em_top_nav_block':
-    case 'sa_top_nav_block':
+    case 'top_nav_block':
       $current_path = \Drupal::service('path.current')->getPath();
       $variables['page_url'] = \Drupal::service('path.alias_manager')->getAliasByPath($current_path);
       $uid = \Drupal::currentUser()->id();
       if ($uid > 0) {
         $user = \Drupal::entityTypeManager()->getStorage('user')->load($uid);
-        if ($user->field_picture->isEmpty()) {
+        if ($user->user_picture->isEmpty()) {
           $variables['user_name'] = $user->name[0]->value;
         }
         else {
-          $fid = $user->field_picture[0]->target_id;
+          $fid = $user->user_picture[0]->target_id;
           $file = \Drupal\file\Entity\File::load($fid);
           $variables['user_picture_url'] = \Drupal\image\Entity\ImageStyle::load('thumbnail')
             ->buildUrl($file->getFileUri());
@@ -797,11 +797,11 @@ function az_content_preprocess_node(&$variables) {
     case 'landing_page':
 
       // Dashboard - Front page
-      if (\Drupal::service('path.matcher')->isFrontPage()) {
-        _az_content_create_home($node, $variables);
-      } // Home page
-      if ($node->id() == 311)  { _az_content_create_dashboard($node, $variables); }                         // User Dashboard
-      if ($node->id() == 585)  { _az_content_create_upcoming_events($node, $variables); }                   // Upcoming events
+//    if (\Drupal::service('path.matcher')->isFrontPage()) {
+//      _az_content_create_home($node, $variables);
+//    } // Home page
+//    if ($node->id() == 311)  { _az_content_create_dashboard($node, $variables); }                         // User Dashboard
+//    if ($node->id() == 585)  { _az_content_create_upcoming_events($node, $variables); }                   // Upcoming events
       break;
   }
 
@@ -840,7 +840,7 @@ function _az_content_group_status_page($node, &$variables) {
  * @return array
  */
 function _az_content_render_node($nid, $viewMode = 'full') {
-  $node = \Drupal::entityManager()->getStorage('node')->load($nid);
+  $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
   if ($node) {
     $body = $node->body->value;
     $node->body->setValue([
@@ -875,13 +875,13 @@ function _az_content_wrap_block($title, $content) {
 
 function _az_content_create_home($node, &$variables) {
 
-  $variables['snippet_home_em']          = _az_content_render_node(377, 'full');
-  $variables['snippet_home_welcome']     = _az_content_wrap_block('Welcome back', _az_content_render_node(482, 'full'));
-  $variables['snippet_home_login']       = _az_content_wrap_block(null, _az_content_render_node(481, 'full'));
-  $variables['snippet_home_communities'] = _az_content_render_node(479, 'full');
+//$variables['snippet_home_em']          = _az_content_render_node(377, 'full');
+//$variables['snippet_home_welcome']     = _az_content_wrap_block('Welcome back', _az_content_render_node(482, 'full'));
+//$variables['snippet_home_login']       = _az_content_wrap_block(null, _az_content_render_node(481, 'full'));
+//$variables['snippet_home_communities'] = _az_content_render_node(479, 'full');
 
   // Get view with active communities
-  $variables['view_home_communities'] = views_embed_view('az_groups', 'block_communities');
+//$variables['view_home_communities'] = views_embed_view('az_groups', 'block_communities');
 
   /*
   $variables['block_recent_activity'] = _az_content_build_block('recent-activity', [
@@ -942,9 +942,9 @@ function _az_content_create_dashboard($node, &$variables) {
     // Create the user block in the upper left corner.
     $variables['user_id'] = $user->id();
     $variables['user_name'] = $user->name->value;
-    $picture = $user->field_picture->getValue();
-    if ($user->field_picture->isEmpty()) {
-      $field = \Drupal\field\Entity\FieldConfig::loadByName('user', 'user', 'field_picture');
+    $picture = $user->user_picture->getValue();
+    if ($user->user_picture->isEmpty()) {
+      $field = \Drupal\field\Entity\FieldConfig::loadByName('user', 'user', 'user_picture');
       $default_image = $field->getSetting('default_image');
       $file = \Drupal::entityManager()
         ->loadEntityByUuid('file', $default_image['uuid']);

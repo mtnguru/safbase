@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0fee70b7d4d7bf11a081610a74eb8822",
+    "content-hash": "152b6095fdad41a6fa189c6e4a7a030a",
     "packages": [
         {
             "name": "acquia/lightning",
@@ -180,7 +180,7 @@
             "version": "3.4.1",
             "source": {
                 "type": "git",
-                "url": "git@github.com:jquery/jquery-dist.git",
+                "url": "https://github.com/jquery/jquery-dist.git",
                 "reference": "15bc73803f76bc53b654b9fdbbbc096f56d7c03d"
             },
             "dist": {
@@ -1991,6 +1991,58 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/ckeditor_smiley",
                 "issues": "http://drupal.org/project/issues/ckeditor_smiley"
+            }
+        },
+        {
+            "name": "drupal/codesnippet",
+            "version": "1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/codesnippet.git",
+                "reference": "8.x-1.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/codesnippet-8.x-1.6.zip",
+                "reference": "8.x-1.6",
+                "shasum": "cda07e671361defed098a8e82da0cd42c44d3970"
+            },
+            "require": {
+                "drupal/core": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.6",
+                    "datestamp": "1473688439",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Kevin Quillen (kevinquillen)",
+                    "homepage": "https://www.drupal.org/u/kevinquillen",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Adds the CodeSnippet plugin to CKEditor.",
+            "homepage": "http://drupal.org/project/codesnippet",
+            "keywords": [
+                "Drupal"
+            ],
+            "support": {
+                "source": "http://cgit.drupalcode.org/codesnippet",
+                "issues": "http://drupal.org/project/issues/codesnippet"
             }
         },
         {
@@ -6635,6 +6687,65 @@
             "homepage": "https://www.drupal.org/project/redirect",
             "support": {
                 "source": "https://git.drupalcode.org/project/redirect"
+            }
+        },
+        {
+            "name": "drupal/rename_admin_paths",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/rename_admin_paths.git",
+                "reference": "8.x-2.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/rename_admin_paths-8.x-2.0.zip",
+                "reference": "8.x-2.0",
+                "shasum": "9c7eaddb0af467635cd1d9e824a00ab50de4fec5"
+            },
+            "require": {
+                "drupal/core": "^8.7|^9.0",
+                "php": "^7.1"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-2.x": "2.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-2.0",
+                    "datestamp": "1574153584",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Raphael Apard",
+                    "homepage": "https://www.drupal.org/user/410831"
+                },
+                {
+                    "name": "slootjes",
+                    "homepage": "https://www.drupal.org/user/3516667"
+                }
+            ],
+            "description": "The purpose of this module is to secure drupal backend by renaming the admin paths.",
+            "homepage": "https://www.drupal.org/project/rename_admin_paths",
+            "keywords": [
+                "admin",
+                "guess",
+                "override",
+                "protect",
+                "security"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/rename_admin_paths"
             }
         },
         {

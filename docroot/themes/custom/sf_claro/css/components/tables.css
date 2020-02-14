@@ -235,7 +235,7 @@ tr.color-error:focus {
 td {
   box-sizing: border-box;
   height: 2rem;
-  padding: 0.5rem 0.5rem;
+  padding: 0.1rem 1rem;
   text-align: left; /* LTR */
 }
 

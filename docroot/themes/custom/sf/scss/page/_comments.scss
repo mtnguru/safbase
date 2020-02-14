@@ -1,0 +1,24 @@
+section.field--type-comment {
+  margin-top: 2em;
+  hr {
+    width: 85%;
+    color: $color-dark-blue;
+    margin: 1em auto;
+  }
+
+  footer.comment__meta {
+    margin-bottom: .5em;
+    article {
+      display: inline-block;
+      img {
+        width: 50px;
+      }
+    }
+    p.comment__submitted {
+      display: inline-block;
+      vertical-align: top;
+      margin-top: 1em;
+      margin-left: 1em;
+    }
+  }
+}

@@ -78,8 +78,6 @@ function az_user_form_user_login_form_alter(&$form, FormStateInterface $form_sta
  * Redirects the user to the dashboard after logging in.
  */
 function _az_user_login_form_submit(&$form, FormStateInterface $form_state) {
-  $url = Url::fromRoute('<front>');
-
   // Check if a destination was set, probably on an exception controller.
   // @see \Drupal\user\Form\UserLoginForm::submitForm()
   $request = \Drupal::service('request_stack')->getCurrentRequest();
@@ -186,11 +184,11 @@ function az_user_preprocess_menu(&$variables) {
       ->getStorage('user')
       ->load(\Drupal::currentUser()->id());
 //  if ($user) {
-//    if ($user->field_picture->isEmpty()) {
+//    if ($user->user_picture->isEmpty()) {
 //      $variables['user_name'] = $user->name[0]->value;
 //    }
 //    else {
-//      $fid = $user->field_picture[0]->target_id;
+//      $fid = $user->user_picture[0]->target_id;
 //      $file = \Drupal\file\Entity\File::load($fid);
 //      $variables['user_picture_url'] = \Drupal\image\Entity\ImageStyle::load('thumbnail')->buildUrl($file->getFileUri());
 //    }

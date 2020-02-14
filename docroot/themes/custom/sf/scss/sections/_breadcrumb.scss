@@ -1,12 +1,13 @@
 .breadcrumb {
   $base-border-radius: 3px !default;
-  $base-spacing: 1.5em !default;
+  $base-spacing: .5em !default;
   $breadcrumb-border: 1px solid $breadcrumb-border-color;
   $breadcrumb-height: $base-spacing * 1.5;
 
   display: inline-block;
-  margin-bottom: $base-spacing;
+  margin: 1em 0 .5em;
   text-align: left;
+  padding: 0;
 
   a {
     background-color: $breadcrumb-background;

@@ -1,0 +1,36 @@
+form.webform-submission-form,
+form.webform-submission-add-form {
+
+  .details-wrapper {
+    padding: 0 1.5em .5em;
+  }
+  fieldset {
+    >legend {
+      margin-bottom: 0;
+    }
+  }
+  .fieldset-wrapper {
+    margin-left: 1.5em;
+  }
+  .form-item {
+    margin: 0;
+  }
+
+  details {
+    margin-bottom: .5em;
+    margin-top: .5em;
+  }
+
+  .webform-details-toggle-state-wrapper {
+    margin-top: 0;
+    margin-bottom: .5em;
+
+    button {
+      padding: .25em .75em;
+      font-size: 85%;
+    }
+  }
+}
+
+
+

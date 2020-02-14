@@ -36,7 +36,9 @@
         "drupal/linkit": "^4.3",
         "drupal/geofield_map": "^2.57",
         "drupal/likebtn": "^2.15",
-        "drupal/field_group": "^3.0"
+        "drupal/field_group": "^3.0",
+        "drupal/codesnippet": "^1.6",
+        "drupal/rename_admin_paths": "^2.0"
     },
     "require-dev": {
         "drush/drush": "^9.0"

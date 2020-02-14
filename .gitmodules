@@ -1,0 +1,6 @@
+[submodule "imager"]
+	path = imager
+	url = https://github.com/mtnguru/imager
+[submodule "docroot/modules/custom/imager"]
+	path = docroot/modules/custom/imager
+	url = https://github.com/mtnguru/imager
