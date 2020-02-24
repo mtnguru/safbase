@@ -1,0 +1,7 @@
+form.node-ticket-form {
+  #edit-field-visibility {
+    .form-type-radio:nth-child(1) {
+      display: none;
+    }
+  }
+}

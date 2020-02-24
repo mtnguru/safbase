@@ -5,3 +5,15 @@ main.outer-wrapper {
   max-width: var(--max-page-width);
 }
 
+body {
+  &.path-presentations,
+  &.path-runs,
+  &.path-projects,
+  &.path-experiments,
+  &.path-tickets {
+    main.outer-wrapper {
+      max-width: none;
+    }
+  }
+}
+

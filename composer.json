@@ -38,7 +38,8 @@
         "drupal/likebtn": "^2.15",
         "drupal/field_group": "^3.0",
         "drupal/codesnippet": "^1.6",
-        "drupal/rename_admin_paths": "^2.0"
+        "drupal/rename_admin_paths": "^2.0",
+        "drupal/contact_block": "^1.4"
     },
     "require-dev": {
         "drush/drush": "^9.0"

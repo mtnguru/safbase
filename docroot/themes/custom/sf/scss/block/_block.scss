@@ -1,3 +1,9 @@
 .block {
   clear: both;
 }
+
+.block-entity-viewnode {
+  article > h2 {
+    display: none;
+  }
+}

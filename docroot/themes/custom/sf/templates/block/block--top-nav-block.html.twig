@@ -43,13 +43,24 @@
 
 <div{{ attributes.addClass(classes) }}>
 
-  <div id="site-logo">
-    <a href="/home">
-      <img src="/sites/default/files/Aureon_logo.png"></img>
-    </a>
+  <div id="header-top">
+    <div id="site-logo">
+      <a href="/home">
+        <img src="/sites/default/files/Aureon_logo.png"></img>
+      </a>
+    </div>
+
+    <div id="company-name">
+      <div>Aureon</div>
+      <div>Energy Ltd.</div>
+    </div>
+
+    <div id="safire-project">
+      <h1>SAFIRE PROJECT</h1>
+    </div>
   </div>
 
-  <div class="content-container">
+  <div id="header-bottom">
     {% block content %}
       {{ content.top_menu }}
 
@@ -68,15 +79,18 @@
               <article{{ attributes.addClass(['user-popup-menu']) }}>
                 <div class="popup">
                   <div class="links"><a href="/dashboard">My Dashboard</a></div>
-                  <div class="links"><a href="/user">My Profile Page</a></div>
+                  <!-- div class="links"><a href="/user">My Profile Page</a></div -->
                   <div class="links"><a href="/user/logout?destination={{ page_url }}">Logout</a></div>
                   <div class="account-links">
-                    <div class="account-title">Account Settings</div>
+                    {# <div class="account-title">Account Settings</div> #}
+                    <div class="account-link"><a href="/user/{{ user.id }}/edit">Account Settings</a></div>
+                  {#
                     <div class="account-link"><a href="/user/{{ user.id }}/edit?display=account">Identification</a></div>
                     <div class="account-link"><a href="/user/{{ user.id }}/edit?display=biography">Biography</a></div>
                     <div class="account-link"><a href="/user/{{ user.id }}/edit?display=email_notifications">Email Notifications</a></div>
-                    {# <div class="account-link"><a href="/user/{{ user.id }}/edit?display=groups">Groups</a></div> #}
+                    <div class="account-link"><a href="/user/{{ user.id }}/edit?display=groups">Groups</a></div>
                     <div class="account-link"><a href="/user/{{ user.id }}/edit?display=social_media_and_website">Social Media and Website</a></div>
+                  #}
                   </div>
                 </div>
               </article>

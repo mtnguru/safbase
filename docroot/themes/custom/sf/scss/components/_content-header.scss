@@ -1,0 +1,35 @@
+.header-container {
+  .information {
+    font-size: 90%;
+    margin-bottom: 15px;
+
+    .type {
+      &:before {
+        color: darken($color-white, 15%);
+      }
+    }
+
+    svg {
+      margin-right: .3em;
+    }
+
+    .changed {
+      color: $base-date-color;
+      font-style: italic;
+    }
+
+    .state {
+      color: black;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-right: .5em;
+
+      &.published    { background-color: $color-published; }
+      &.unpublished  { background-color: $color-unpublished; }
+      &.needs-review { background-color: $color-needs-review; }
+      &.draft        { background-color: $color-draft; }
+      &.placeholder  { background-color: $color-placeholder; }
+      &.confidential { background-color: $color-confidential; }
+    } // .state
+  } // .information
+} // .header-container

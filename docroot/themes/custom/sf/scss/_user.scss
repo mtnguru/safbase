@@ -1,0 +1,99 @@
+// Top left corner of dashboard
+.user-header {
+  .user-text {
+    line-height: 1.2;
+    .name {
+      color: $color-user;
+      margin-bottom: 15px;
+      font-size: 130%;
+      font-weight: bold;
+    }
+    .links {
+      font-size: 85%;
+    }
+  }
+}
+
+.username {
+  color: $color-user;
+}
+
+// Teasers?
+.author-container {
+  margin-bottom: 15px;
+
+  > .image {
+    display: inline-block;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .author-picture {
+    display: inline-block;
+  }
+
+  .author-text {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 12px;
+
+    .name {
+      line-height: 1.1;
+      font-size: 110%;
+      font-weight: bold;
+      color: $color-user;
+      a {
+        color: $color-user;
+      }
+    }
+
+    .links {
+      font-size: 90%;
+    }
+
+    .location {
+      font-size: 80%;
+    }
+
+    .title {
+      font-style: italic;
+      color: $base-date-color;
+      font-size: 75%;
+    }
+
+    .social-media {
+      margin: 1.5em 0 0 1em;
+    }
+
+    .website {
+    }
+
+    .linkedin {
+    }
+
+    .twitter {
+    }
+
+    .facebook {
+    }
+  } // .author-text
+} // .author-container
+
+.user--compact {
+  .image {
+    img {
+      display: block;
+      border-radius: 25%;
+    } // img
+  } // .image
+} // .user--compact
+
+.user--full {
+//margin-bottom: 2em;
+} // .user--full
+
+.user--views {
+  margin-bottom: 1em;
+}

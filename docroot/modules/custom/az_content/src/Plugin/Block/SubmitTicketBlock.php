@@ -30,24 +30,35 @@ class SubmitTicketBlock extends BlockBase {
     $id = 0;
     switch ($route) {
       case 'entity.group.canonical':
+        $entityType = 'group';
         $activePage = 'recent-content';
-        $group = $this->requestStack->getCurrentRequest()->get('group');
+        $group = \Drupal::service('request_stack')->getCurrentRequest()->get('group');
         if ($value = $group->field_directory_book->getValue()) {
           $bid = $value[0]['target_id'];
         }
-      	$entityType = 'group';
         break;
 
       case 'entity.node.canonical':
+        $entityType = 'contentType';
         $node = \Drupal::service('request_stack')->getCurrentRequest()->get('node');
-      	$entityType = 'contentType';
       	$id = $node->id();
         break;
 
       case 'entity.user.canonical':
         $entityType = 'user';
+        $user = \Drupal::service('request_stack')->getCurrentRequest()->get('user');
+        $id = $user->id();
         break;
-        
+
+      case 'layout_builder.overrides.node.review':
+      case 'layout_builder.overrides.node.view':
+      case 'layout_builder.defaults.node.view':
+      case 'node.add':
+      case 'entity.node.edit_form':
+      case 'view.tickets.page_1':
+      case 'system.404':
+        break;
+
       default:
         \Drupal::messenger()->addMessage(t('az_content::SubmitTicketBlock unknown route ' . $route),'error');
       	break;
@@ -65,11 +76,29 @@ class SubmitTicketBlock extends BlockBase {
 //          'group' => $group->id(),
             'entityType' => $entityType,
             'id' => $id,
-            'node' => $id
           ],
         ]),
       ],
     ];
+
+    /*
+    $build['add_media_link'] = [
+      '#type' => 'container',
+      'link' => [
+        '#type' => 'link',
+        '#title' => t('Add Media'),
+        '#attributes' => ['title' => t('Add media to this page')],
+        '#url' => Url::fromRoute('entity.media_type.add_form', null, [
+          'absolute' => TRUE,
+          'query' => [
+//          'group' => $group->id(),
+            'entityType' => $entityType,
+            'id' => $id,
+          ],
+        ]),
+      ],
+    ];
+    */
     return $build;
   }
 }

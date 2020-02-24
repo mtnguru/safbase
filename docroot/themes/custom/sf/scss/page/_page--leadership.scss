@@ -1,0 +1,17 @@
+.field--name-user-picture {
+  display: inline-block;
+}
+
+.user-header {
+  vertical-align: top;
+  display: inline-block;
+  margin-left: 1em;
+  margin-top: .5em;
+  .field--name-field-full-name {
+    font-weight: bold;
+  }
+  .field--name-field-job-title {
+    font-style: italic;
+  }
+
+}

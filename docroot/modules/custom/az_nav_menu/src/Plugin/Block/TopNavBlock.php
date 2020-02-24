@@ -36,7 +36,7 @@ class TopNavBlock extends BlockBase {
     $parameters->setMinDepth(1);
 
     // Load the tree based on this set of parameters.
-    $tree = $menu_tree_service->load('main', $parameters);
+    $tree = $menu_tree_service->load('aureon-main', $parameters);
     $manipulators = [
       ['callable' => 'menu.default_tree_manipulators:checkNodeAccess'],
       ['callable' => 'menu.default_tree_manipulators:checkAccess'],

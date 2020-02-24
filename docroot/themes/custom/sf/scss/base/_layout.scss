@@ -85,8 +85,8 @@ body {
 
 $page-padding-mobile: 20px;
 $page-padding-tablet: 20px;
-$page-padding-desktop: 40px;
-$page-padding-widescreen: 60px;
+$page-padding-desktop: 30px;
+$page-padding-widescreen: 50px;
 
 %layout-padding-mobile {
   @include media($bp320only) {
@@ -125,12 +125,12 @@ $page-padding-widescreen: 60px;
 
 
 div.layout {
-  margin: .75em 0;
+  margin: 1em 0;
   box-shadow: 0px 0px 5px 1px $color-light-gray;
   border-radius: 8px;
-  padding: .75em 0;
+//padding: .75em 0;
   .block {
-    padding: 0 .75em;
+    padding: 1em;
   }
 }
 

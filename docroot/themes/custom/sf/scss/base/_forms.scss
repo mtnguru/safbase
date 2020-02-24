@@ -3,6 +3,15 @@
   --form-box-shadow-focus: var(--form-box-shadow), 0 0 0.3125rem #{$action-color};
 }
 
+form {
+  > .form-wrapper {
+    padding: 0.1em 1em;
+    box-shadow: 0px 0px 5px 1px $color-gray;
+    margin: .75em 0;
+
+  }
+}
+
 fieldset {
   background-color: transparent;
   border: 0;
@@ -108,3 +117,23 @@ select {
     outline-offset: var(--focus-outline-offset);
   }
 }
+
+// Place the date and time on one line
+.container-inline {
+  .form-type-date {
+    margin: 0;
+    display: inline-block;
+  }
+}
+
+.field--type-language {
+  display: none;
+}
+
+// Indent radio buttons
+.form-radios {
+  .form-item.form-type-radio {
+    margin: .1em 0 .1em 1em;
+  }
+}
+

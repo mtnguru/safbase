@@ -6,5 +6,5 @@ global-styling:
 global-scripts:
   version: VERSION
   js:
-    js/scripts.js: {}
+    js/js-src/scripts.js: {}
     js/js-src/menuTop.js: {}

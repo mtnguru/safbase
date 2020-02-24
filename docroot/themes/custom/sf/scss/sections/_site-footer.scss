@@ -16,21 +16,26 @@
   }
   //////////////////////////////////////////////////////////////////////////////////
 
-  section {
-    @include outer-container;
-  }
+//section {
+//  @include outer-container;
+//}
 
-  background: linear-gradient(187deg, rgba(48,111,161,1) 0%, rgba(10,25,36,1) 100%);
-  color: $color-white;
-  border-top: solid 3px $separator-color;
-  padding: ($base-spacing * 2) $gutter;
-  width: 100%;
+  color: $color-black;
 
   .footer-top {
-    margin-bottom: 1em;
+    color: $color-white;
+    border-top: solid 3px $separator-color;
+    border-bottom: solid 3px $separator-color;
+    width: 100%;
+    background: linear-gradient(187deg, $color-blue, $color-dark-blue);
+    padding: ($base-spacing * 2) $gutter;
+    .block {
+      text-align: center;
+    }
   }
 
   .footer-logo {
+    width: 100%;
     margin-bottom: 2em;
     text-align: center;
 
@@ -40,8 +45,10 @@
   }
 
   .footer-bottom {
+    background: $color-lightest-purple;
+    padding: 1em $gutter;
+    margin-top:20px;
     p {
-      color: $footer-disclaimer-color;
       font-size: 0.9em;
       line-height: 1.5em;
       margin: auto;
@@ -51,6 +58,10 @@
   .copyright {
     @include span-columns(4);
     padding-left: 1em;
+  }
+
+  #block-azsubmitticketblock {
+    margin-bottom: 1.5em;
   }
 
   .utility-menu {

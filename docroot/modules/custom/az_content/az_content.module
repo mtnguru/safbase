@@ -140,11 +140,19 @@ function az_content_form_node_ticket_form_alter(&$form, FormStateInterface $form
     $form['field_group']['widget'][0]['target_id']['#default_value'] = $group;
   }
 
-  if ($request->query->has('node')) {
-    $nid = $request->query->get('node');
-    $node = is_numeric($nid) ? Node::load($nid) : NULL;
-    $form['field_page']['widget'][0]['target_id']['#default_value'] = $node;
-    $form['field_page']['widget'][0]['target_id']['#default_value'] = $node;
+  if ($request->query->has('entityType')) {
+    $entityType = $request->query->get('entityType');
+    $id = $request->query->get('id');
+    switch ($entityType) {
+      case 'contentType':
+        $node = is_numeric($id) ? Node::load($id) : NULL;
+        $form['field_usage']['widget'][0]['target_id']['#default_value'] = $node;
+        break;
+      case 'user':
+        $user = is_numeric($id) ? User::load($id) : NULL;
+        $form['field_usage']['widget'][0]['target_id']['#default_value'] = $user;
+        break;
+    }
   }
 }
 
@@ -656,6 +664,54 @@ function _az_content_add_query_args($set) {
   return $set;
 }
 
+function _az_content_get_fontawesome($bundle) {
+  switch ($bundle) {
+    case 'announcement':
+      $fa = 'fa-birthday-cake';
+      break;
+    case 'article_internal':
+      $fa = 'fa-file-alt';
+      break;
+    case 'book':
+      $fa = 'fa-book';
+      break;
+    case 'discussion':
+      $fa = 'fa-comments';
+      break;
+    case 'event':
+      $fa = 'fa-calendar-alt';
+      break;
+    case 'news':
+      $fa = 'fa-newspaper';
+      break;
+    case 'experiment':
+      $fa = 'fa-flask';
+      break;
+    case 'glossary':
+      $fa = 'fa-puzzle-piece';
+      break;
+    case 'notes':
+      $fa = 'fa-sticky-note';
+      break;
+    case 'project':
+      $fa = 'fa-project-diagram';
+      break;
+    case 'run':
+      $fa = 'fa-running';
+      break;
+    case 'snippet':
+      $fa = 'fa-cut';
+      break;
+    case 'ticket':
+      $fa = 'fa-ticket-alt';
+      break;
+    default:
+      $fa = 'fa-bomb';
+      break;
+  }
+  return $fa;
+}
+
 /**
  * Implements HOOK_preprocess_node().
  *
@@ -687,6 +743,8 @@ function az_content_preprocess_node(&$variables) {
   );
 
   $variables['nid'] = $node->id();
+
+  $variables['fontawesome'] = _az_content_get_fontawesome($node->bundle());
 
   // Get the status and moderation_state
   if ($node->hasField('moderation_state') &&
