@@ -1,7 +1,7 @@
 # Ignore binaries.
 /bin
 
-# Ignore non-custom parts of Drupal.
+# Ignore non-custom parts of Drupal.  Composer maintains these.
 /docroot/core
 /docroot/modules/contrib
 /docroot/modules/custom/atomizer
@@ -9,16 +9,16 @@
 /docroot/themes/contrib
 /docroot/libraries
 /docroot/sites/default/*.php
+#
+# Ignore Composer-managed dependencies.
+vendor/
+config/
 
 # Don't include node_modules and bower_components
 *node_modules
 
 # Ignore site files directory
 /docroot/sites/default/files
-
-# Ignore Composer-managed dependencies.
-vendor/
-config/
 
 .idea/
 *.css.map
