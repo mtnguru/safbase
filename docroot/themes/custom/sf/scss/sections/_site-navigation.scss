@@ -20,7 +20,7 @@
   $dark-gray: #333 !default;
   $navigation-padding: 1em;
   $navigation-color: $topnav-color;
-  $navigation-color-hover: lighten($topnav-color, 40%);
+  $navigation-color-hover: lighten($topnav-color, 50%);
   $navigation-submenu-padding: 20px;
   $navigation-submenu-width: 16em;
 
@@ -64,11 +64,11 @@
 
       #company-name {
         display: inline-block;
-        color: $color-blue;
+        color: $color-light-blue;
         vertical-align: top;
-        margin-left: 10px;
-        margin-top: 16px;
-        font-size: 180%;
+        margin-left: 5px;
+        margin-top: 20px;
+        font-size: 150%;
         font-weight: bold;
       }
 
@@ -80,7 +80,7 @@
         position: absolute;
         right: 80px;
         h1 {
-          font-size: 300%;
+          font-size: 250%;
           color: $color-yellow;
         }
       }
@@ -316,7 +316,7 @@
       font-size: 110%;
       font-weight: bold;
       text-shadow: 0px 0px 4px #000;
-      @include transition-3d($timing: 250ms);
+      @include transition-3d($timing: 150ms);
       &:hover,
       &:focus {
         color: $navigation-color-hover;
