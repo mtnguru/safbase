@@ -45,9 +45,10 @@
   }
 
   .footer-bottom {
-    background: $color-lightest-purple;
-    padding: 1em $gutter;
-    margin-top:20px;
+    > div {
+      background: $color-lightest-purple;
+      padding: 1em $gutter;
+    }
     p {
       font-size: 0.9em;
       line-height: 1.5em;

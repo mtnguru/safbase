@@ -47,6 +47,7 @@
         $(this).removeClass('menu-open').find('.submenu').slideUp();
       }); */
 
+/*
       $moreLinks.hover(function() {
         if ($(this).hasClass('menu-open')) {
           $(this).removeClass('menu-open').find('.submenu').slideUp();
@@ -59,6 +60,7 @@
           $(this).addClass('menu-open').find('.submenu').slideDown();
         }
       });
+*/
       $moreLinks.click(function() {
         if ($(this).hasClass('menu-open')) {
           $(this).removeClass('menu-open').find('.submenu').slideUp();

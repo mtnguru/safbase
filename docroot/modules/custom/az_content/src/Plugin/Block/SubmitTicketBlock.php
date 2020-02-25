@@ -57,11 +57,11 @@ class SubmitTicketBlock extends BlockBase {
       case 'entity.node.edit_form':
       case 'view.tickets.page_1':
       case 'system.404':
-        break;
+        return null;
 
       default:
-        \Drupal::messenger()->addMessage(t('az_content::SubmitTicketBlock unknown route ' . $route),'error');
-      	break;
+        \Drupal::logger('az_control')->notice(t('az_content::SubmitTicketBlock unknown route ' . $route));
+        return null;
     }
 
     $build['submit_ticket_link'] = [
