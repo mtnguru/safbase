@@ -1,6 +1,6 @@
-name: Aurtas Custom theme
+name: Aureon Custom theme
 type: theme
-description: Custom Neato subtheme for Aurtas International, Inc.
+description: Custom Neato subtheme for Aureon Energy, Ltd.
 base theme: neato
 core: 8.x
 libraries:
