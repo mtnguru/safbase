@@ -39,7 +39,8 @@
         "drupal/field_group": "^3.0",
         "drupal/codesnippet": "^1.6",
         "drupal/rename_admin_paths": "^2.0",
-        "drupal/contact_block": "^1.4"
+        "drupal/contact_block": "^1.4",
+        "drupal/smtp": "^1.0@beta"
     },
     "require-dev": {
         "drush/drush": "^9.0"

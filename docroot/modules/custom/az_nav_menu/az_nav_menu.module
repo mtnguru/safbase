@@ -1,11 +1,9 @@
 <?php
 
-
 /**
  * @file
  * Contains az_nav_menu.module.
  */
-
 
 /**
  * Implements hook_theme().

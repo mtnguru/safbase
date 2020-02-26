@@ -12,10 +12,22 @@ h4,
 h5,
 h6 {
   font-family: var(--font-family--heading);
-  font-size: 1.25rem;
   line-height: var(--line-height--heading);
   margin: 0 0 var(--spacing--small);
   color: $color-purple;
+}
+
+h1 {
+  font-size: 200%;
+}
+h2 {
+  font-size: 175%;
+}
+h3 {
+  font-size: 150%;
+}
+h4 {
+  font-size: 125%;
 }
 
 p {

@@ -56,6 +56,7 @@ class SubmitTicketBlock extends BlockBase {
       case 'node.add':
       case 'entity.node.edit_form':
       case 'view.tickets.page_1':
+      case 'system.403':
       case 'system.404':
         return null;
 
