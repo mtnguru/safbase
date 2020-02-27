@@ -44,12 +44,14 @@
           <li{{ item.attributes.addClass(classes | merge(['more', 'js-navigation-more', 'no-link'])) }}>
             <div class="title">
               {{ item.title }}
+              <i class="fas fa-caret-down"></i>
             </div>
             {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
           </li>
         {% else %}
           <li{{ item.attributes.addClass(classes | merge(['more', 'js-navigation-more'])) }}>
             {{ link(item.title, item.url) }}
+            <i class="fas fa-caret-down"></i>
             {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
           </li>
         {% endif %}
