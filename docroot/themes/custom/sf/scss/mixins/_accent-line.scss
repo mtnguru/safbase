@@ -1,0 +1,48 @@
+// @mixin accent-line()
+// - Displays a thin vertical line to the left of parent container
+// - Parent container needs "position: relative"
+// - Options include offest to top of container, and height of line, per breakpoint
+
+// @mixin remove-accent-line()
+// - Removes display of accent line that had been previosly set by @mixin accent-line()
+
+@mixin accent-line(
+  $margin-top: rem(6),
+  $height: rem(50),
+  $desktop-margin-top: rem(8),
+  $desktop-height: rem(80),
+  $desktopPlus-margin-top: rem(8),
+  $desktopPlus-height: $desktop-height
+) {
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    display: block;
+    width: 4px;
+    background-color: $accent-line-color;
+
+    @include media($bp320only) {
+      height: $height;
+      margin-top: $margin-top;
+    } // $bp320only
+
+    @include media($bp580only) {
+      height: $desktop-height;
+      margin-top: $desktop-margin-top;
+    } // $bp580only
+
+    @include media($bp960) {
+      height: $desktopPlus-height;
+      margin-top: $desktopPlus-margin-top;
+    } // $bp960
+  } // &::before
+} // @mixin accent-line
+
+@mixin remove-accent-line() {
+  &::before {
+    display: none;
+  } // &::before
+} // @mixin remove-accent-line

@@ -104,7 +104,7 @@
 
       .user-menu {
         position: absolute;
-        bottom: 0px;
+        top: 76px;
 
         @include media($bp320only) {
           right: 80px;
@@ -287,6 +287,7 @@
     line-height: $navigation-height;
     padding: 0 20px;
     font-size: 160%;
+    margin-top: -10px;
 
     @include media ($bp960) {
       display: none;
@@ -330,6 +331,11 @@
     @include media(max-width $bp580max) {
       padding-bottom: 10px;
       margin: 0 auto;
+
+      a,
+      span {
+        font-size: 150%;
+      }
     }
 
     @include media ($bp960) {
@@ -345,8 +351,10 @@
         margin-top: 1px;
       }
 
-      span {
-
+      svg {
+        color: $color-gold;
+        margin-left: -10px;
+        font-size: 130%;
       }
 
       > a {
@@ -356,21 +364,24 @@
 
     @include media(max-width $bp580max) {
       li {
-        padding: 25px 20px;
-        line-height: 2.2;
+        text-align: center;
+        span,
+        a {
+          padding: 0px 25px;
+          line-height: 2.2;
+        }
         &:last-child {
-          margin-bottom: 20px;
+          margin-bottom: 10px;
         }
       }
     }
 
     @include media($bp960) {
       > li {
-        padding: 25px 15px;
-//      float: left;
-        height: $navigation-height;
-        line-height: 1.2;
+        span,
         > a {
+          height: $navigation-height;
+          padding: 25px 15px;
           vertical-align: middle;
           line-height: 1.2;
         }
@@ -379,8 +390,9 @@
 
     @include media($bp1280) {
       > li {
-        padding: 25px 15px;
+        span,
         > a {
+          padding: 25px 15px;
           width: auto;
         }
       }

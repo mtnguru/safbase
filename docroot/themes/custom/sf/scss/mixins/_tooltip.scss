@@ -1,0 +1,35 @@
+// include here because it's used
+.taxonomy-tooltip-link {
+  position: relative;
+  &:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0px;
+    border-width: 0 0 1px;
+    border-style: dotted;
+  }
+}
+
+abbr.taxonomy-tooltip-tip {
+  position: relative;
+  text-decoration: none;
+  color: $color-tooltip;
+  border: 0px;
+  &:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0px;
+    border-width: 0 0 1px;
+    border-style: dotted;
+  }
+}
+
+.tooltip-inner {
+//background-color: orange;
+  color: orange;
+  border-radius: 5px;
+}
