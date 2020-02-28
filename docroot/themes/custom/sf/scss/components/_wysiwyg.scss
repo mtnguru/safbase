@@ -2,8 +2,7 @@
 $cke-bg: #cdf;
 
 body.cke_editable {
-  padding: .25em 1em;
-  background: $color-dark-blue;
+//padding: .25em 1em;
 
 }
 body.cke_editable,
@@ -26,7 +25,6 @@ body.cke_ltr {
     min-height: 225px !important;
     overflow-y: scroll;
   }
-
 }
 
 .entity-embed-dialog {
@@ -230,6 +228,7 @@ article.embedded-entity {
   }
 }
 
+/*
 .cke_reset_all * {
   color: $color-white;
   background-color: $color-dark-green;
@@ -276,3 +275,4 @@ article.embedded-entity {
   .hljs-preprocessor { color: #888; }
 
 }
+*/

@@ -16,3 +16,5 @@ regions:
   sidebar_second: 'Sidebar second'
   footer_top: 'Footer Top'
   footer_bottom: 'Footer Bottom'
+ckeditor_stylesheets:
+  - css/wysiwyg.css

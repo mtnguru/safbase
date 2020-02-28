@@ -13,6 +13,7 @@
 
   a {
     text-decoration: none;
+    color: $color-light-blue;
   }
   //////////////////////////////////////////////////////////////////////////////////
 
@@ -31,6 +32,15 @@
     padding: ($base-spacing * 2) $gutter;
     .block {
       text-align: center;
+    }
+    .footer-left {
+      float: left;
+    }
+    .footer-center {
+      margin: 0 auto;
+    }
+    .footer-right {
+      float: right;
     }
   }
 
