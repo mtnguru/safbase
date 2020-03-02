@@ -1,6 +1,13 @@
-section.banner {
-  background-position-x: 50%;
-  background-position-y: 50%;
-  background-size: cover;
-  height: 300px;
+body.page-node-type-landing-page {
+  section.banner {
+    background-position-x: 50%;
+    background-position-y: 50%;
+    background-size: cover;
+    height: 300px;
+  }
+
+  #block-sf-page-title {
+    display: none;
+  }
 }
+
