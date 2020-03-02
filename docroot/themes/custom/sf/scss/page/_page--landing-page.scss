@@ -10,5 +10,18 @@ body.page-node-type-landing-page {
   #block-sf-page-title {
     display: none;
   }
+
+  form.contact-message-sitewide-form {
+    width: 520px;
+    @include media ($bp580max) {
+      width: 320px;
+    }
+
+    margin: 0 auto;
+    > .form-wrapper {
+      padding: 0;
+      box-shadow: none;
+    }
+  }
 }
 
