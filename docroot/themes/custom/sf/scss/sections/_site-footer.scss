@@ -25,8 +25,6 @@
 
   .footer-top {
     color: $color-white;
-    border-top: solid 3px $separator-color;
-    border-bottom: solid 3px $separator-color;
     width: 100%;
     background: linear-gradient(187deg, $color-blue, $color-dark-blue);
     padding: ($base-spacing * 2) $gutter;

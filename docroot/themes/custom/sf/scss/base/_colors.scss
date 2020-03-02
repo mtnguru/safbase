@@ -17,8 +17,9 @@ $color-green: #33cc33;
 $color-dark-green: #1a401a;
 
 $color-light-blue: #88C4FE;
-$color-blue: #2f6c9d;
-$color-dark-blue: #0c1c30;
+$color-blue: #286a8b;
+$color-darker-blue: #0B3F59;
+$color-dark-blue: #022234;
 
 $color-light-red: #ff8899;
 $color-red: #ff1111;
@@ -64,9 +65,6 @@ $base-link-color: $base-accent-color !default;
 $base-link-color--hover: darken($base-accent-color, 20) !default;
 $base-label-color: $color-light-green;
 $base-date-color: $color-gray;
-
-// Header
-$topnav-color: $color-gold;
 
 $separator-color: $color-gold;
 

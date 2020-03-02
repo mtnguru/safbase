@@ -1,6 +1,6 @@
 /**
  * @file
- * Ethereal Matters - Top Navigation Menu bar
+ * Aureon Energey - Top Navigation Menu bar
  *
  * @type {{attach: Drupal.behaviors.menu_top.attach}}
  */

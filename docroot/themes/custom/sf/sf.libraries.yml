@@ -6,6 +6,5 @@ global-styling:
 global-scripts:
   version: VERSION
   js:
-    core/jquery: {}
     js/js-src/scripts.js: {}
     js/js-src/menuTop.js: {}

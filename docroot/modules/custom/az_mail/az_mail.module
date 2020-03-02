@@ -127,7 +127,7 @@ function az_mail_mail_alter(&$message) {
       break;
   }
 
-  $signature = '<div class="signature">Mail sent from <a href="https://etherealmatters.org">Ethereal Matters</a></div>';
+  $signature = '<div class="signature">Mail sent from <a href="https://aureon.ca">Aureon Energy</a></div>';
   if (is_array($message['body'])) {
     $message['body'][] = Markup::create($signature);
   }

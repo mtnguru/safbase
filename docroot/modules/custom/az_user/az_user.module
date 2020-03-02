@@ -37,7 +37,7 @@ function az_user_form_user_login_form_alter(&$form, FormStateInterface $form_sta
       '#type' => 'container',
       '#attributes' => ['class' => ['header']],
       '#weight' => -1,
-      'markup' => ['#markup' => '<h2>Login to Ethereal Matters</h2>'],
+      'markup' => ['#markup' => '<h2>Login to Aureon Energy Website</h2>'],
     ],
     'forgot_password' => [
       '#type' => 'container',
