@@ -15,6 +15,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\media\Entity\Media;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\user\Entity\User;
@@ -854,6 +855,17 @@ function az_content_preprocess_node(&$variables) {
 
     case 'landing_page':
 
+
+      if ($node->hasField('field_background_image')) {
+        if ($viewMode == 'banner') {
+          $mid = $node->get('field_background_image')->getString(); // Get media ID from your field.
+          $media = Media::load($mid); // Loading media entity.
+          if ($media) {
+            $uri = $media->image->entity->getFileUri(); // It is for image media.
+            $variables['background_url'] = file_create_url($uri); // Here you will get URL of uploaded image.
+          }
+        }
+      }
       // Dashboard - Front page
 //    if (\Drupal::service('path.matcher')->isFrontPage()) {
 //      _az_content_create_home($node, $variables);
