@@ -25,54 +25,57 @@ article.media {
     color: lighten($color-black, 10%);
   }
 
-  &.align-right {
-    margin-left: 1em;
-  }
-  &.align-left {
-    margin-right: 1em;
-  }
-  &.align-center {
-    margin-left: 1em;
-    margin-right: 1em;
-  }
-
   >.az-image {
     float: none;
   }
 
+  &.align-center {
+    width: 100%;
+  }
+
+  &.align-right {
+    float: right;
+    margin-left: 1em;
+  }
+
+  &.align-left {
+    float: left;
+    margin-right: 1em;
+  }
+
   &.az-view-mode-tiny,
   &.az-view-mode-tiny-w-desc {
-    @include media($bp320only) { width: 35%; } // $bp320only
-    @include media($bp580only) { width: 30%; } // $bp580only
-    @include media($bp960only) { width: 25%} // $bp960only
-    @include media($bp1280only) { width: 20%; } // $bp1280only
+    @include media($bp320only)  { width: 35%; } // $bp320
+    @include media($bp580)  { width: 30%; } // $bp580
+    @include media($bp960)  { width: 25%; } // $bp960
+    @include media($bp1280) { width: 20%; } // $bp1280
     @include media($bp1920) { width: 20%; } // $bp1920
   }
 
   &.az-view-mode-small,
   &.az-view-mode-small-w-desc {
-    @include media($bp320only) { width: 50%; } // $bp320only
-    @include media($bp580only) { width: 45%; } // $bp580only
-    @include media($bp960only) { width: 40%  } // $bp960only
-    @include media($bp1280only) { width: 35%; } // $bp1280only
+    @include media($bp320only)  { width: 50%; } // $bp320
+    @include media($bp580)  { width: 45%; } // $bp580
+    @include media($bp960)  { width: 40%  } // $bp960
+    @include media($bp1280) { width: 35%; } // $bp1280
     @include media($bp1920) { width: 30%; } // $bp1920
   }
 
   &.az-view-mode-medium,
   &.az-view-mode-medium-w-desc {
-    @include media($bp320only) { width: 90%; } // $bp320only
-    @include media($bp580only) { width: 70%; } // $bp580only
-    @include media($bp960only) { width: 50%; } // $bp960only
-    @include media($bp1280only) { width: 40%; } // $bp1280only
+    @include media($bp320only)  { width: 90%; margin: 0 auto; float: none;} // $bp320
+    @include media($bp580only)  { width: 70%; margin: 0 auto; float: none;} // $bp580
+    @include media($bp960)  { width: 50%; } // $bp960
+    @include media($bp1280) { width: 40%; } // $bp1280
     @include media($bp1920) { width: 30%; } // $bp1920
   }
 
   &.az-view-mode-large,
   &.az-view-mode-large-w-desc {
-    @include media($bp320only) { width: 100%; } // $bp320only
-    @include media($bp580only) { width: 100%; } // $bp580only
-    @include media($bp960only) { width: 90%; } // $bp960only
-    @include media($bp1280only) { width: 80%; } // $bp1280only
-    @include media($bp1920) { width: 70%; } // $bp1920
+    @include media($bp320only)  { width: 100%; margin: 0 auto; float: none;} // $bp320
+    @include media($bp580only)  { width: 100%; margin: 0 auto; float: none;} // $bp580
+    @include media($bp960only)  { width: 100%; margin: 0 auto; float: none;} // $bp960
+    @include media($bp1280only) { width: 90%; } // $bp1280
+    @include media($bp1920) { width: 80%; } // $bp1920
   }
 }

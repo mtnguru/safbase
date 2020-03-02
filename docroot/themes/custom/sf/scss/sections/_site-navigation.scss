@@ -334,11 +334,11 @@
 
       svg {
         color: $navigation-color;
-        margin-left: -14px;
+        margin-left: -12px;
         &:hover {
           color: $navigation-color-hover;
         }
-//      font-size: 120%;
+        font-size: 90%;
       }
 
       > a {
@@ -364,7 +364,7 @@
       > li {
         span,
         > a {
-          height: $navigation-height;
+//        height: $navigation-height;
           padding: 18px 15px;
           vertical-align: middle;
           line-height: 1.3;
