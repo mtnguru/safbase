@@ -1,10 +1,13 @@
 body.page-node-type-landing-page {
   color: #516A7C;
   section.banner {
-    background-position-x: 50%;
-    background-position-y: 50%;
+//  background-position-x: 50%;
+//  background-position-y: 30vh;
     background-size: cover;
-    height: 300px;
+    height: 50vh;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
   }
 
   #block-sf-page-title {
