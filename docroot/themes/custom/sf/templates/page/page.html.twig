@@ -49,11 +49,31 @@
 
   {% if page.footer_top or page.footer_bottom %}
     <footer id="site-footer" role="contentinfo">
-      {% if page.footer_top %}
-        <section class="footer-top">
-          {{ page.footer_top }}
-        </section>
-      {% endif %}
+
+      <section class="footer-top">
+        <div class="left-col">
+          <a class="contact" href="/contact">Contact Us</a>
+        </div>
+
+        <div class="right-col">
+          {% if logged_in %}
+            <a class="login" href="/user/logout">Logout</a>
+          {% else %}
+            <a class="login" href="/user/login">Login</a>
+          {% endif %}
+        </div>
+
+        <div class="middle-col">
+          <div id="site-logo"><a href="/home"><img alt="" src="/sites/default/files/assets/logo.png" /> </a></div>
+
+          <div id="safire-project">
+            <h1>THE SAFIRE PROJECT</h1>
+
+            <h2>TRANSFORMATIONAL TECHNOLOGY</h2>
+            <p><i class="fas fa-copyright"></i>2020 AUREON ENERGY LTD. All rights reserved</p>
+          </div>
+        </div>
+      </section>
 
       {% if page.footer_bottom %}
         <section class="footer-bottom">
