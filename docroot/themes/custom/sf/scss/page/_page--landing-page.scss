@@ -6,6 +6,16 @@ body.page-node-type-landing-page {
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
+
+    .banner-title {
+      max-width: $page-max-width;
+      margin: 0 auto;
+      padding-top: 20px;
+      h1 {
+        color: white;
+        font-size: 300%;
+      }
+    }
   }
 
   #block-sf-page-title {

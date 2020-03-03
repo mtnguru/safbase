@@ -864,6 +864,7 @@ function az_content_preprocess_node(&$variables) {
             $uri = $media->image->entity->getFileUri(); // It is for image media.
             $variables['background_url'] = file_create_url($uri); // Here you will get URL of uploaded image.
           }
+          $variables['banner_title'] = $node->label();
         }
       }
       // Dashboard - Front page

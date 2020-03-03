@@ -84,7 +84,10 @@
       p {
         color: $color-light-blue;
         margin-top: 50px;
-        font-size: 80%;
+        font-size: 85%;
+        svg {
+          margin-right: 2px;
+        }
       }
       @include media($bp320only) {
         margin-left: 0px;
