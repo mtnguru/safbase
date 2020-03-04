@@ -9,8 +9,8 @@ body.page-node-type-landing-page {
 
     .banner-title {
       max-width: $page-max-width;
+      padding: 20px 0 0 20px;
       margin: 0 auto;
-      padding-top: 20px;
       h1 {
         text-shadow: 0 0 4px $color-black;
         color: white;
@@ -19,13 +19,18 @@ body.page-node-type-landing-page {
     }
   }
 
+  .field--name-body {
+    max-width: 750px;
+    margin: 0 auto;
+  }
+
   #block-sf-page-title {
     display: none;
   }
 
   form.contact-message-sitewide-form {
     width: 520px;
-    @include media ($bp580max) {
+    @include media (max-width $bp320max) {
       width: 320px;
     }
 
