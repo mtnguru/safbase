@@ -12,23 +12,32 @@ h4,
 h5,
 h6 {
   font-family: var(--font-family--heading);
+  font-weight: normal;
   line-height: var(--line-height--heading);
   margin: 0 0 var(--spacing--small);
-  color: $color-purple;
+  color: $color-title;
 }
 
 h1 {
-  font-size: 200%;
+  font-size: 180%;
 }
 h2 {
-  font-size: 175%;
+  font-size: 160%;
 }
 h3 {
-  font-size: 150%;
+  font-size: 140%;
 }
 h4 {
-  font-size: 125%;
-  color: $color-light-purple;
+  font-size: 120%;
+  color: $color-title;
+}
+h5 {
+  font-size: 120%;
+  color: $color-light-title;
+}
+h6 {
+  font-size: 100%;
+  color: $color-light-title;
 }
 
 p {
