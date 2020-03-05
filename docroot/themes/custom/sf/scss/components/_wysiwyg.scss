@@ -147,21 +147,26 @@ body.cke_ltr {
     color: $color-title;
   }
   h2 {
-    font-size: 160%;
+    font-size: 130%;
     font-weight: normal;
     color: $color-title;
   }
   h3 {
-    font-size: 140%;
+    font-size: 110%;
     font-weight: normal;
     color: $color-title;
   }
   h4 {
-    font-size: 120%;
+    font-size: 110%;
     font-weight: normal;
     color: $color-light-title;
   }
   h5 {
+    font-size: 100%;
+    font-weight: normal;
+    color: $color-title;
+  }
+  h6 {
     font-size: 100%;
     font-weight: normal;
     color: $color-light-title;
