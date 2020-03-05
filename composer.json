@@ -4,7 +4,7 @@
     "description": "Project template for Drupal 8 sites built with the Lightning distribution.",
     "license": "GPL-2.0-or-later",
     "require": {
-        "acquia/lightning": "^4.0",
+        "acquia/lightning": "~4.1.2",
         "algolia/places": "*",
         "ckeditor/autogrow": "*",
         "ckeditor/codemirror": "*",
@@ -59,8 +59,9 @@
         "jquery/timepicker": "*",
         "progress-tracker/progress-tracker": "*",
         "signature_pad/signature_pad": "*",
-        "swiftmailer/swiftmailer": "^6.2",
-        "drupal/menu_item_role_access": "^1.0"
+        "swiftmailer/swiftmailer": "^5.4",
+        "drupal/menu_item_role_access": "^1.0",
+        "drupal/swiftmailer": "^1.0@beta"
     },
     "require-dev": {
         "drush/drush": "^9.0"
