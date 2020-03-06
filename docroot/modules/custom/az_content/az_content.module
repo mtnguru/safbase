@@ -862,7 +862,11 @@ function az_content_preprocess_node(&$variables) {
           $media = Media::load($mid); // Loading media entity.
           if ($media) {
             $uri = $media->image->entity->getFileUri(); // It is for image media.
-            $variables['background_url'] = file_create_url($uri); // Here you will get URL of uploaded image.
+	    $url = file_create_url($uri);
+            \Drupal::logger('my_module')->error('what the f ' . $url);
+            $url = preg_replace('/45\.79\.25\.206/', 'aureon.ca', $url);
+            \Drupal::logger('my_module')->error('what the frick ' . $url);
+            $variables['background_url'] = $url;
           }
           $variables['banner_title'] = $node->label();
         }
