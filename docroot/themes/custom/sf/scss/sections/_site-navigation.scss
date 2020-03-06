@@ -143,7 +143,7 @@
 
       .user-menu {
         position: absolute;
-        top: 76px;
+        top: 115px;
 
         @include media($bp320only) {
           right: 80px;
@@ -202,8 +202,8 @@
             right: -10px;
             width: 230px;
             background-color: $color-dark-purple;
-            border: 2px solid $color-gold;
-            border-radius: 8px;
+            border: 2px solid $color-light-blue;
+            border-radius: 1px;
             padding: 10px 15px;
             z-index: 20;
 //          @extend %text-shadow;
@@ -246,7 +246,7 @@
             &:hover {
               .popup {
                 bottom: auto;
-                top: 50px;
+                top: -10px;
                 right: -10px;
               }
             }
