@@ -1028,7 +1028,6 @@ function _az_content_create_dashboard($node, &$variables) {
       $file = \Drupal\file\Entity\File::load($picture[0]['target_id']);
     }
 
-
     $variables['user_picture_url'] = \Drupal\image\Entity\ImageStyle::load('thumbnail')
       ->buildUrl($file->getFileUri());
 

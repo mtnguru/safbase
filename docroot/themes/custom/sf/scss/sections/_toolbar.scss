@@ -1,0 +1,8 @@
+body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
+  @include media(max-width $bp580max) {
+    margin-left: 0;
+    #toolbar-administration {
+      display: none;
+    }
+  }
+}
