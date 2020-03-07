@@ -24,6 +24,7 @@
   color: $color-black;
 
   .footer-top {
+    position: relative;
     color: $color-white;
     width: 100%;
     background: linear-gradient(187deg, $color-blue, $color-dark-blue);
@@ -33,7 +34,9 @@
       text-align: center;
     }
     .left-col {
-      float: left;
+      position: absolute;
+      left: 0;
+      bottom: 0;
       a.contact {
         display: block;
         padding: 2em;
@@ -43,64 +46,38 @@
       margin: 0 auto;
     }
     .right-col {
-      float: right;
+      position: absolute;
+      right: 0;
+      bottom: 0;
       a.login {
         display: block;
         padding: 2em;
       }
     }
-    #site-logo {
-      display: inline-block;
-      padding: 20px;
-      margin-left: 30px;
-      //      display: inline-block;
-      img {
-        width: 154px;
-        height: 154px;
-      }
-    }
 
-    #safire-project {
-      text-align: left;
-      vertical-align: top;
-      display: inline-block;
-      margin-top: 60px;
-      margin-left: 16px;
-      h1 {
-        font-size: 250%;
-        color: $color-light-blue;
-        font-family: "Times New Roman";
-        font-weight: 400;
-        margin-bottom: 5px;
-        line-height: 1;
-      }
-      h2 {
-        color: $color-light-blue;
-        font-weight: 400;
-        font-size: 100%;
-        margin-left: 7px;
-        letter-spacing: .256em;
-      }
-      p {
-        color: $color-light-blue;
-        margin-top: 50px;
-        font-size: 85%;
-        svg {
-          margin-right: 2px;
+    @include media($bp960) {
+      .left-col {
+        position: relative;
+        float: left;
+        a.contact {
+          display: block;
+          padding: 2em;
         }
       }
-      @include media($bp320only) {
-        margin-left: 0px;
-        h1 {
-          font-size: 135%;
+      .middle-col {
+        margin: 0 auto;
+        text-align: left;
+      }
+      .right-col {
+        position: relative;
+        float: right;
+        a.login {
+          display: block;
+          padding: 2em;
         }
       }
-      @include media($bp580only) {
-        margin-left: 30px;
-        h1 {
-          font-size: 190%;
-        }
-      }
+
+
     }
   }
 
