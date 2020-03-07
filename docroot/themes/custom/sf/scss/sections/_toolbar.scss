@@ -1,6 +1,12 @@
-body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
+body.toolbar-tray-open {
+  @include media(max-width $bp320max) {
+    margin-left: 0 !important;
+    #toolbar-administration {
+      display: none;
+    }
+  }
   @include media(max-width $bp580max) {
-    margin-left: 0;
+    margin-left: 0 !important;
     #toolbar-administration {
       display: none;
     }
