@@ -855,7 +855,6 @@ function az_content_preprocess_node(&$variables) {
 
     case 'landing_page':
 
-
       if ($node->hasField('field_background_image')) {
         if ($viewMode == 'banner') {
           $mid = $node->get('field_background_image')->getString(); // Get media ID from your field.
@@ -863,9 +862,11 @@ function az_content_preprocess_node(&$variables) {
           if ($media) {
             $uri = $media->image->entity->getFileUri(); // It is for image media.
 	    $url = file_create_url($uri);
-            \Drupal::logger('my_module')->error('what the f ' . $url);
+//          \Drupal::logger('my_module')->error('what the f ' . $url);
+//          $url = preg_replace('/aureon.ca/', '45.79.25.206', $url);
+            \Drupal::logger('my_module')->error('what the fr ' . $url);
             $url = preg_replace('/45\.79\.25\.206/', 'aureon.ca', $url);
-            \Drupal::logger('my_module')->error('what the frick ' . $url);
+            \Drupal::logger('my_module')->error('wtf ' . $url);
             $variables['background_url'] = $url;
           }
           $variables['banner_title'] = $node->label();
