@@ -3,6 +3,8 @@ global-styling:
   css:
     base:
       css/sf.css: {}
+      '//fonts.googleapis.com/css?family=Martel+Sans': { type: external }
+
 global-scripts:
   version: VERSION
   js:

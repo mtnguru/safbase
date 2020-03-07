@@ -124,6 +124,11 @@
       line-height: 1.5em;
       margin: auto;
     }
+
+    display: none;
+    @include media($bp960) {
+      display: block;
+    }
   }
 
   .copyright {

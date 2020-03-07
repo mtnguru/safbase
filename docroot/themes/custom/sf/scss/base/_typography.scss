@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Martel Sans";
+  src: url('/fonts/martel.ttf');
+}
+@font-face {
+  font-family: "Trajan Pro";
+  src: url('/fonts/trajan.ttf');
+}
 html {
   color: $base-fg-color;
   font-family: var(--font-family);
