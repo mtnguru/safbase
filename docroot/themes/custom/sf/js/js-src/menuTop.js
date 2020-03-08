@@ -12,10 +12,23 @@
     var $navMenu = $('#js-navigation-menu');
     var $menuToggle = $('#js-mobile-menu');
     var $moreLinks = $('.js-navigation-more');
+    var mode = 'large';
 
     function resizeWindow() {
+      var windowWidth = $(window).width();
+      if (windowWidth < 960) {
+        if (mode == 'large') {
+          mode = 'small';
+        }
+      }
+      else {
+        if (mode == 'small') {
+          mode = 'large';
+          $('#js-navigation-menu').show();
+        }
+      }
+
       if ($moreLinks.length > 0) {
-        var windowWidth = $(window).width();
         var moreLeftSideToPageLeftSide = $moreLinks.offset().left;
         var moreLeftSideToPageRightSide = windowWidth - moreLeftSideToPageLeftSide;
 
