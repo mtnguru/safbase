@@ -1,17 +1,31 @@
-.field--name-user-picture {
-  display: inline-block;
-}
-
-.user-header {
-  vertical-align: top;
-  display: inline-block;
-  margin-left: 1em;
-  margin-top: .5em;
-  .field--name-field-full-name {
-    font-weight: bold;
+body.url-leadership {
+  .layout__region--first {
+    article {
+      padding-right: 20px;
+    }
   }
-  .field--name-field-job-title {
-    font-style: italic;
+  .layout__region--second {
+    article {
+      padding-left: 20px;
+    }
   }
 
+  .field--name-user-picture {
+    display: inline-block;
+  }
+
+  .user-header {
+    vertical-align: top;
+    display: inline-block;
+    margin-left: 1em;
+    margin-top: .5em;
+
+    .field--name-field-full-name {
+      font-weight: bold;
+    }
+
+    .field--name-field-job-title {
+      font-style: italic;
+    }
+  }
 }
