@@ -39,6 +39,29 @@ function sf_preprocess_html(&$variables) {
 }
 
 /**
+ * Implements template_preprocess().
+ */
+/*
+function sf_preprocess(&$variables) {
+  // Make 'is_front' available to all templates.
+  try {
+    $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
+  }
+  catch (Exception $e) {
+    $variables['is_front'] = FALSE;
+  }
+
+  // Make the full node content-type available to all templates.
+  $variables['az_route_name'] = \Drupal::routeMatch()->getRouteName();
+  $route_match = \Drupal::routeMatch();
+  if ($route_match->getParameter('node') && is_object($route_match->getParameter('node'))) {
+    $variables['az_root_content_type'] = $route_match->getParameter('node')->bundle();
+  }
+}
+*/
+
+
+/**
  * Implements template_preprocess_page.
  *
  * @param array $variables

@@ -42,6 +42,7 @@
 {%
   set body_classes = [
     logged_in ? 'user-logged-in',
+    az_route_name | replace({'.': '-'}),
     not root_path ? 'path-frontpage' : 'path-' ~ root_path|clean_class,
     node_type ? 'page-node-type-' ~ node_type|clean_class,
     'url-' ~ url('<current>')['#markup'] | split('/') | slice(-1) | join('/') | clean_class,
@@ -68,6 +69,7 @@
     {{ page }}
   {% endif %}
 
+  {{ kint(body_classes) }}
   {% if page_bottom %}
     {{ page_bottom }}
   {% endif %}

@@ -22,14 +22,14 @@
   }
 
   #safire-project {
-    margin-top: 20px;
+    margin-top: 28px;
     vertical-align: top;
     display: inline-block;
     margin-left: 0px;
     text-align: left;
 
     h1 {
-      font-size: 150%;
+      font-size: 128%;
       font-family: 'Trajan Pro';
       color: $color-light-blue;
       font-weight: 400;
@@ -41,14 +41,15 @@
       font-family: 'Martel Sans';
       color: $color-light-blue;
       font-weight: 400;
-      font-size: 85%;
+      font-size: 72%;
       margin: 0;
       //        letter-spacing: .075em;
     }
     p {
       color: $color-light-blue;
-      margin-top: 20px;
-      font-size: 80%;
+      margin-top: 10px;
+      margin-bottom: 30px;
+      font-size: 55%;
       svg {
         margin-right: 2px;
       }

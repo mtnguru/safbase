@@ -1,6 +1,7 @@
 body.page-node-type-landing-page {
   color: #516A7C;
   section.banner {
+    position: relative;
     background-size: cover;
     height: 50vh;
     background-repeat: no-repeat;
@@ -9,12 +10,18 @@ body.page-node-type-landing-page {
 
     .banner-title {
       max-width: $page-max-width;
-      padding: 20px 0 0 20px;
-      margin: 0 auto;
+//    padding: 20px 0 0 20px;
+//?   margin: 0 auto;
+      position: absolute;
+      top: 20px;
+      right: 20px;
       h1 {
         text-shadow: 0 0 4px $color-black;
         color: white;
-        font-size: 200%;
+        font-size: 140%;
+        @include media($bp960) {
+          font-size: 200%;
+        }
       }
     }
   }
