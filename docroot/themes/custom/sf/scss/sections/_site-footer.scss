@@ -38,8 +38,9 @@
       left: 0;
       bottom: 0;
       a.contact {
+        margin-top: 20px;
         display: block;
-        padding: 2em;
+        padding: 1em;
       }
     }
     .middle-col {
@@ -50,8 +51,9 @@
       right: 0;
       bottom: 0;
       a.login {
+        margin-top: 20px;
         display: block;
-        padding: 2em;
+        padding: 1em;
       }
     }
 
@@ -60,20 +62,21 @@
         position: relative;
         float: left;
         a.contact {
+          margin-top: 0;
           display: block;
-          padding: 2em;
+          padding: 1em 2em;
         }
       }
       .middle-col {
         margin: 0 auto;
-        text-align: left;
       }
       .right-col {
         position: relative;
         float: right;
         a.login {
+          margin-top: 0;
           display: block;
-          padding: 2em;
+          padding: 1em 2em;
         }
       }
 

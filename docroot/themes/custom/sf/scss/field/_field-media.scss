@@ -60,6 +60,7 @@ article.media {
   }
 
   &.az-view-mode-small,
+  &.az-view-mode-small-no-caption,
   &.az-view-mode-small-w-desc {
     @include media($bp320only)  { width: 50%; } // $bp320
     @include media($bp580)  { width: 45%; } // $bp580
@@ -69,6 +70,7 @@ article.media {
   }
 
   &.az-view-mode-medium,
+  &.az-view-mode-medium-no-caption,
   &.az-view-mode-medium-w-desc {
     @include media($bp320only)  { width: 100%; margin-left: auto; margin-right: auto; float: none;} // $bp320
     @include media($bp580only)  { width: 100%; margin-left: auto; margin-right: auto; float: none;} // $bp580
@@ -78,7 +80,11 @@ article.media {
   }
 
   &.az-view-mode-large,
-  &.az-view-mode-large-w-desc {
+  &.az-view-mode-large-w-desc,
+  &.az-view-mode-large-w-no-caption,
+  &.az-view-mode-x-large,
+  &.az-view-mode-x-large-no-caption,
+  &.az-view-mode-x-large-w-desc {
     @include media($bp320only)  { width: 100%; margin-left: auto; margin-right: auto; float: none;} // $bp320
     @include media($bp580only)  { width: 100%; margin-left: auto; margin-right: auto; float: none;} // $bp580
     @include media($bp960only)  { width: 100%; margin-left: auto; margin-right: auto; float: none;} // $bp960
