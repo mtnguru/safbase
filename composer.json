@@ -61,7 +61,9 @@
         "signature_pad/signature_pad": "*",
         "swiftmailer/swiftmailer": "^5.4",
         "drupal/menu_item_role_access": "^1.0",
-        "drupal/swiftmailer": "^1.0@beta"
+        "drupal/swiftmailer": "^1.0@beta",
+        "drupal/google_analytics": "^3.0",
+        "drupal/nodeaccess": "^1.0@beta"
     },
     "require-dev": {
         "drush/drush": "^9.0"
