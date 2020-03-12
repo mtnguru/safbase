@@ -14,12 +14,15 @@ body.page-node-type-landing-page {
       position: absolute;
       top: 20px;
       right: 20px;
+      @include media($bp960) {
+        right: 50px;
+      }
       h1 {
         text-shadow: 1px 1px 3px $color-dark-gray;
         color: white;
-        font-size: 140%;
+        font-size: 130%;
         @include media($bp960) {
-          font-size: 200%;
+          font-size: 160%;
         }
       }
     }
