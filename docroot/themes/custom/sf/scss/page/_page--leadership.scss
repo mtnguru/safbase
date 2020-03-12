@@ -1,13 +1,19 @@
 body.url-leadership {
   .layout__region--first {
     article {
-      padding-right: 20px;
+      padding-left: 30px;
+      padding-right: 30px;
     }
   }
   .layout__region--second {
     article {
-      padding-left: 20px;
+      padding-right: 30px;
+      padding-left: 30px;
     }
+  }
+
+  .block-entity-blockuser {
+    margin-bottom: 40px;
   }
 
   .field--name-user-picture {

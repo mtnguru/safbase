@@ -9,14 +9,13 @@ body.page-node-type-landing-page {
     background-attachment: fixed;
 
     .banner-title {
+      font-family: "Trajan Pro";
       max-width: $page-max-width;
-//    padding: 20px 0 0 20px;
-//?   margin: 0 auto;
       position: absolute;
       top: 20px;
       right: 20px;
       h1 {
-        text-shadow: 0 0 4px $color-black;
+        text-shadow: 1px 1px 3px $color-dark-gray;
         color: white;
         font-size: 140%;
         @include media($bp960) {
