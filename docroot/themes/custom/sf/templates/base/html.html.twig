@@ -45,8 +45,8 @@
     az_route_name | replace({'.': '-'}),
     not root_path ? 'path-frontpage' : 'path-' ~ root_path|clean_class,
     node_type ? 'page-node-type-' ~ node_type|clean_class,
-    'url-' ~ url('<current>')['#markup'] | split('/') | slice(-1) | join('/') | clean_class,
     db_offline ? 'db-offline',
+    'url-' ~ url('<current>')['#markup'] | split('/') | slice(-1) | join('/') | clean_class,
   ]
 %}
 <!DOCTYPE html>

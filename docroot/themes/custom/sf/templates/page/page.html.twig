@@ -47,7 +47,6 @@
     {% endif %}
   </main>
 
-  {% if page.footer_top or page.footer_bottom %}
     <footer id="site-footer" role="contentinfo">
 
       <section class="footer-top">
@@ -68,7 +67,8 @@
             <div id="site-logo"><a href="/home"><img alt="" src="/sites/default/files/assets/aureon_logo.png" /> </a></div>
 
             <div id="safire-project">
-              <img src="/sites/default/files/assets/company-banner.png"></img>
+              <img class="banner" src="/sites/default/files/assets/company-banner.png"></img>
+              <p class="copyright"><i class="far fa-copyright"></i>2020 AUREON ENERGY LTD. All rights reserved</p>
             </div>
           </div>
         </div>
@@ -80,5 +80,4 @@
         </section>
       {% endif %}
     </footer>
-  {% endif %}
 </div>
