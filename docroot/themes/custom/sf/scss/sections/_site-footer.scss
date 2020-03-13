@@ -28,7 +28,7 @@
     color: $color-white;
     width: 100%;
     background: linear-gradient(187deg, $color-blue, $color-dark-blue);
-    padding: 0 0 3em;
+    padding: 0 0 2em;
     text-align: center;
     .block {
       text-align: center;
@@ -109,11 +109,6 @@
     @include media($bp960) {
       display: block;
     }
-  }
-
-  .copyright {
-    @include span-columns(4);
-    padding-left: 1em;
   }
 
   #block-azsubmitticketblock {

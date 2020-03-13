@@ -28,6 +28,17 @@
       width: 235px;
       height: auto;
     }
+
+    .copyright {
+      color: $color-light-blue;
+      margin-top: 24px;
+      margin-left: -40px;
+      font-size: 60%;
+      svg {
+        margin-right: .5em;
+      }
+    }
+
     @include media($bp960) {
       margin-left: 10px;
       margin-top: 67px;
@@ -35,7 +46,13 @@
         width: 436px;
         height: auto;
       }
+      .copyright {
+        margin-left: 54px;
+        margin-top: 35px;
+        font-size: 80%;
+      }
     }
+
   }
 }
 

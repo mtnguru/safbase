@@ -1,0 +1,48 @@
+<?php
+
+
+/**
+ * @file
+ * Contains az_contact.module.
+ */
+
+use Drupal\az_contact\AzContentQuery;
+use Drupal\az_contact\AzStream;
+use Drupal\az_groups\AzGroupQuery;
+use Drupal\comment\Entity\Comment;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
+use Drupal\media\Entity\Media;
+use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
+use Drupal\user\Entity\User;
+use Drupal\Component\Utility\Random;
+use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+/**
+ * Implements hook_theme().
+ */
+/*
+function az_contact_theme() {
+  return [
+    'az_tabs' => [
+      'variables' => [
+        'tabs' => NULL,
+        'id' => NULL,
+      ],
+    ],
+  ];
+}
+*/
+
+/**
+ * Implements hook_form_alter().
+ */
+function az_contact_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  return;
+}
+
