@@ -13,7 +13,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Provides query for recent content 
+ * Provides query for recent content
  *   Array $settings configures query parameters.
  */
 class AzContentQuery {
@@ -73,16 +73,16 @@ class AzContentQuery {
       $query->condition('nfat.field_assigned_to_target_id', $set['assigned'], (is_array($set['assigned'])) ? 'IN' : '=');
     }
 
-    ////////// Atom CT - Approval field
-    if (isset($set['approval'])) {
-      $query->join('node__field_approval', 'nfa', 'nfd.nid = nfa.entity_id');
-      $query->condition('nfa.field_approval_value', $set['approval'], (is_array($set['approval'])) ? 'IN' : '=');
-    }
-
     ////////// Topics
     if (isset($set['topics'])) {
       $query->join('node__field_topics', 'nft', 'nfd.nid = nft.entity_id');
       $query->condition('nft.field_topics_target_id', $set['topics'], (is_array($set['topics'])) ? 'IN' : '=');
+    }
+
+    ////////// Interest
+    if (isset($set['interest'])) {
+      $query->join('node__field_interest', 'nfi', 'nfd.nid = nfi.entity_id');
+      $query->condition('nfi.field_interest_target_id', $set['interest'], (is_array($set['interest'])) ? 'IN' : '=');
     }
 
     ////////// Groups
