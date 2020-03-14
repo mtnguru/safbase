@@ -1,37 +1,74 @@
 <?php
-
-use Drupal\node\NodeInterface;
-
-
 /**
  * @file
  * Contains az_contact.module.
  */
 
+use Drupal\az_content\AzContentQuery;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 
+function az_contact_send_emails($interestIds, $node) {
+  // Create the mailing list
+  $set = [
+    'types' => 'contact',
+    'interest' => $interestIds,
+  ];
+  $res = AzContentQuery::nodeQuery($set);
 
-function az_contact_entity_insert(NodeInferface $entity) {
-  $type = $entity->getEntityTypeId();
-  if ($entity->getEntityTypeId() == 'contact_message') {
-    $wow = 6;
-    // Submit it like we talked
+  if (count($res['results'])) {
+    foreach ($res['results'] as $row) {
+      $id = 5;
+    }
+  }
+  // Send the emails
+  $wow = 6;
+}
+
+function az_contact_emailit ($node) {
+  if ($node->field_send_email->value) {
+    // Create array of selected Interest Ids
+    $interestIds = [];
+    foreach ($node->get('field_interest') as $item) {
+      $interestIds[] = $item->target_id;
+    }
+
+    if (count($interestIds)) {
+      az_contact_send_emails($interestIds, $node);
+    }
   }
 }
 
-function az_contact_node_insert(NodeInterface $node) {
-  $type = $node->getEntityTypeId();
-  if ($node->getEntityTypeId() == 'contact_message') {
-    $wow = 6;
-    // Submit it like we talked
+function az_contact_node_insert(Node $node) {
+  if ($node->bundle() == 'email') {
+    az_contact_emailit($node);
   }
 }
 
-function az_contact_node_update(NodeInterface $node) {
-  $type = $node->getEntityTypeId();
-  if ($node->getEntityTypeID() == 'contact_message') {
-    $wow = 6;
-    // Submit it like we talked
+function az_contact_node_update(Node $node) {
+  if ($node->bundle() == 'email') {
+    az_contact_emailit($node);
   }
 }
+
+function az_contact_form_alter(&$form, &$form_state, $form_id) {
+  return;
+}
+
+function az_contact_form_node_email_form_alter(&$form, &$form_state, $form_id) {
+  foreach (array_keys($form['actions']) as $action) {
+    if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
+      $form['actions'][$action]['#submit'][] = 'ac_contact_form_node_email_submit';
+    }
+  }
+  return;
+}
+
+function ac_contact_form_node_email_submit(&$form, FormStateInterface &$form_state) {
+  // if send email is enabled then build a list of emails and send the file
+  return;
+}
+
 
 
