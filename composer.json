@@ -74,6 +74,11 @@
     "extra": {
         "composer-exit-on-patch-failure": true,
         "enable-patching": true,
+	"patches": {
+          "drupal/core": {
+            "#3045171-140: Forms break Layout Builder saving.": "https://www.drupal.org/files/issues/2020-02-04/layout-builder-save-issue-3045171-140.patch"
+          }
+        },
         "installer-paths": {
             "docroot/core": [
                 "type:drupal-core"
