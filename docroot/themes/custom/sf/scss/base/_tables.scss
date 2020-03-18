@@ -25,4 +25,9 @@ th {
 th,
 td {
   padding: var(--spacing--small) var(--spacing--small) var(--spacing--small) 0;
+  ol,
+  ul {
+    margin: 0;
+    padding: 0;
+  }
 }

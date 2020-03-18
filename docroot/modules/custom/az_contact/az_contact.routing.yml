@@ -1,0 +1,18 @@
+az_contact.mailit_form:
+  path: '/open_mailit_form'
+  defaults:
+    _form: 'Drupal\az_contact\Form\OpenMailitForm'
+    _title: 'Mailit Form'
+  requirements:
+    _permission: 'administer site configuration'
+
+az_contact.open_mailit_form:
+  path: '/mailit_form'
+  defaults:
+    _title: 'Mailit Form'
+    _controller: '\Drupal\az_contact\Controller\MailitFormController::openMailitForm'
+#   _form: 'Drupal\az_contact\Form\OpenMailitForm'
+  requirements:
+    _permission: 'administer site configuration'
+# options:
+#   _admin_route: TRUE

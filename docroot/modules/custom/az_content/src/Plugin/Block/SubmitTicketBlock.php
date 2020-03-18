@@ -61,7 +61,7 @@ class SubmitTicketBlock extends BlockBase {
         return null;
 
       default:
-        \Drupal::logger('az_control')->notice(t('az_content::SubmitTicketBlock unknown route ' . $route));
+        \Drupal::logger('az_content')->notice(t('az_content::SubmitTicketBlock unknown route ' . $route));
         return null;
     }
 

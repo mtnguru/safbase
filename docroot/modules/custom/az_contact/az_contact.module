@@ -66,6 +66,7 @@ function az_contact_form_node_email_form_alter(&$form, &$form_state, $form_id) {
 }
 
 function ac_contact_form_node_email_submit(&$form, FormStateInterface &$form_state) {
+
   // if send email is enabled then build a list of emails and send the file
   return;
 }
