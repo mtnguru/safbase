@@ -33,14 +33,14 @@ $kernel->prepareLegacyRequest($request);
 
 // Switch from anonymous user to admin
 $accountSwitcher = \Drupal::service('account_switcher');
-$accountSwitcher->switchTo(new UserSession(['uid' => 1]));
+// $accountSwitcher->switchTo(new UserSession(['uid' => 1]));
 
 // Retrieve Atoms from DB
 $settings = [];
 $results = queryMessages($settings);
 
 $out = fopen('/tmp/out.csv', 'w');
-fputs($out, "Date,Name,Email,Subject,Phone,Address,Message\n");
+fputs($out, "Date,Name,Email,Phone,Address,Subject,Message\n");
 foreach ($results['results'] as $row) {
   $date = date('Y/d/m H:i', $row->created);
   $address =

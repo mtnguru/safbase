@@ -63,7 +63,8 @@
         "drupal/menu_item_role_access": "^1.0",
         "drupal/swiftmailer": "^1.0@beta",
         "drupal/google_analytics": "^3.0",
-        "drupal/nodeaccess": "^1.0@beta"
+        "drupal/nodeaccess": "^1.0@beta",
+        "drupal/node_view_permissions": "^1.2"
     },
     "require-dev": {
         "drush/drush": "^9.0"
