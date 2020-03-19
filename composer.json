@@ -64,7 +64,8 @@
         "drupal/swiftmailer": "^1.0@beta",
         "drupal/google_analytics": "^3.0",
         "drupal/nodeaccess": "^1.0@beta",
-        "drupal/node_view_permissions": "^1.2"
+        "drupal/node_view_permissions": "^1.2",
+        "drupal/mail_safety": "^1.0"
     },
     "require-dev": {
         "drush/drush": "^9.0"
