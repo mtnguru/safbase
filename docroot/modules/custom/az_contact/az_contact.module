@@ -28,9 +28,7 @@ function az_contact_mail($key, &$message, $params) {
           $media = Media::load($mid);
           if (isset($media->field_document)) {
             $fid = $media->field_document->target_id;
-            $file = \Drupal\file\Entity\File::load($fid);
             $message['files'][] = \Drupal\file\Entity\File::load($fid);
-
           }
         }
       }

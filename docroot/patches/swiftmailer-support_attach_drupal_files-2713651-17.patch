@@ -1,0 +1,67 @@
+diff --git a/src/Plugin/Mail/SwiftMailer.php b/src/Plugin/Mail/SwiftMailer.php
+index 3e89311..4e22171 100644
+--- a/src/Plugin/Mail/SwiftMailer.php
++++ b/src/Plugin/Mail/SwiftMailer.php
+@@ -422,28 +422,50 @@ class SwiftMailer implements MailInterface, ContainerFactoryPluginInterface {
+     foreach ($files as $file) {
+ 
+       if ($file instanceof stdClass) {
+-
+         // Validate required fields.
+         if (empty($file->uri) || empty($file->filename) || empty($file->filemime)) {
+           continue;
+         }
+ 
+-        // Get file data.
+-        if (UrlHelper::isValid($file->uri, TRUE)) {
+-          $content = file_get_contents($file->uri);
+-        }
+-        else {
+-          $content = file_get_contents(\Drupal::service('file_system')->realpath($file->uri));
+-        }
+-
+         $filename = $file->filename;
+         $filemime = $file->filemime;
++        $uri = $file->uri;
++      }
++      // Drupal file.
++      elseif ($file instanceof \Drupal\file\Entity\File) {
++        // Extract required properties.
++        $uri = $file->getFileUri();
++        $filename = $file->getFilename();
++        $filemime = $file->getMimeType();
++      }
++      else {
++        continue;
++      }
+ 
+-        // Attach file.
+-        $m->attach(Swift_Attachment::newInstance($content, $filename, $filemime));
++      // Validate required fields.
++      if (empty($uri) || empty($filename) || empty($filemime)) {
++        continue;
++      }
++
++      // Get file data.
++      if (UrlHelper::isValid($uri, TRUE)) {
++        $content = file_get_contents($uri);
++      }
++      else {
++        $fileSystem = \Drupal::service('file_system');
++
++        $scheme = $fileSystem->uriScheme($uri);
++        if ($fileSystem->validScheme($scheme)) {
++          $content = file_get_contents($uri);
++        }
++        else {
++          $content = file_get_contents($fileSystem->realpath($uri));
++        }
+       }
+-    }
+ 
++      // Attach file.
++      $m->attach(Swift_Attachment::newInstance($content, $filename, $filemime));
++    }
+   }
+ 
+   /**

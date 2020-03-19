@@ -79,6 +79,9 @@
 	"patches": {
           "drupal/core": {
             "#3045171-140: Forms break Layout Builder saving.": "https://www.drupal.org/files/issues/2020-02-04/layout-builder-save-issue-3045171-140.patch"
+          },
+          "drupal/swiftmailer": {
+            "#2713651-17: Fix attaching files to emails.": "https://www.drupal.org/files/issues/2018-09-09/swiftmailer-support_attach_drupal_files-2713651-17.patch"
           }
         },
         "installer-paths": {
