@@ -8,6 +8,7 @@ use Drupal\az_content\AzContentQuery;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
+use Drupal\media\Entity\Media;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
@@ -19,14 +20,18 @@ function az_contact_mail($key, &$message, $params) {
     case 'contact_key':
       $message['from'] = \Drupal::config('system.site')->get('mail');
       $message['subject'] = $params['subject'];
-//    $message['body'] = '<html><body>' . $params['message'] . '</body></html>';
       $message['body'][] = Markup::create($params['message']);
-//    $message['body'][] = $params['message'];
       $message['headers']['Content-Type'] = SWIFTMAILER_FORMAT_HTML;
       if (!empty($params['attachments'])) {
         foreach($params['attachments'] as $attachment) {
-          $fid = $attachment['target_id']; // get file fid;
-          $message['files'][] = \Drupal\file\Entity\File::load($fid);
+          $mid = $attachment['target_id']; // get file fid;
+          $media = Media::load($mid);
+          if (isset($media->field_document)) {
+            $fid = $media->field_document->target_id;
+            $file = \Drupal\file\Entity\File::load($fid);
+            $message['files'][] = \Drupal\file\Entity\File::load($fid);
+
+          }
         }
       }
       break;
