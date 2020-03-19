@@ -15,10 +15,10 @@ use Drupal\node\NodeInterface;
  */
 function az_contact_mail($key, &$message, $params) {
   switch ($key) {
-    case 'the_mail_key':
+    case 'mail_key':
       $body = implode("\n\n", $params['message']);
       $message['from'] = \Drupal::config('system.site')->get('mail');
-      $message['subject'] = '<html><body>' . $params['subject'] . '</body></html>';
+      $message['subject'] =  $params['subject'];
       $message['body'] = '<html><body>' . $body . '</body></html>';
       if (!empty($params['attachments'])) {
         $message['params']['files'] = $params['attachments'];
