@@ -24,8 +24,10 @@ function az_contact_mail($key, &$message, $params) {
 //    $message['body'][] = $params['message'];
       $message['headers']['Content-Type'] = SWIFTMAILER_FORMAT_HTML;
       if (!empty($params['attachments'])) {
-        $message['params']['files'] = $params['attachments'];
-        $message['files'] = $params['attachments'];
+        foreach($params['attachments'] as $attachment) {
+          $fid = $attachment['target_id']; // get file fid;
+          $message['files'][] = \Drupal\file\Entity\File::load($fid);
+        }
       }
       break;
   }
@@ -47,10 +49,7 @@ function az_contact_emailit ($node) {
     $subject = $node->label();
     $attachments = [];
     if (!$node->field_media_attachment->isEmpty()) {
-      foreach($node->get('field_media_attachment')->getValue() as $attachment) {
-        $fid = $attachment['target_id']; // get file fid;
-        $attachments[] = file_create_url(\Drupal\file\Entity\File::load($fid)->getFileUri());
-      }
+      $attachments = $node->get('field_media_attachment')->getValue();
     }
 
     // Create array of selected Interest Ids
