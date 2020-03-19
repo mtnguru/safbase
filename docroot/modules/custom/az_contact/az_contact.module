@@ -18,20 +18,36 @@ use Drupal\node\NodeInterface;
 function az_contact_mail($key, &$message, $params) {
   switch ($key) {
     case 'contact_key':
-      $message['from'] = \Drupal::config('system.site')->get('mail');
+//    $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['from'] = 'investment@aureon.ca';
+      $message['reply-to'] = 'ir@aureon.ca';
       $message['subject'] = $params['subject'];
       $message['body'][] = Markup::create($params['message']);
       $message['headers']['Content-Type'] = SWIFTMAILER_FORMAT_HTML;
+
+      $file1 = new stdClass();
+      $file1->uri = 'sites/default/files/Aureon_logo.png';
+      $file1->filename = 'Aureon_logo.png';
+      $file1->filemime = 'image/png';
+      $message['params']['files'][] = $file1;
+      $message['files'][] = $file1;
+
+      /*
       if (!empty($params['attachments'])) {
         foreach($params['attachments'] as $attachment) {
           $mid = $attachment['target_id']; // get file fid;
           $media = Media::load($mid);
           if (isset($media->field_document)) {
-            $fid = $media->field_document->target_id;
-            $message['files'][] = \Drupal\file\Entity\File::load($fid);
+
+//          $fid = $media->field_document->target_id;
+//          $file = [
+//            $message['params']['files'][] = \Drupal\file\Entity\File::load($fid);
+
+            ];
           }
         }
       }
+      */
       break;
   }
 }
