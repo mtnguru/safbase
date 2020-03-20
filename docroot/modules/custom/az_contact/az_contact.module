@@ -29,7 +29,7 @@ function az_contact_mail($key, &$message, $params) {
       $file1->uri = 'sites/default/files/Aureon_logo.png';
       $file1->filename = 'Aureon_logo.png';
       $file1->filemime = 'image/png';
-      $message['params']['files'][] = $file1;
+//    $message['params']['files'][] = $file1;
       $message['files'][] = $file1;
 
       /*
@@ -41,29 +41,32 @@ function az_contact_mail($key, &$message, $params) {
       $message['files'][] = $file2;
       */
 
+      /*
       $file3 = new stdClass();
       $file3->uri = 'sites/default/files/document/2020-03/document/20200130-1 SAFIRE Project Gantt Chart 4.pdf';
       $file3->filename = '20200130-1 SAFIRE Project Gantt Chart 4.pdf';
       $file3->filemime = 'application/pdf';
       $message['params']['files'][] = $file3;
       $message['files'][] = $file3;
+      */
 
-      /*
       if (!empty($params['attachments'])) {
         foreach($params['attachments'] as $attachment) {
           $mid = $attachment['target_id']; // get file fid;
           $media = Media::load($mid);
           if (isset($media->field_document)) {
+            $file = \Drupal\file\Entity\File::load($media->field_document->target_id);
 
-//          $fid = $media->field_document->target_id;
-//          $file = [
-//            $message['params']['files'][] = \Drupal\file\Entity\File::load($fid);
+            $f = new stdClass();
+            $f->uri = $file->getFileUri();
+            $f->filename = $file->getFilename();
+            $f->filemime = $file->getMimeType();
 
-            ];
+            $message['params']['files'][] = $f;
+            $message['files'][] = $f;
           }
         }
       }
-      */
       break;
   }
 }
