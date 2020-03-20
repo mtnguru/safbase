@@ -19,8 +19,8 @@ function az_contact_mail($key, &$message, $params) {
   switch ($key) {
     case 'contact_key':
 //    $message['from'] = \Drupal::config('system.site')->get('mail');
-      $message['from'] = 'Investor Relations <investment@aureon.ca>';
-      $message['reply-to'] = 'ir@aureon.ca';
+      $message['from'] = 'Investor Information <investment@aureon.ca>';
+      $message['reply-to'] = 'Investor Relations <ir@aureon.ca>';
       $message['subject'] = $params['subject'];
       $message['body'][] = Markup::create($params['message']);
       $message['headers']['Content-Type'] = SWIFTMAILER_FORMAT_HTML;
