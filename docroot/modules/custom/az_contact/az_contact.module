@@ -25,12 +25,14 @@ function az_contact_mail($key, &$message, $params) {
       $message['body'][] = Markup::create($params['message']);
       $message['headers']['Content-Type'] = SWIFTMAILER_FORMAT_HTML;
 
+      /*
       $file1 = new stdClass();
       $file1->uri = 'sites/default/files/Aureon_logo.png';
       $file1->filename = 'Aureon_logo.png';
       $file1->filemime = 'image/png';
 //    $message['params']['files'][] = $file1;
       $message['files'][] = $file1;
+      */
 
       /*
       $file2 = new stdClass();
@@ -63,7 +65,6 @@ function az_contact_mail($key, &$message, $params) {
             $f->filemime = $file->getMimeType();
 
             $message['params']['files'][] = $f;
-            $message['files'][] = $f;
           }
         }
       }
@@ -81,18 +82,27 @@ function az_contact_send_email($subject, $message, $attachments, $email) {
   $result = $mailManager->mail('az_contact', 'contact_key', $email, $langcode, $params, NULL, $send);
 }
 
-function az_contact_emailit ($node) {
-  if ($node->field_send_email->value) {
-    $message = $node->body->value;
-    $subject = $node->label();
+/**
+ * @param $eid - Email node id
+ * @param $cid - Contact node id
+ */
+function az_contact_mark_email_sent($eid, $cid) {
+  // Look for a record with this email and contact
+
+}
+
+function az_contact_emailit ($email) {
+  if ($email->field_send_email->value) {
+    $message = $email->body->value;
+    $subject = $email->label();
     $attachments = [];
-    if (!$node->field_media_attachment->isEmpty()) {
-      $attachments = $node->get('field_media_attachment')->getValue();
+    if (!$email->field_media_attachment->isEmpty()) {
+      $attachments = $email->get('field_media_attachment')->getValue();
     }
 
     // Create array of selected Interest Ids
     $interestIds = [];
-    foreach ($node->get('field_interest') as $item) {
+    foreach ($email->get('field_interest') as $item) {
       $interestIds[] = $item->target_id;
     }
 
@@ -105,10 +115,23 @@ function az_contact_emailit ($node) {
       $res = AzContentQuery::nodeQuery($set);
 
       if (count($res['results'])) {
+        // create a new email recipients node
+        // populate the date and email fields
+        $email_recipients = Node::create([
+          'title' => $email->label(),
+          'type' => 'email_recipients',
+          'field_email_reference' => [
+            'target_id' => $email->id(),
+          ],
+          'field_date_sent' => \Drupal::time()->getRequestTime(),
+        ]);
+
         foreach ($res['results'] as $row) {
           $contact = Node::load($row->nid);
           az_contact_send_email($subject, $message, $attachments, $contact->field_email->value);
+          $email_recipients->get('field_recipients')->appendItem(['target_id' => $contact->id()]);
         }
+        $email_recipients->save();
       }
     }
   }
@@ -116,13 +139,13 @@ function az_contact_emailit ($node) {
 
 function az_contact_node_insert(Node $node) {
   if ($node->bundle() == 'email') {
-    az_contact_emailit($node);
+//  az_contact_emailit($node);
   }
 }
 
 function az_contact_node_update(Node $node) {
   if ($node->bundle() == 'email') {
-    az_contact_emailit($node);
+//  az_contact_emailit($node);
   }
 }
 
@@ -130,7 +153,7 @@ function az_contact_form_alter(&$form, &$form_state, $form_id) {
   return;
 }
 
-function az_contact_form_node_email_form_alter(&$form, &$form_state, $form_id) {
+function az_contact_form_node_email_edit_form_alter(&$form, &$form_state, $form_id) {
   foreach (array_keys($form['actions']) as $action) {
     if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
       $form['actions'][$action]['#submit'][] = 'ac_contact_form_node_email_submit';
@@ -140,6 +163,15 @@ function az_contact_form_node_email_form_alter(&$form, &$form_state, $form_id) {
 }
 
 function ac_contact_form_node_email_submit(&$form, FormStateInterface &$form_state) {
+  $node = $form_state->getFormObject()->getEntity();
+  az_contact_emailit($node);
+
+  // $form_state->setValue(['field_configuration_file', 0, 'value'], $form_state->getValue('field_config'));
+
+  //if ($form_state->hasValue('updateChanged') && !$form_state->getValue('updateChanged')) {
+    //  $node->set('changed', $form_state->getValue('changed'));
+    //};
+  //}
 
   // if send email is enabled then build a list of emails and send the file
   return;
