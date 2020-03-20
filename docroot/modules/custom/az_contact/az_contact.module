@@ -25,12 +25,14 @@ function az_contact_mail($key, &$message, $params) {
       $message['body'][] = Markup::create($params['message']);
       $message['headers']['Content-Type'] = SWIFTMAILER_FORMAT_HTML;
 
+      /*
       $file1 = new stdClass();
       $file1->uri = 'sites/default/files/Aureon_logo.png';
       $file1->filename = 'Aureon_logo.png';
       $file1->filemime = 'image/png';
 //    $message['params']['files'][] = $file1;
       $message['files'][] = $file1;
+      */
 
       /*
       $file2 = new stdClass();
@@ -63,7 +65,6 @@ function az_contact_mail($key, &$message, $params) {
             $f->filemime = $file->getMimeType();
 
             $message['params']['files'][] = $f;
-            $message['files'][] = $f;
           }
         }
       }
