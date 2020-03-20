@@ -19,7 +19,7 @@ function az_contact_mail($key, &$message, $params) {
   switch ($key) {
     case 'contact_key':
 //    $message['from'] = \Drupal::config('system.site')->get('mail');
-      $message['from'] = 'investment@aureon.ca';
+      $message['from'] = 'Investor Relations <investment@aureon.ca>';
       $message['reply-to'] = 'ir@aureon.ca';
       $message['subject'] = $params['subject'];
       $message['body'][] = Markup::create($params['message']);
@@ -31,6 +31,13 @@ function az_contact_mail($key, &$message, $params) {
       $file1->filemime = 'image/png';
       $message['params']['files'][] = $file1;
       $message['files'][] = $file1;
+
+      $file2 = new stdClass();
+      $file2->uri = 'sites/default/files/document/2020-03/document/Aureon Energy - PPM - The SAFIRE Project.pdf';
+      $file2->filename = 'Aureon Energy - PPM - The SAFIRE Project.pdf';
+      $file2->filemime = 'application/pdf';
+      $message['params']['files'][] = $file2;
+      $message['files'][] = $file2;
 
       /*
       if (!empty($params['attachments'])) {
