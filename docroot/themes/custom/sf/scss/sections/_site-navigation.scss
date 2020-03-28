@@ -285,8 +285,8 @@
 
     > li {
       text-align: center;
-      span,
-      a {
+      > span,
+      > a {
         padding: 0px 25px;
       }
       &:last-child {
@@ -322,7 +322,7 @@
     @include media($bp960) {
       > li.nav-link {
         text-align: left;
-        span,
+        > span,
         > a {
 //        height: $navigation-height;
           padding: 14px 15px;
@@ -363,6 +363,17 @@
 
     @include media($bp960) {
       position: relative;
+    }
+
+    .trademark {
+      svg {
+        margin-bottom: .75em !important;
+        margin-left: auto !important;
+        height: auto;
+        font-size: 33% !important;
+
+      }
+
     }
   }
 

@@ -13,6 +13,7 @@ use Drupal\comment\Entity\Comment;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\media\Entity\Media;
@@ -713,6 +714,28 @@ function _az_content_get_fontawesome($bundle) {
   return $fa;
 }
 
+function _az_content_add_tm(&$text) {
+  $patterns = [
+    '/(\bSAFIRE\b)/i',
+    '/(\bAUREON\b)/i',
+  ];
+  $replacements = [
+    '<span class="trademark">$1<i class="fas fa-trademark"></i></span>',
+    '<span class="trademark">$1<i class="fas fa-trademark"></i></span>',
+  ];
+  $text = preg_replace($patterns, $replacements, $text, -1, $count);
+
+  $patterns = [
+    '/(\<span.*(SAFIRE).*\<\/span\> (PROJECT)\b)/i',
+    '/(\<span.*(AUREON).*\<\/span\> (ENERGY)\b)/i',
+  ];
+  $replacements = [
+    '<span class="trademark">$2 $3<i class="fas fa-trademark"></i></span>',
+    '<span class="trademark">$2 $3<i class="fas fa-trademark"></i></span>',
+  ];
+  $text = preg_replace($patterns, $replacements, $text, -1, $count);
+}
+
 /**
  * Implements HOOK_preprocess_node().
  *
@@ -758,6 +781,13 @@ function az_content_preprocess_node(&$variables) {
 
   $variables['show_author'] = ($node->hasField('field_show_author') && $node->field_show_author->value) ? true : false;
 
+  _az_content_add_tm($variables['content']['body'][0]['#text']);
+
+  $title = $node->title->value;
+  _az_content_add_tm($title);
+  $variables['title'] = ['#markup' => $title];
+
+
   switch ($type) {
     case 'article':   $variables['fontAwesomeIcon'] = 'fa-file-alt';    break;
     case 'book':      $variables['fontAwesomeIcon'] = 'fa-book';        break;
@@ -778,7 +808,10 @@ function az_content_preprocess_node(&$variables) {
     case 'ticket':
     case 'glossary':
 
+      _az_content_add_tm($variables['content']['body'][0]['#text']);
+
       $title = $node->title->value;
+      _az_content_add_tm($title);
       $variables['title'] = ['#markup' => $title];
 
       if ($viewMode == 'teaser') {
@@ -861,12 +894,12 @@ function az_content_preprocess_node(&$variables) {
           $media = Media::load($mid); // Loading media entity.
           if ($media) {
             $uri = $media->image->entity->getFileUri(); // It is for image media.
-	    $url = file_create_url($uri);
-//          \Drupal::logger('my_module')->error('what the f ' . $url);
+            $url = file_create_url($uri);
             $url = preg_replace('/45\.79\.25\.206/', 'aureon.ca', $url);
             $variables['background_url'] = $url;
           }
-          $variables['banner_title'] = $node->label();
+          $variables['banner_title'] = strtoupper($node->label());
+         $variables['title_image_path'] = '/sites/default/files/assets/' . $node->field_title_image->value;
         }
       }
       // Dashboard - Front page
@@ -881,6 +914,14 @@ function az_content_preprocess_node(&$variables) {
   if ($node->id() == "424") {
     _az_content_group_status_page($node, $variables);
   }
+}
+
+function az_content_link_alter(&$variables) {
+  if (strstr($variables['text'], 'SAFIRE')) {
+    _az_content_add_tm($variables['text']);
+    $variables['text'] = Markup::create($variables['text']);
+  }
+  return;
 }
 
 /**

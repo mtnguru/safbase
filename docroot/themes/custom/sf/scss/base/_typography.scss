@@ -1,13 +1,13 @@
 //@font-face {
 //  font-family: "Martel Sans";
-//  src: url('/fonts/martel.ttf');
+//  src: url('/themes/custom/sa_neato/fonts/martel.ttf');
 //}
-/*
+
 @font-face {
   font-family: "Trajan Pro";
-  src: url('/fonts/trajan.ttf');
+  src: url('/themes/custom/sa_neato/fonts/trajanpro.ttf') format('ttf');
 }
- */
+
 html {
   color: $base-fg-color;
   font-family: var(--font-family);

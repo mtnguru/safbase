@@ -40,7 +40,7 @@ $settings = [];
 $results = queryMessages($settings);
 
 $out = fopen('/tmp/out.csv', 'w');
-fputs($out, "Date,Name,Email,Phone,Address,Subject,Message\n");
+fputs($out, "Date,Name,Email,Phone,Address,Interest,Subject,Message\n");
 foreach ($results['results'] as $row) {
   $date = date('Y/m/d H:i', $row->created);
   $address =
@@ -55,6 +55,7 @@ foreach ($results['results'] as $row) {
     $row->mail,
     $row->phone,
     $address,
+    $row->interest,
     $row->subject,
     $row->message,
   ];
@@ -80,6 +81,7 @@ exit(0);
 function queryMessages($settings) {
   $query = \Drupal::database()->select('contact_message', 'cm');
   $query->fields('cm', ['id', 'name', 'mail', 'subject', 'message', 'created']);
+  $query->orderBy('cm.created', 'DESC');
 
   $query->leftJoin('contact_message__field_address', 'cmfa', 'cm.id = cmfa.entity_id');
   $query->addField('cmfa', 'field_address_address_line1', 'line1');
@@ -88,6 +90,14 @@ function queryMessages($settings) {
   $query->addField('cmfa', 'field_address_administrative_area', 'area');
   $query->addField('cmfa', 'field_address_postal_code', 'code');
   $query->addField('cmfa', 'field_address_country_code', 'country');
+
+  $query->leftJoin('contact_message__field_interest', 'cmfi', 'cm.id = cmfi.entity_id');
+
+  $query->leftJoin('taxonomy_term_field_data', 'ttfd', 'cmfi.field_interest_target_id = ttfd.tid');
+  $query->addField('ttfd', 'name', 'interest');
+//$query->addExpression('GROUP_CONCAT(DISTINCT cmfi.field_interest_target_id)', 'tag_list');
+//$query->groupBy('cm.id');
+
 
   $query->leftJoin('contact_message__field_phone', 'cmfp', 'cm.id = cmfp.entity_id');
   $query->addField('cmfp', 'field_phone_value', 'phone');

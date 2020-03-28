@@ -17,6 +17,9 @@ body.page-node-type-landing-page {
       @include media($bp960) {
         right: 50px;
       }
+      img {
+        height: 18px;
+      }
       h1 {
         text-shadow: 1px 1px 3px $color-dark-gray;
         color: white;
