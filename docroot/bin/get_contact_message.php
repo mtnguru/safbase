@@ -42,7 +42,7 @@ $results = queryMessages($settings);
 $out = fopen('/tmp/out.csv', 'w');
 fputs($out, "Date,Name,Email,Phone,Address,Subject,Message\n");
 foreach ($results['results'] as $row) {
-  $date = date('Y/d/m H:i', $row->created);
+  $date = date('Y/m/d H:i', $row->created);
   $address =
     $row->line1 . "\n" .
 //  (($row->line2) ? $row->line2 . "\r" : "") .
@@ -91,6 +91,8 @@ function queryMessages($settings) {
 
   $query->leftJoin('contact_message__field_phone', 'cmfp', 'cm.id = cmfp.entity_id');
   $query->addField('cmfp', 'field_phone_value', 'phone');
+  print "order it";
+  $query->orderBy('cm.created', 'DESC');
 
 //$query->condition('nfd.status', $set['status'], (is_array($set['status'])) ? 'IN' : '=');
 
