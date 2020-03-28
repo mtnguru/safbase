@@ -25,33 +25,6 @@ function az_contact_mail($key, &$message, $params) {
       $message['body'][] = Markup::create($params['message']);
       $message['headers']['Content-Type'] = SWIFTMAILER_FORMAT_HTML;
 
-      /*
-      $file1 = new stdClass();
-      $file1->uri = 'sites/default/files/Aureon_logo.png';
-      $file1->filename = 'Aureon_logo.png';
-      $file1->filemime = 'image/png';
-//    $message['params']['files'][] = $file1;
-      $message['files'][] = $file1;
-      */
-
-      /*
-      $file2 = new stdClass();
-      $file2->uri = 'sites/default/files/document/2020-03/document/Aureon Energy - PPM - The SAFIRE Project.pdf';
-      $file2->filename = 'Aureon Energy - PPM - The SAFIRE Project.pdf';
-      $file2->filemime = 'application/pdf';
-      $message['params']['files'][] = $file2;
-      $message['files'][] = $file2;
-      */
-
-      /*
-      $file3 = new stdClass();
-      $file3->uri = 'sites/default/files/document/2020-03/document/20200130-1 SAFIRE Project Gantt Chart 4.pdf';
-      $file3->filename = '20200130-1 SAFIRE Project Gantt Chart 4.pdf';
-      $file3->filemime = 'application/pdf';
-      $message['params']['files'][] = $file3;
-      $message['files'][] = $file3;
-      */
-
       if (!empty($params['attachments'])) {
         foreach($params['attachments'] as $attachment) {
           $mid = $attachment['target_id']; // get file fid;
