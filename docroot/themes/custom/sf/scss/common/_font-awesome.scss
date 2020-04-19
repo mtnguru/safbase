@@ -1,7 +1,7 @@
-.trademark {
+span.trademark {
   white-space: nowrap;
-  svg {
+  i::before {
     font-size: 40%;
-    margin-bottom: 1.8em;
+    vertical-align: top;
   }
 }

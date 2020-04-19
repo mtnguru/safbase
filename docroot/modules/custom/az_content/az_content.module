@@ -717,7 +717,7 @@ function _az_content_get_fontawesome($bundle) {
 function _az_content_add_tm(&$text) {
   $patterns = [
     '/(\bSAFIRE\b)/',
-    '/(\bAUREON\b)/',
+    '/(\bAUREON ENERGY\b)/',
   ];
   $replacements = [
     '<span class="trademark">$1<i class="fas fa-trademark"></i></span>',
@@ -727,11 +727,11 @@ function _az_content_add_tm(&$text) {
 
   $patterns = [
     '/(\<span class=.trademark.\>(SAFIRE).*\<\/span\> (PROJECT)\b)/',
-    '/(\<span class=.trademark.\>(AUREON).*\<\/span\> (ENERGY)\b)/',
+//  '/(\<span class=.trademark.\>(AUREON).*\<\/span\> (ENERGY)\b)/',
   ];
   $replacements = [
     '<span class="trademark">$2 $3<i class="fas fa-trademark"></i></span>',
-    '<span class="trademark">$2 $3<i class="fas fa-trademark"></i></span>',
+//  '<span class="trademark">$2 $3<i class="fas fa-trademark"></i></span>',
   ];
   $text = preg_replace($patterns, $replacements, $text, -1, $count);
 }

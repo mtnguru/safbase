@@ -4,6 +4,7 @@
  * Contains az_contact.module.
  */
 
+use Drupal\az_contact\AzContact;
 use Drupal\az_content\AzContentQuery;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Markup;
@@ -13,7 +14,7 @@ use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
 /**
- * Implements hook_mail().
+ * Implements HOOK_mail().
  */
 function az_contact_mail($key, &$message, $params) {
   switch ($key) {
@@ -122,10 +123,6 @@ function az_contact_node_update(Node $node) {
   }
 }
 
-function az_contact_form_alter(&$form, &$form_state, $form_id) {
-  return;
-}
-
 function az_contact_form_node_email_edit_form_alter(&$form, &$form_state, $form_id) {
   foreach (array_keys($form['actions']) as $action) {
     if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
@@ -150,5 +147,26 @@ function ac_contact_form_node_email_submit(&$form, FormStateInterface &$form_sta
   return;
 }
 
+/**
+ * Implements HOOK_form_alter().
+ */
+function az_contact_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  return;
+}
 
+/**
+ * Implements HOOK_form_alter().
+ */
+function az_contact_form_contact_message_sitewide_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  foreach (array_keys($form['actions']) as $action) {
+    if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
+      $form['actions'][$action]['#submit'][] = 'ac_contact_contact_message_form_submit';
+    }
+  }
+  return;
+}
 
+function ac_contact_contact_message_form_submit(&$form, FormStateInterface &$form_state) {
+  $cm = $form_state->getFormObject()->getEntity();
+  AzContact::addContactMessage($cm);
+}

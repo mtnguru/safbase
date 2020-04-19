@@ -59,22 +59,47 @@ class AzContact {
 
     return [
       'results' => $results,
-      'numRows' => count($results),
+      'numRows' => ($results) ? count($results) : 0,
     ];
   }
 
-  static public function createContact($row, $source) {
+  static public function addContactMessage($cm) {
+    $res = AzContact::queryEmail($cm->mail->value);
+    if ($res['results'] == false) {
+      $contact = AZContact::createContact($cm, 'Contact Form');
+      $contactId = $contact->id();
+    }
+    else {
+      $contactId = $res['results']->id;
+      AzContact::addSubmission($contactId, $cm);
+    }
+    $cm->field_contact = $contactId;
+    $cm->save();
+  }
 
+  static public function createContact($cm, $source) {
+
+    $interestv = $cm->field_interest->getValue();
+    $interest = $cm->field_interest->getString();
+    $addressv = $cm->field_address->getValue();
+    $address = $cm->field_address->getString();
     $node = Node::create([
       'type'           => 'contact',
       'status'         => 1,
-      'title'          => $row->name,
-      'field_email'    => $row->mail,
-      'field_interest' => [$row->interestId],
-      'field_phone'    => $row->phone,
+      'title'          => $cm->name->value,
+      'field_email'    => $cm->mail->value,
+      'field_interest' => $cm->field_interest->getValue(),
+      'field_phone'    => $cm->field_phone->value,
       'field_source'   => $source,
-      'field_first_contact_date' => date('Y-m-d', $row->created),
+      'field_first_contact_date' => date('Y-m-d', $cm->created->value),
+      'field_last_contact_date'  => date('Y-m-d', $cm->created->value),
+      'field_address'  => $cm->field_address->getValue(),
+    ]);
 
+    $node->save();
+    return $node;
+
+    /*
       'field_address'  => [
         'address_line1' => $row->line1,
         'address_line2' => $row->line2,
@@ -84,28 +109,32 @@ class AzContact {
         'country_code' => $row->country,
       ]
     ]);
-    $node->save();
-    return $node;
+    */
   }
 
-  static public function addSubmission($contactId, $data) {
+  static public function addSubmission($contactId, $cm) {
     // So what to do here?  Overwrite existing data, that way it gets corrected?
     // Read in the contact;
     $contact = \Drupal::entityTypeManager()->getStorage('node')->load($contactId);
 
-    if ($data->interestId) {
+    if (!$cm->field_interest->isEmpty()) {
       $existingInterests = array_column($contact->field_interest->getValue(), 'target_id');
-      if (!in_array($data->interestId, $existingInterests)) {
-        $contact->field_interest[] = $data->interestId;
-      }
+//    if (!in_array($cm->field_interest->getValue(), $existingInterests)) {
+//      $contact->field_interest[] = $cm->field_interest;
+//    }
     }
+    $contact->field_last_contact_date->setValue(date('Y-m-d', $cm->created->value));
 
-    if ($data->name) {
-      $contact->setTitle($data->name);
+    $contact->setTitle($cm->label());
+
+    if (!$cm->field_phone->isEmpty()) {
+      $contact->field_phone->setValue($cm->field_phone->value);
     }
-
-    if ($data->phone) {
-      $contact->field_phone->setValue($data->phone);
+    if (!$cm->field_address->isEmpty()) {
+      $contact->field_address->setValue($cm->field_address->getValue());
+    }
+    if (!$cm->field_interest->isEmpty()) {
+      $contact->field_interest->setValue($cm->field_interest->getValue());
     }
 
     $contact->save();
