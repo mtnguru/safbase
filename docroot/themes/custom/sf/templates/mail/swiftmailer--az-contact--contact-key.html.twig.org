@@ -57,7 +57,7 @@ table tr td {
 
     <tr class="mail-header">
       <td>
-        <div style="padding: 0px 0px 0px 0px;">
+        <div class="header">
           <img src="https://aureon.ca/sites/default/assets/aureon_logo.png"</img>
           <img src="https://aureon.ca/sites/default/assets/company-banner-top.png"></img> 
         </div>
