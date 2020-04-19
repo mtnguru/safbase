@@ -49,6 +49,8 @@ global-styling:
       css/layout/breadcrumb.css: {}
       css/layout/local-actions.css: {}
       css/layout/layout.css: {}
+    custom:
+      css/custom/field.css: {}
   dependencies:
     - system/admin
     - core/jquery

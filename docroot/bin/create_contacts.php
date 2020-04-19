@@ -37,18 +37,8 @@ $accountSwitcher->switchTo(new UserSession(['uid' => 1]));
 $settings = [];
 $results = AzContact::querySubmissions($settings);
 foreach ($results['results'] as $row) {
-  $res = AzContact::queryEmail($row->mail);
-  if ($res['results'] == false) {
-    $contact = AzContact::createContact($row, 'Contact Form');
-    $contactId = $contact->id();
-  }
-  else {
-    $contactId = $res['results']->id;
-    AzContact::addSubmission($contactId, $row);
-  }
-  $submission =  \Drupal::entityTypeManager()->getStorage('contact_message')->load($row->id);
-  $submission->field_contact = $contactId;
-  $submission->save();
+  $cm = \Drupal::entityTypeManager()->getStorage('contact_message')->load($row->id);
+  AzContact::addContactMessage($cm);
 
   /*
   $address =

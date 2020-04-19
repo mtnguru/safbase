@@ -18,6 +18,9 @@ config/
 *node_modules
 
 # Ignore site files directory
+/docroot/sites/default/services.yml
+/docroot/sites/default/settings.local.php
+/docroot/sites/default/settings.php
 /docroot/sites/default/files
 
 .idea/
