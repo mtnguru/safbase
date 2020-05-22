@@ -3,10 +3,13 @@ body.page-node-type-landing-page {
   section.banner {
     position: relative;
     background-size: cover;
-    height: 50vh;
+    height: 40vh;
     background-repeat: no-repeat;
     background-position: center;
-    background-attachment: fixed;
+    @include media($bp960) {
+      background-attachment: fixed;
+      height: 50vh;
+    }
 
     .banner-title {
       font-family: "Trajan Pro";
