@@ -169,14 +169,14 @@ body.cke_ltr {
     color: $color-title;
   }
   h6 {
-    font-size: 110%;
+    color: #51676C;
+    font-size: 120%;
     font-weight: normal;
     font-style: italic;
     text-align: center;
     @include media (max-width $bp580max) {
       text-align: left;
     }
-    color: $color-light-title;
   }
 
 
