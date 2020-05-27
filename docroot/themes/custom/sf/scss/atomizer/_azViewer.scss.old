@@ -20,6 +20,9 @@
     right: 10px;
     opacity: .5;
     font-size: 80%;
+    @include media(max-width $bp580max) {
+      font-size: 62%;
+    }
   }
 }
 
