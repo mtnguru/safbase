@@ -162,17 +162,22 @@ body.cke_ltr {
     color: $color-light-title;
   }
   h5 {
-    font-size: 100%;
+    font-size: 120%;
     font-weight: normal;
+    font-style: italic;
+    text-align: center;
     color: $color-title;
   }
   h6 {
-    font-size: 100%;
+    font-size: 110%;
     font-weight: normal;
+    font-style: italic;
+    text-align: center;
+    @include media (max-width $bp580max) {
+      text-align: left;
+    }
     color: $color-light-title;
   }
-
-
 
 
   .az-topic {
