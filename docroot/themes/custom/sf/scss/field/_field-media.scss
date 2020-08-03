@@ -88,7 +88,7 @@ article.media {
     @include media($bp320only)  { width: 100%; margin-left: auto; margin-right: auto; float: none;} // $bp320
     @include media($bp580only)  { width: 100%; margin-left: auto; margin-right: auto; float: none;} // $bp580
     @include media($bp960only)  { width: 100%; margin-left: auto; margin-right: auto; float: none;} // $bp960
-    @include media($bp1280only) { width: 90%; } // $bp1280
-    @include media($bp1920) { width: 80%; } // $bp1920
+    @include media($bp1280only) { width: 100%; } // $bp1280
+    @include media($bp1920) { width: 90%; } // $bp1920
   }
 }

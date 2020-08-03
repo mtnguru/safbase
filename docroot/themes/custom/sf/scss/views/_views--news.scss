@@ -1,0 +1,115 @@
+body.path-investors {
+  .page-title {
+    text-align: center;
+  }
+  .field--name-name {
+    font-size: 140%;
+  }
+}
+
+
+body.page-node-type-news {
+  article.profile {
+    float: left;
+    margin-right: 1em;
+    margin-bottom: 2em;
+  }
+  .field--name-user-picture {
+    max-width: 40px;
+    max-height: 40px;
+  }
+
+  .field--name-field-media {
+    margin-bottom: 30px;
+  }
+  img {
+    border-radius: 5px;
+  }
+
+  .node__submitted {
+    padding-top: .5em;
+  }
+}
+
+
+.view-investor-news {
+  .views-row {
+    box-shadow: 0 0 5px 1px #ddd;
+    padding: 1em;
+    margin: .5em auto;
+    max-width: 960px;
+  }
+
+  .text-formatted {
+    > p {
+      max-width: 960px;
+    }
+  }
+
+  .field--name-field-media {
+    float: left;
+    margin: 5px 1em .5em 0;
+  }
+
+  .field--name-body {
+//  float: left;
+    clear: none;
+  }
+
+  h2 {
+    margin-bottom: 0;
+    a {
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .node__links {
+    float: right;
+    margin-top: -1em;
+  }
+
+  .field--name-user-picture {
+    display: none;
+    margin-right: 1em;
+    float: left;
+    img {
+      width: 42px;
+      height: 42px;
+    }
+  }
+
+  .node__submitted {
+    font-size: 80%;
+    color: grey;
+    margin-top: -0px;
+    margin-bottom: .5em;
+  }
+
+  .node__content {
+    clear: both;
+
+    img {
+      display: block;
+    }
+  }
+
+  .pager {
+    padding-left: 0;
+    width: 100%;
+    text-align: center;
+
+    .pager__item {
+      padding: 0;
+      a {
+        @extend button;
+      }
+    }
+  }
+
+  .video-embed-field-responsive-video {
+    width: 200px;
+  }
+}

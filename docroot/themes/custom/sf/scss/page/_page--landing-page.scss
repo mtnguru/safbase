@@ -10,6 +10,10 @@ body.page-node-type-landing-page {
       background-attachment: fixed;
       height: 50vh;
     }
+    @include media($bp1280) {
+      background-attachment: fixed;
+      height: 60vh;
+    }
 
     .banner-title {
       font-family: "Trajan Pro";

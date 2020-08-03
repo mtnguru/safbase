@@ -1,0 +1,89 @@
+.view-investor-documents-personal,
+.view-investor-documents {
+  .views-row {
+    box-shadow: 0 0 5px 1px #ddd;
+    padding: 1em;
+    margin: .5em auto;
+    max-width: 960px;
+  }
+
+  .text-formatted {
+    > p {
+      max-width: 960px;
+    }
+  }
+
+  .field--name-body {
+//  float: left;
+    clear: none;
+  }
+
+  article {
+    margin: 0;
+    .field {
+      text-align: left;
+    }
+  }
+
+  .field--name-field-create-date {
+    text-align: left;
+    color: grey;
+    font-size: 85%;
+    .field__label {
+      font-weight: normal;
+    }
+  }
+
+  h2 {
+    margin-bottom: 0;
+    a {
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .node__links {
+    float: right;
+    margin-top: -1em;
+  }
+
+  .field--name-user-picture {
+    display: none;
+    margin-right: 1em;
+    float: left;
+    img {
+      width: 42px;
+      height: 42px;
+    }
+  }
+
+  .node__submitted {
+    font-size: 80%;
+    color: grey;
+    margin-top: -0px;
+    margin-bottom: .5em;
+  }
+
+  .node__content {
+    clear: both;
+
+    img {
+      display: block;
+    }
+  }
+
+  .pager {
+    padding-left: 0;
+    width: 100%;
+    text-align: center;
+
+    .pager__item {
+      padding: 0;
+      a {
+        @extend button;
+      }
+    }
+  }
+}

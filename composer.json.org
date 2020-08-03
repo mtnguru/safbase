@@ -65,10 +65,7 @@
         "drupal/google_analytics": "^3.0",
         "drupal/nodeaccess": "^1.0@beta",
         "drupal/node_view_permissions": "^1.2",
-        "drupal/mail_safety": "^1.0",
-        "drupal/vapn": "^1.4",
-        "drupal/views_node_access_filter": "^1.0@alpha",
-        "drupal/admin_toolbar_search": "^1.0"
+        "drupal/mail_safety": "^1.0"
     },
     "require-dev": {
         "drush/drush": "^9.0"
@@ -81,6 +78,7 @@
         "enable-patching": true,
 	"patches": {
           "drupal/core": {
+#           "#3045171-140: Forms break Layout Builder saving.": "https://www.drupal.org/files/issues/2020-02-04/layout-builder-save-issue-3045171-140.patch"
           },
           "drupal/swiftmailer": {
             "#2713651-17: Fix attaching files to emails.": "https://www.drupal.org/files/issues/2018-09-09/swiftmailer-support_attach_drupal_files-2713651-17.patch"

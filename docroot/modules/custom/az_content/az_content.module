@@ -122,6 +122,7 @@ function _az_content_node_submit(&$form, FormStateInterface &$form_state) {
 //  $node->set('changed', $form_state->getValue('changed'));
 //};
 
+  /*
   // if the node moderation state has changed and is now published then set the published date.
   if ($form_state->hasValue('publishChanged') ||
         ($form_state->getValue('moderation_state')[0]['value'] == 'published' &&
@@ -129,6 +130,7 @@ function _az_content_node_submit(&$form, FormStateInterface &$form_state) {
     $date= DrupalDateTime::createFromTimestamp((int)\Drupal::time()->getRequestTime('UTC'));
     $node->field_publish_date->value = format_date($date->getTimestamp() , 'custom', 'Y-m-d\TH:i:s', 'UTC');
   }
+  */
 
   $node->save();
   return;
@@ -195,6 +197,37 @@ function az_content_entity_access(EntityInterface $entity, $op, AccountInterface
         }
       }
       break;
+
+    case 'media':
+      $bundle = $entity->getEntityType()->getBundleLabel();
+      $label = \Drupal::entityTypeManager()
+        ->getStorage('media_type')
+        ->load($entity->bundle())
+        ->label();
+      if  ($label == 'Document') {
+        $croles = $entity->field_user_types->getValue();
+        if (count($croles) == 0) {  // If User Types not set then allow viewing
+          return AccessResult::neutral();
+        }
+        if ($account == null) {
+          return AccessResult::forbidden();
+        }
+        $roles = $account->getRoles();
+        foreach($croles as $crole) {
+          if (!empty($crole['target_id'])) {
+            $tid = $crole['target_id'];
+            $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($crole['target_id']);
+            if ($term) {
+              $name = strtolower(str_replace(' ', '_', $term->label()));
+              if (in_array($name, $roles)) {
+                return AccessResult::neutral();
+              }
+            }
+          }
+        }
+        return AccessResult::forbidden();
+      }
+      break;
   }
 
   return AccessResult::neutral();
@@ -212,23 +245,24 @@ function az_content_entity_access(EntityInterface $entity, $op, AccountInterface
  * @return \Drupal\Core\Access\AccessResultForbidden|\Drupal\Core\Access\AccessResultNeutral
  */
 function az_content_node_access(NodeInterface $node, $op, AccountInterface $account) {
-  /*
-  if ($gid = AzGroupQuery::nodeInGroup($node)) {
-    $group = \Drupal::entityManager()->getStorage('group')->load($gid);
-
-    // If the group is hidden check if user has permission 'az groups view hidden'
-    $status = $group->field_status->value;
-    if ($status == 'hidden' && !\Drupal::currentUser()->hasPermission('az groups view hidden')) {
+  if  ($node->getType() == 'news') {
+    if ($account == null) {
       return AccessResult::forbidden();
     }
-    // If node has field_private set then check if current user is a member.
-    if ($node->hasField('field_private') && $node->field_private->value) {
-      if (!$group->getMember(\Drupal::currentUser()->getAccount())) {
-        return AccessResult::forbidden();
+    $roles = $account->getRoles();
+    $croles = $node->field_user_types->getValue();
+    foreach($croles as $crole) {
+      $tid = $crole['target_id'];
+      $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($crole['target_id']);
+      if ($term) {
+        $name = strtolower(str_replace(' ', '_', $term->label()));
+        if (in_array($name, $roles)) {
+          return AccessResult::neutral();
+        }
       }
     }
+    return AccessResult::forbidden();
   }
-  */
   return AccessResult::neutral();
 }
 
@@ -621,18 +655,6 @@ function _az_content_build_tabs($id, $sets) {
   ];
 }
 
-function _az_content_add_group_logo($node, &$variables) {
-  if ($gid = AzGroupQuery::nodeInGroup($node)) {
-    $group = \Drupal::entityManager()->getStorage('group')->load($gid);
-    $variables['group_url'] = \Drupal::service('path.alias_manager')
-      ->getAliasByPath('/group/' . $gid);
-    $variables['group_label'] = $group->label->value;
-    $file = \Drupal\file\Entity\File::load($group->field_logo_image->getValue()[0]['target_id']);
-    $variables['group_logo_url'] = \Drupal\image\Entity\ImageStyle::load('300x100')
-      ->buildUrl($file->getFileUri());
-  }
-}
-
 function _az_content_has_new_content($variables) {
   // Add marker if content is New, Updated or has already been read.
   switch (node_mark($variables['node']->id(), $variables['node']->getChangedTime())) {
@@ -715,6 +737,9 @@ function _az_content_get_fontawesome($bundle) {
 }
 
 function _az_content_add_tm(&$text) {
+  if (strlen($text) == 0) {
+    return;
+  }
   $patterns = [
     '/(\bSAFIRE\b)/',
     '/(\bAUREON ENERGY\b)/',
@@ -808,15 +833,13 @@ function az_content_preprocess_node(&$variables) {
     case 'ticket':
     case 'glossary':
 
-      _az_content_add_tm($variables['content']['body'][0]['#text']);
+      if ($viewMode != 'header' && $viewMode != 'teaser') {
+        _az_content_add_tm($variables['content']['body'][0]['#text']);
+      }
 
       $title = $node->title->value;
       _az_content_add_tm($title);
       $variables['title'] = ['#markup' => $title];
-
-      if ($viewMode == 'teaser') {
-        _az_content_add_group_logo($node, $variables);
-      }
 
       if ($viewMode == 'full') {
         // Add block showing any tickets submitted for this page.
@@ -832,24 +855,6 @@ function az_content_preprocess_node(&$variables) {
             'empty' => 'NO DISPLAY',
           ];
         }
-
-        // Create book navigation block
-        if (in_array($type, ['article', 'glossary', 'news', 'book'])) {
-          $block_entity = Drupal\block\Entity\Block::load('azbooknavigation');
-          $variables['sidebar']['block_booknavigation'] = \Drupal::entityTypeManager()
-            ->getViewBuilder('block')
-            ->view($block_entity);
-        }
-
-	/*
-        // If field_contribute has content - add contribute block
-        if ($node->hasField('field_contribute') && !$node->field_contribute->isEmpty()) {
-          $block_entity = Drupal\block\Entity\Block::load('azcontributeblock');
-          $variables['sidebar']['block_contribute'] = \Drupal::entityTypeManager()
-            ->getViewBuilder('block')
-            ->view($block_entity);
-        }
-        */
 
         // If field_display_image_map has a value then add the map views map block.
         if ($node->hasField('field_display_image_map') && $node->field_display_image_map->value == true) {
