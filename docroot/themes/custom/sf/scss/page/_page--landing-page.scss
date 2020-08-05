@@ -8,11 +8,11 @@ body.page-node-type-landing-page {
     background-position: center;
     @include media($bp960) {
       background-attachment: fixed;
-      height: 50vh;
+      height: 45vh;
     }
     @include media($bp1280) {
       background-attachment: fixed;
-      height: 60vh;
+      height: 55vh;
     }
 
     .banner-title {

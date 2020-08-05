@@ -1,3 +1,17 @@
+
+body.investors-docs {
+  #block-sf-page-title {
+    display: none;
+  }
+  .block-views {
+    > h2 {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+  }
+}
+
 .view-investor-documents-personal,
 .view-investor-documents {
   .views-row {
@@ -85,5 +99,9 @@
         @extend button;
       }
     }
+  }
+
+  .view-empty {
+    text-align: center;
   }
 }

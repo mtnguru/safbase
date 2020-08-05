@@ -18,7 +18,22 @@ function az_user_form_user_form_alter(&$form, FormStateInterface $form_state, $f
     $form['field_address']['#access'] = false;
     $form['field_phone']['#access'] = false;
     $form['field_private_notes']['#access'] = false;
+    $form['field_biography']['#access'] = false;
+    $form['field_first_name']['#access'] = false;
+    $form['field_last_name']['#access'] = false;
+    $form['field_full_name']['#access'] = false;
+    $form['field_job_title']['#access'] = false;
+    $form['field_middle_initial']['#access'] = false;
+    $form['field_phones']['#access'] = false;
+    $form['field_cv_file']['#access'] = false;
+    $form['user_picture']['#access'] = false;
   }
+  $form['#validate'][] = '_az_user_form_validate';
+  return;
+}
+
+function _az_user_form_validate(&$form, FormStateInterface &$form_state) {
+  $form_state->setValue('name',$form_state->getValue('mail'));
   return;
 }
 

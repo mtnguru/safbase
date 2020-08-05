@@ -68,7 +68,9 @@
         "drupal/mail_safety": "^1.0",
         "drupal/vapn": "^1.4",
         "drupal/views_node_access_filter": "^1.0@alpha",
-        "drupal/admin_toolbar_search": "^1.0"
+        "drupal/admin_toolbar_search": "^1.0",
+        "drupal/email_registration": "^1.1",
+        "drupal/mail_login": "^2.0"
     },
     "require-dev": {
         "drush/drush": "^9.0"
