@@ -33,7 +33,7 @@ function az_user_form_user_form_alter(&$form, FormStateInterface $form_state, $f
 }
 
 function _az_user_form_validate(&$form, FormStateInterface &$form_state) {
-  $form_state->setValue('name',$form_state->getValue('mail'));
+  $form_state->setValue('name',strtolower($form_state->getValue('mail')));
   return;
 }
 
