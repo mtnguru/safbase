@@ -61,7 +61,12 @@ class TopNavBlock extends BlockBase {
         '#uid' => \Drupal::currentUser()->id(),
       ];
     } */
+
     return $build;
+  }
+
+  public function getCacheMaxAge() {
+    return 0;
   }
 }
 

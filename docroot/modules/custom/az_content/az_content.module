@@ -55,6 +55,27 @@ function az_content_form_alter(&$form, FormStateInterface $form_state, $form_id)
   return;
 }
 
+/**
+ * Implements hook_form_FORM_ID_alter().
+ * Form ID = user_pass
+ *
+ * Redirect to a special page.
+ */
+function az_content_form_user_pass_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['#submit'][] = '_az_content_user_pass_submit';
+  return;
+}
+
+/**
+ * @param $form
+ * @param FormStateInterface $form_state
+ */
+function _az_content_user_pass_submit (&$form, FormStateInterface &$form_state) {
+  $url = Url::fromUserInput('/node/' . 1601, []);
+  $form_state->setRedirectUrl($url);
+}
+
+
 function az_content_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $node = $form_state->getFormObject()->getEntity();
   $type = $node->getType();
