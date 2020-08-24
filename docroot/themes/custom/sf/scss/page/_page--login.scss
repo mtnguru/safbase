@@ -1,0 +1,24 @@
+body.user-login {
+  #block-sf-page-title {
+    display: none;
+  }
+
+  #block-sf-content {
+    max-width: 440px;
+    margin: 0 auto;
+    .login-form {
+      padding: 30px;
+    }
+  }
+}
+
+body.user-password {
+  section#content {
+    > div {
+      max-width: 440px;
+      margin: 1em auto;
+      box-shadow: 0 0 5px 1px #999;
+      padding: 1em 2em;
+    }
+  }
+}

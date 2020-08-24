@@ -28,13 +28,24 @@ function az_user_form_user_form_alter(&$form, FormStateInterface $form_state, $f
     $form['field_cv_file']['#access'] = false;
     $form['user_picture']['#access'] = false;
   }
-  $form['#validate'][] = '_az_user_form_validate';
+  $form['#validate'][] = '_az_user_user_form_validate';
+  $form['#submit'][] = '_az_user_user_form_submit';
   return;
 }
 
-function _az_user_form_validate(&$form, FormStateInterface &$form_state) {
+function _az_user_user_form_validate(&$form, FormStateInterface &$form_state) {
   $form_state->setValue('name',strtolower($form_state->getValue('mail')));
   return;
+}
+
+function _az_user_user_form_submit(&$form, FormStateInterface &$form_state)
+{
+  $request = \Drupal::service('request_stack')->getCurrentRequest();
+  if ($request->request->has('destination')) {
+    $request->query->set('destination', $request->request->get('destination'));
+  } else {
+    $form_state->setRedirectUrl(Url::fromRoute('<front>'));
+  }
 }
 
 /**
@@ -92,7 +103,7 @@ function az_user_form_user_login_form_alter(&$form, FormStateInterface $form_sta
  *
  * Redirects the user to the dashboard after logging in.
  */
-function _az_user_login_form_submit(&$form, FormStateInterface $form_state) {
+function _az_user_login_form_submit(&$form, FormStateInterface &$form_state) {
   // Check if a destination was set, probably on an exception controller.
   // @see \Drupal\user\Form\UserLoginForm::submitForm()
   $request = \Drupal::service('request_stack')->getCurrentRequest();
@@ -102,6 +113,26 @@ function _az_user_login_form_submit(&$form, FormStateInterface $form_state) {
     $form_state->setRedirectUrl(Url::fromRoute('<front>'));
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ * Form ID = user_pass
+ *
+ * Redirect to a special page.
+ */
+function az_user_form_user_pass_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['#submit'][] = '_az_user_user_pass_submit';
+  return;
+}
+
+/**
+ * @param $form
+ * @param FormStateInterface $form_state
+ */
+function _az_user_user_pass_submit (&$form, FormStateInterface &$form_state) {
+  $form_state->setRedirectUrl(Url::fromRoute('<front>'));
+}
+
 
 /**
  * Implements HOOK_preprocess_user().
