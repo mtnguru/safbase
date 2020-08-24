@@ -145,6 +145,7 @@ function az_mail_mail_alter(&$message) {
  */
 function az_mail_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
 
+/*
 ////////// Send email to ninjas only
 
   $ninjaUids = \Drupal::entityQuery('user')
@@ -168,6 +169,7 @@ BODY;
       _az_mail_send_mail('user_presave', $ninja, $params);
     }
   }
+*/
 }
 
 /**

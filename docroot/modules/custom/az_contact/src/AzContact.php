@@ -57,20 +57,17 @@ class AzContact {
     $query->condition('nfm.field_email_value', $email, (is_array($email)) ? 'IN' : '=');
     $results = $query->execute()->fetch();
 
-    return [
-      'results' => $results,
-      'numRows' => ($results) ? count($results) : 0,
-    ];
+    return $results;
   }
 
   static public function addContactMessage($cm) {
     $res = AzContact::queryEmail($cm->mail->value);
-    if ($res['results'] == false) {
+    if ($res == false) {
       $contact = AZContact::createContact($cm, 'Contact Form');
       $contactId = $contact->id();
     }
     else {
-      $contactId = $res['results']->id;
+      $contactId = $res->id;
       AzContact::addSubmission($contactId, $cm);
     }
     $cm->field_contact = $contactId;

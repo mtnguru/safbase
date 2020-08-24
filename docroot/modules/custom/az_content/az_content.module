@@ -39,41 +39,24 @@ function az_content_theme() {
 }
 
 /**
+ * Implements HOOK_mail().
+ */
+function az_content_mail($key, &$message, $params) {
+  $far = 5;
+  return;
+}
+
+function az_content_mail_alter(&$message) {
+  $far = 5;
+  if ($message['id'] == 'user_password_reset') {
+    $message['from'] = 'Investor Relations <ir@aureon.ca>';
+  }
+  return;
+}
+
+/**
  * Implements hook_form_alter().
  */
-function az_content_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-/*if ($form['#form_id'] == 'entity_embed_dialog') {
-    $form['shitty'] = [
-      '#type' => 'container',
-      'checkbox' => [
-        '#type' => 'checkbox',
-        '#title' => t('hey james dude'),
-        '#default_value' => false,
-      ],
-    ];
-  } */
-  return;
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- * Form ID = user_pass
- *
- * Redirect to a special page.
- */
-function az_content_form_user_pass_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $form['#submit'][] = '_az_content_user_pass_submit';
-  return;
-}
-
-/**
- * @param $form
- * @param FormStateInterface $form_state
- */
-function _az_content_user_pass_submit (&$form, FormStateInterface &$form_state) {
-  $form_state->setRedirectUrl(Url::fromRoute('<front>'));
-}
-
 
 function az_content_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $node = $form_state->getFormObject()->getEntity();

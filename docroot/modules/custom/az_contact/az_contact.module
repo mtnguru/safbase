@@ -13,14 +13,16 @@ use Drupal\media\Entity\Media;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
+
 /**
  * Implements HOOK_mail().
  */
 function az_contact_mail($key, &$message, $params) {
+  $far = 5;
   switch ($key) {
     case 'contact_key':
 //    $message['from'] = \Drupal::config('system.site')->get('mail');
-      $message['from'] = 'Investor Information <ir@aureon.ca>';
+      $message['from'] = 'Investor Relations <ir@aureon.ca>';
       $message['reply-to'] = 'Investor Relations <ir@aureon.ca>';
       $message['subject'] = $params['subject'];
       $message['body'][] = Markup::create($params['message']);
@@ -45,6 +47,18 @@ function az_contact_mail($key, &$message, $params) {
       break;
   }
 }
+
+/*
+function az_contact_mail_alter(&$message) {
+  $far = 5;
+//    $message['from'] = \Drupal::config('system.site')->get('mail');
+      $message['from'] = 'Investor Information <ir@aureon.ca>';
+      $message['reply-to'] = 'Investor Relations <ir@aureon.ca>';
+      $message['subject'] = $params['subject'];
+      $message['body'][] = Markup::create($params['message']);
+      $message['headers']['Content-Type'] = SWIFTMAILER_FORMAT_HTML;
+}
+*/
 
 function az_contact_send_email($subject, $message, $attachments, $email) {
   $mailManager = \Drupal::service('plugin.manager.mail');
