@@ -71,8 +71,7 @@ function az_content_form_user_pass_alter(&$form, FormStateInterface $form_state,
  * @param FormStateInterface $form_state
  */
 function _az_content_user_pass_submit (&$form, FormStateInterface &$form_state) {
-  $url = Url::fromUserInput('/node/' . 1601, []);
-  $form_state->setRedirectUrl($url);
+  $form_state->setRedirectUrl(Url::fromRoute('<front>'));
 }
 
 
