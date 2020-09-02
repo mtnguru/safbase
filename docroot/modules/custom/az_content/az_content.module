@@ -180,7 +180,7 @@ function az_content_entity_access(EntityInterface $entity, $op, AccountInterface
   switch ($entity->getEntityTypeId()) {
     case 'node':
       // If node is atom builder then chech if user has that permission. -- entity 511? weird
-      if (($entity->id() == '511')  && !\Drupal::currentUser()->hasPermission('atomizer display atom builder')) {
+      if (($entity->id() == '511') && !\Drupal::currentUser()->hasPermission('atomizer display atom builder')) {
         return AccessResult::forbidden();
       }
       break;
@@ -209,31 +209,46 @@ function az_content_entity_access(EntityInterface $entity, $op, AccountInterface
         ->getStorage('media_type')
         ->load($entity->bundle())
         ->label();
-      if  ($label == 'Document') {
-        $croles = $entity->field_user_types->getValue();
-        if (count($croles) == 0) {  // If User Types not set then allow viewing
-          return AccessResult::neutral();
-        }
-        if ($account == null) {
+      switch ($label) {
+        case 'Document':
+          $croles = $entity->field_user_types->getValue();
+          if (count($croles) == 0) {  // If User Types not set then allow viewing
+            return AccessResult::neutral();
+          }
+          if ($account == null) {
+            return AccessResult::forbidden();
+          }
+          $roles = $account->getRoles();
+          if (in_array('editor', $roles) || in_array('administrator', $roles)) {
+            return AccessResult::neutral();
+          }
+          foreach ($croles as $crole) {
+            if (!empty($crole['target_id'])) {
+              $tid = $crole['target_id'];
+              $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($crole['target_id']);
+              if ($term) {
+                $name = strtolower(str_replace(' ', '_', $term->label()));
+                if (in_array($name, $roles)) {
+                  return AccessResult::neutral();
+                }
+              }
+            }
+          }
           return AccessResult::forbidden();
-        }
-        $roles = $account->getRoles();
-        if (in_array('editor', $roles) || in_array('administrator', $roles)) {
-          return AccessResult::neutral();
-        }
-        foreach($croles as $crole) {
-          if (!empty($crole['target_id'])) {
-            $tid = $crole['target_id'];
-            $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($crole['target_id']);
-            if ($term) {
-              $name = strtolower(str_replace(' ', '_', $term->label()));
-              if (in_array($name, $roles)) {
+          break;
+        case 'Document - Personal':
+          if ($account == null) {
+            return AccessResult::forbidden();
+          }
+          foreach ($entity->field_authorized_users->getValue() as $value) {
+            if (!empty($value['target_id'])) {
+              if ($value['target_id'] == $account->id()) {
                 return AccessResult::neutral();
               }
             }
           }
-        }
-        return AccessResult::forbidden();
+          return AccessResult::forbidden();
+          break;
       }
       break;
   }
