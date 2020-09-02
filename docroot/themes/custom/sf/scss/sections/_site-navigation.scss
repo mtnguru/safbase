@@ -206,6 +206,11 @@
     padding: 0 30px;
     font-size: 180%;
 
+    .fas {
+      font-size: 110%;
+      vertical-align: middle;
+    }
+
     @include media ($bp960) {
       display: none;
     }
@@ -306,12 +311,16 @@
         }
       }
 
-      > i.fas::before {
-        color: $navigation-color;
-	font-size: 90%;
-	margin-left: -13px;
-        &:hover {
-          color: $navigation-color-hover;
+      > i.fas {
+        vertical-align: middle;
+        font-size: 120%;
+        &::before {
+          color: $navigation-color;
+          font-size: 90%;
+          margin-left: -13px;
+          &:hover {
+            color: $navigation-color-hover;
+          }
         }
       }
 
