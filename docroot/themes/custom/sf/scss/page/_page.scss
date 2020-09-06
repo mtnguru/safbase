@@ -2,4 +2,24 @@
   h1 {
     font-size: 175%;
   }
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+body.view-contacts-page-1,
+body.view-investor-documents-page-4,
+body.view-investor-documents-personal-page-1 {
+  main {
+    max-width: none;
+    &.outer-wrapper {
+      max-width: none;
+    }
+  }
+  #block-sf-page-title {
+    max-width: none;
+  }
+  .page-title {
+    max-width: none;
+  }
+
 }

@@ -42,7 +42,7 @@
 {%
   set body_classes = [
     logged_in ? 'user-logged-in',
-    az_route_name | replace({'.': '-'}),
+    az_route_name | replace({'.': '-'})|clean_class,
     not root_path ? 'path-frontpage' : 'path-' ~ root_path|clean_class,
     node_type ? 'page-node-type-' ~ node_type|clean_class,
     url('<current>')['#markup'] | split('/') | slice(-2) | join('/') | clean_class,

@@ -237,6 +237,10 @@ function az_content_entity_access(EntityInterface $entity, $op, AccountInterface
           if ($account == null) {
             return AccessResult::forbidden();
           }
+          $roles = $account->getRoles();
+          if (in_array('editor', $roles) || in_array('administrator', $roles)) {
+            return AccessResult::neutral();
+          }
           foreach ($entity->field_authorized_users->getValue() as $value) {
             if (!empty($value['target_id'])) {
               if ($value['target_id'] == $account->id()) {
