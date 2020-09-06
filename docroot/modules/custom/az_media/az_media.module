@@ -57,6 +57,40 @@ function az_media_entity_presave(EntityInterface $entity) {
 function az_media_media_presave(EntityInterface $entity) {
   $bundle = $entity->bundle();
   switch ($bundle) {
+    case 'document_personal':
+      $fid = $entity->field_media_file_1->getValue()[0]['target_id'];
+      $file = \Drupal\file\Entity\File::load($fid);
+
+      $filename = $file->getFilename();
+
+      $dir = 'Unknown';
+      if (!$entity->field_authorized_users->isEmpty()) {
+        foreach ($entity->field_authorized_users->referencedEntities() as $user) {
+          $first = $user->field_first_name->value;
+          $last  = $user->field_last_name->value;
+          $dir = "${first}_${last}";
+        }
+      }
+
+      $uri = $file->getFileUri();
+      $newuri = "public://investors/$dir/$filename";
+
+      $srcPath = \Drupal::service('file_system')->realpath($uri);
+      $destDir = DRUPAL_ROOT . "/sites/default/files/investors/$dir";
+      $destPath = "$destDir/$filename";
+      if (!file_exists($destDir)) {
+        mkdir($destDir);
+      }
+      link($srcPath, $destPath);
+      unlink($srcPath);
+
+      if ($srcPath != $destPath) {
+        $file->setFileUri($newuri);
+        $file->setFilename($filename);
+        $file->save();
+      }
+      break;
+
     case 'image':
       $fid = $entity->image->getValue()[0]['target_id'];
       $file = \Drupal\file\Entity\File::load($fid);
@@ -150,90 +184,85 @@ function az_media_file_presave($file) {
 
   // Document files already have the date for a directory. Move it from files/$date to files/document/$date
   $pos = strpos($info['dirname'], 'files/atoms');
-  if (strpos($info['dirname'], 'files/atoms')) {
-    // do nothing?
-
-  } else {
-//  $doc = strpos($info['dirname'], 'files/' . $date);
-    $doc = false;
-//  if (strpos($info['dirname'], '/' . $mime . '/') || $doc) {
-    if (strpos($info['dirname'], '/' . $mime . '/') || $doc) {
-      /*
-      $directory = $mime . '/' . $date;
-      if ($doc) {
-        $info['dirname'] = str_replace($date, $directory, $info['dirname']);
-        $file->setFileUri($uinfo['scheme'] . '://' . $directory . '/' . $basename);
-      }
-      else {
-        $info['dirname'] .= '/' . $directory;
-        $file->setFileUri($uinfo['scheme'] . '://' . $directory . '/' . $basename);
-      }
-
-      if (!is_dir($info['dirname'])) {
-        mkdir($info['dirname'], 0777, TRUE);
-      } */
-
-//    if (preg_match('/^(.*)\/default\/files\/(.*)$/', $info['dirname'], $matches)) {
-//      $directory = $matches[2];
-//    } else {
-//      // error message needed here.
-//      $val = 5/0;
-//    }
-//    $tmpPath = file_directory_temp() . '/tmp_' . $basename;
-//    $destPath = $info['dirname'] . '/' . $basename;
-//    if (preg_match('/(.*)_fn_(.*)\./', $info['filename'], $matches)) {
-//      $filename = $matches[1];
-//      $fn = $matches[2];
-//    } else {
-//      $filename = $info['filename'];
-//      $fn = 0;
-//    }
-//    if (file_exists($destPath)) {
-//      while (file_exists($destPath)) {
-//        $newfilename = $filename . '_fn_' . ++$fn . '.' . $info['extension'];
-//        $destPath = $info['dirname'] . '/' . $newfilename;
-//      }
-//      $file->setFileUri($uinfo['scheme'] . '://' . $directory . '/' . $newfilename);
-//    }
-
-      $tmpPath = file_directory_temp() . '/tmp_' . $basename;
-      $destPath = $info['dirname'] . '/' . $basename;
-
-      if (strstr($file->getMimeType(), 'image') &&
-          $info['extension'] != 'png' &&
-          $info['extension'] != 'gif') {
-
-        $initialSize = $file->getSize();
-        $dims = getimagesize($srcPath);
-
-        // Default settings - Reduces 4M cell phone image file to appx 200-500KB.
-        $quality = 50;
-        $resolution = array(
-          'width' => 10000,
-          'height' => 10000,
-        );
-
-        // If image is greater than max resolution in width or height then resize it.
-        $res = ($dims[0] > $resolution['width'] || $dims[1] > $resolution['height'])
-          ? "-resize " . $resolution['width'] . 'x' . $resolution['height']
-          : '';
-
-        // Create and execute gd library convert command to change quality and resolution of image
-        $cmd = "convert $res -quality $quality '$srcPath' '$tmpPath';" .
-          " cp '$tmpPath' '$destPath'; rm '$tmpPath';";
-
-        $finalSize = filesize($destPath);
-        drupal_set_message('File saved: ' . $srcPath . ' -> ' . $destPath .
-          '   Size: ' . $initialSize . ' -> ' . $finalSize);
-      } else {
-        $cmd = "mv $srcPath $destPath;";
-      }
-
-      if ($srcPath != $destPath) {  // Remove the source file
-        $cmd .= " rm '$srcPath'";
-      }
-      `$cmd`;
+//$doc = strpos($info['dirname'], 'files/' . $date);
+  $doc = false;
+//if (strpos($info['dirname'], '/' . $mime . '/') || $doc) {
+  if (strpos($info['dirname'], '/' . $mime . '/') || $doc) {
+    /*
+    $directory = $mime . '/' . $date;
+    if ($doc) {
+      $info['dirname'] = str_replace($date, $directory, $info['dirname']);
+      $file->setFileUri($uinfo['scheme'] . '://' . $directory . '/' . $basename);
     }
+    else {
+      $info['dirname'] .= '/' . $directory;
+      $file->setFileUri($uinfo['scheme'] . '://' . $directory . '/' . $basename);
+    }
+
+    if (!is_dir($info['dirname'])) {
+      mkdir($info['dirname'], 0777, TRUE);
+    } */
+
+//  if (preg_match('/^(.*)\/default\/files\/(.*)$/', $info['dirname'], $matches)) {
+//    $directory = $matches[2];
+//  } else {
+//    // error message needed here.
+//    $val = 5/0;
+//  }
+//  $tmpPath = file_directory_temp() . '/tmp_' . $basename;
+//  $destPath = $info['dirname'] . '/' . $basename;
+//  if (preg_match('/(.*)_fn_(.*)\./', $info['filename'], $matches)) {
+//    $filename = $matches[1];
+//    $fn = $matches[2];
+//  } else {
+//    $filename = $info['filename'];
+//    $fn = 0;
+//  }
+//  if (file_exists($destPath)) {
+//    while (file_exists($destPath)) {
+//      $newfilename = $filename . '_fn_' . ++$fn . '.' . $info['extension'];
+//      $destPath = $info['dirname'] . '/' . $newfilename;
+//    }
+//    $file->setFileUri($uinfo['scheme'] . '://' . $directory . '/' . $newfilename);
+//  }
+
+    $tmpPath = file_directory_temp() . '/tmp_' . $basename;
+    $destPath = $info['dirname'] . '/' . $basename;
+
+    if (strstr($file->getMimeType(), 'image') &&
+        $info['extension'] != 'png' &&
+        $info['extension'] != 'gif') {
+
+      $initialSize = $file->getSize();
+      $dims = getimagesize($srcPath);
+
+      // Default settings - Reduces 4M cell phone image file to appx 200-500KB.
+      $quality = 50;
+      $resolution = array(
+        'width' => 10000,
+        'height' => 10000,
+      );
+
+      // If image is greater than max resolution in width or height then resize it.
+      $res = ($dims[0] > $resolution['width'] || $dims[1] > $resolution['height'])
+        ? "-resize " . $resolution['width'] . 'x' . $resolution['height']
+        : '';
+
+      // Create and execute gd library convert command to change quality and resolution of image
+      $cmd = "convert $res -quality $quality '$srcPath' '$tmpPath';" .
+        " cp '$tmpPath' '$destPath'; rm '$tmpPath';";
+
+      $finalSize = filesize($destPath);
+      drupal_set_message('File saved: ' . $srcPath . ' -> ' . $destPath .
+        '   Size: ' . $initialSize . ' -> ' . $finalSize);
+    } else {
+      $cmd = "mv $srcPath $destPath;";
+    }
+
+    if ($srcPath != $destPath) {  // Remove the source file
+      $cmd .= " rm '$srcPath'";
+    }
+    `$cmd`;
   }
 }
 
@@ -333,6 +362,17 @@ function az_media_preprocess_media(&$variables) {
   switch ($media->bundle[0]->target_id) {
     case 'image':
       break;
+
+    case 'document-personal':
+      if (!$media->field_document->isEmpty()) {
+        $file = \Drupal\file\Entity\File::load($media->field_document[0]->target_id);
+        $variables['file_url'] = file_create_url($file->getFileUri());
+        $variables['file_name'] = $file->filename->value;
+      } else {
+        $variables['file_name'] = 'No file has been assigned';
+      }
+      break;
+
     case 'document':
       if (!$media->field_document->isEmpty()) {
         $file = \Drupal\file\Entity\File::load($media->field_document[0]->target_id);
@@ -342,6 +382,7 @@ function az_media_preprocess_media(&$variables) {
         $variables['file_name'] = 'No file has been assigned';
       }
       break;
+
     case 'video':
       break;
     case 'twitter':
