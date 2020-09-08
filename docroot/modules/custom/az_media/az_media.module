@@ -73,10 +73,10 @@ function az_media_media_presave(EntityInterface $entity) {
       }
 
       $uri = $file->getFileUri();
-      $newuri = "public://investors/$dir/$filename";
+      $newuri = "private://investors/$dir/$filename";
 
       $srcPath = \Drupal::service('file_system')->realpath($uri);
-      $destDir = DRUPAL_ROOT . "/sites/default/files/investors/$dir";
+      $destDir = "/home/sf/private/investors/$dir";
       $destPath = "$destDir/$filename";
       if (!file_exists($destDir)) {
         mkdir($destDir);
