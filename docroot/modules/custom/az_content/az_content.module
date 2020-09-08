@@ -57,9 +57,6 @@ function az_content_mail_alter(&$message) {
 /**
  * Implements hook_form_alter().
  */
-function az_content_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  return;
-}
 
 function az_content_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $node = $form_state->getFormObject()->getEntity();
