@@ -55,5 +55,19 @@ body.page-node-type-landing-page {
       box-shadow: none;
     }
   }
+  
+  .field--name-field-share-on-social-media {
+    float: right;
+    font-size: 90%;
+
+    .social-media-sharing {
+      ul {
+        margin: 0;
+        .share img {
+          width: 28px;
+        }
+      }
+    }
+  }
 }
 
